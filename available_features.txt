@@ -1,0 +1,20 @@
+Maplibre Available Features
+====================
+    --- Map     (Base Map with map options)
+    --- NavigationControl   (zoom, bearing, pitch control)
+    --- GeolocateControl    (Fly to user location control)
+    --- AttributionControl
+    --- ScaleControl
+    ---FullscreenControl
+    --- Popup   (Show popup on location)
+    --- Marker  (Show Marker on location)
+    --- Style   (MapStyle?)
+    --- LngLat  ?
+    --- LngLatBounds    ?
+    --- Point   ?
+    --- MercatorCoordinate
+    --- Evented
+    --- config
+    --- Get/Set accessToken of Map
+    --- Get/Set baseApiUrl of Map Server
+    --- clearStorage (Clear browser cache from this library)

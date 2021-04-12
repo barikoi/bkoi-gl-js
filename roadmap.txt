@@ -1,0 +1,12 @@
+Bkoi GL JS RoadMap
+====================
+    --- Map     (Base Map with map options)         --done
+    --- NavigationControl   (zoom, bearing, pitch control)      --done
+    --- GeolocateControl    (Fly to user location control)      --done
+    --- Popup   (Show popup on location)
+    --- Marker  (Show Marker on location)
+    --- Style   (MapStyle?)
+    --- LngLat  ?
+    --- Point   ?
+    --- Get/Set accessToken of Map
+    --- Get/Set baseApiUrl of Map Server

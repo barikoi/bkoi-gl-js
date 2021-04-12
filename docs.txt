@@ -1,0 +1,106 @@
+Bkoi GL JS Features:
+==================================
+    --- Base Map with barikoi map style
+        new bkoigl.Map({
+            container: 'map',
+            center: [ 90, 23 ],
+            zoom: 12,
+            //...other options
+        })
+
+        *** Map Available Options ***
+        {
+            hash?: boolean | string,
+            interactive?: boolean,
+            container: HTMLElement | string,
+            bearingSnap?: number,
+            attributionControl?: boolean,
+            customAttribution?: string | Array<string>,
+            logoPosition?: ControlPosition,
+            failIfMajorPerformanceCaveat?: boolean,
+            preserveDrawingBuffer?: boolean,
+            antialias?: boolean,
+            refreshExpiredTiles?: boolean,
+            maxBounds?: LngLatBoundsLike,
+            scrollZoom?: boolean,
+            minZoom?: ?number,
+            maxZoom?: ?number,
+            minPitch?: ?number,
+            maxPitch?: ?number,
+            boxZoom?: boolean,
+            dragRotate?: boolean,
+            dragPan?: DragPanOptions,
+            keyboard?: boolean,
+            doubleClickZoom?: boolean,
+            touchZoomRotate?: boolean,
+            touchPitch?: boolean,
+            trackResize?: boolean,
+            center?: LngLatLike,
+            zoom?: number,
+            bearing?: number,
+            pitch?: number,
+            renderWorldCopies?: boolean,
+            maxTileCacheSize?: number,
+            transformRequest?: RequestTransformFunction,
+            accessToken: string,
+            locale?: Object
+        }
+
+        *** Default Options ***
+        {
+            center: [0, 0],
+            zoom: 0,
+            bearing: 0,
+            pitch: 0,
+            minZoom: -2,
+            maxZoom: 22,
+            minPitch: 0,
+            maxPitch: 60,
+            interactive: true,
+            scrollZoom: true,
+            boxZoom: true,
+            dragRotate: true,
+            dragPan: true,
+            keyboard: true,
+            doubleClickZoom: true,
+            touchZoomRotate: true,
+            touchPitch: true,
+            bearingSnap: 7,
+            clickTolerance: 3,
+            pitchWithRotate: true,
+            hash: false,
+            attributionControl: true,
+            failIfMajorPerformanceCaveat: false,
+            preserveDrawingBuffer: false,
+            trackResize: true,
+            renderWorldCopies: true,
+            refreshExpiredTiles: true,
+            maxTileCacheSize: null,
+            localIdeographFontFamily: 'sans-serif',
+            transformRequest: null,
+            accessToken: null,
+            fadeDuration: 300,
+            crossSourceCollisions: true
+        }
+    
+
+    --- NavigationControl for Zoom, Bearing, Pitch
+        map.addControl(
+            new bkoigl.NavigationControl({
+                //...options
+            })
+        )
+
+        ******* NavigationControl Available Options *******
+        {
+            showCompass?: boolean,
+            showZoom?: boolean,
+            visualizePitch?: boolean
+        }
+
+        ******* NavigationControl Default Options *******
+        {
+            showCompass: true,
+            showZoom: true,
+            visualizePitch: false
+        }
