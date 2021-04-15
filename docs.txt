@@ -16,12 +16,12 @@ Bkoi GL JS Features:
             bearingSnap?: number,
             attributionControl?: boolean,
             customAttribution?: string | Array<string>,
-            logoPosition?: ControlPosition,
+            logoPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right',
             failIfMajorPerformanceCaveat?: boolean,
             preserveDrawingBuffer?: boolean,
             antialias?: boolean,
             refreshExpiredTiles?: boolean,
-            maxBounds?: LngLatBoundsLike,
+            maxBounds?: [[sw lng-lat], [ne lng-lat]] | [west, south, east, north],
             scrollZoom?: boolean,
             minZoom?: ?number,
             maxZoom?: ?number,
@@ -29,13 +29,18 @@ Bkoi GL JS Features:
             maxPitch?: ?number,
             boxZoom?: boolean,
             dragRotate?: boolean,
-            dragPan?: DragPanOptions,
+            dragPan?: boolean | {
+                linearity?: number
+                easing?: number
+                deceleration?: number
+                maxSpeed?: number
+            },
             keyboard?: boolean,
             doubleClickZoom?: boolean,
             touchZoomRotate?: boolean,
             touchPitch?: boolean,
             trackResize?: boolean,
-            center?: LngLatLike,
+            center?: [ Lng, Lat ],
             zoom?: number,
             bearing?: number,
             pitch?: number,
@@ -103,4 +108,101 @@ Bkoi GL JS Features:
             showCompass: true,
             showZoom: true,
             visualizePitch: false
+        }
+    
+    --- GeolocateControl for user current location
+        map.addControl(
+            new bkoigl.GeolocateControl({
+                //...options
+            })
+        )
+
+        ******** GeolocateControl Available Options **********
+        {
+            positionOptions?: PositionOptions,
+            fitBoundsOptions?: AnimationOptions & CameraOptions,
+            trackUserLocation?: boolean,
+            showAccuracyCircle?: boolean,
+            showUserLocation?: boolean
+        }
+
+        ******** GeolocateControl Default Options *************
+        {
+            positionOptions: {
+                enableHighAccuracy: false,
+                maximumAge: 0,
+                timeout: 6000 /* 6 sec */
+            },
+            fitBoundsOptions: {
+                maxZoom: 15
+            },
+            trackUserLocation: false,
+            showAccuracyCircle: true,
+            showUserLocation: true
+        }
+    
+
+    --- Popup to show popup on a location
+        const popup = new bkoigl.Popup({
+            //...options
+        })
+            .setLngLat([ 90, 23 ])
+            .setHTML('<h3>Hello World!</h3>')
+            .addTo(map)
+        
+        ******** Popup Available Options **********
+        {
+            closeButton?: boolean,
+            closeOnClick?: boolean,
+            closeOnMove?: boolean,
+            focusAfterOpen?: boolean,
+            anchor?: Anchor,
+            offset?: Offset,
+            className?: string,
+            maxWidth?: string
+        }
+
+        ******** Popup Default Options *********
+        {
+            closeButton: true,
+            closeOnClick: true,
+            focusAfterOpen: true,
+            className: '',
+            maxWidth: "240px"
+        }
+    
+
+    --- Marker to show marker on a location
+        const marker = new bkoigl.Marker({
+            //...options
+        })
+            .setLngLat([ 89.989, 23 ])
+            .addTo(map)
+        
+        ******** Marker Available Options **********
+        {
+            element?: HTMLElement,
+            offset?: PointLike,
+            anchor?: Anchor,
+            color?: string,
+            scale?: number,
+            draggable?: boolean,
+            clickTolerance?: number,
+            rotation?: number,
+            rotationAlignment?: string,
+            pitchAlignment?: string
+        }
+
+        ******** Marker Default Options **********
+        {
+            element?: 'div',
+            offset?: element ? [ 0, 0 ] : [ 0, -14 ],
+            anchor?: 'center',
+            color?: '#3FB1CE',
+            scale?: 1,
+            draggable?: false,
+            clickTolerance?: 0,
+            rotation?: 0,
+            rotationAlignment?: 'auto',
+            pitchAlignment?: 'auto'
         }

@@ -1,7 +1,9 @@
 import {
   Map,
   NavigationControl,
-  GeolocateControl
+  GeolocateControl,
+  Popup,
+  Marker
 } from 'maplibre-gl'
 
 // Extend Map
@@ -18,5 +20,7 @@ class BkoiGlMap extends Map {
 export {
   BkoiGlMap as Map,
   NavigationControl,
-  GeolocateControl
+  GeolocateControl,
+  Popup,
+  Marker
 }
