@@ -3,8 +3,8 @@ Bkoi GL JS RoadMap
     --- Map     (Base Map with map options)         --done
     --- NavigationControl   (zoom, bearing, pitch control)      --done
     --- GeolocateControl    (Fly to user location control)      --done
-    --- Popup   (Show popup on location)
-    --- Marker  (Show Marker on location)
+    --- Popup   (Show popup on location)    --done
+    --- Marker  (Show Marker on location)   --done
     --- Style   (MapStyle?)
     --- LngLat  ?
     --- Point   ?

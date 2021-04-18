@@ -1,10 +1,4 @@
-import {
-  Map,
-  NavigationControl,
-  GeolocateControl,
-  Popup,
-  Marker
-} from 'maplibre-gl'
+import { Map, NavigationControl, GeolocateControl, Popup, Marker } from 'maplibre-gl'
 
 // Extend Map
 class BkoiGlMap extends Map {

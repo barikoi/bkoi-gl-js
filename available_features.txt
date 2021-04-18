@@ -5,7 +5,7 @@ Maplibre Available Features
     --- GeolocateControl    (Fly to user location control)
     --- AttributionControl
     --- ScaleControl
-    ---FullscreenControl
+    --- FullscreenControl
     --- Popup   (Show popup on location)
     --- Marker  (Show Marker on location)
     --- Style   (MapStyle?)
