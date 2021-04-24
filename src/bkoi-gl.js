@@ -1,4 +1,4 @@
-import { Map, NavigationControl, GeolocateControl, ScaleControl, Popup, Marker, FullscreenControl } from 'maplibre-gl'
+import { Map, NavigationControl, GeolocateControl, ScaleControl, Popup, Marker, FullscreenControl, accessToken, config } from 'maplibre-gl'
 
 // Default Style Types
 const defaultStyleTypes = {
@@ -9,7 +9,7 @@ const defaultStyleTypes = {
 // Extend Map
 class BkoiGlMap extends Map {
   constructor(mapOptions) {
-    if(!mapOptions.styleType || !defaultStyleTypes[ mapOptions.styleType ]) {
+    if(mapOptions.styleType && !defaultStyleTypes[ mapOptions.styleType ]) {
       console.warn("Invalid Style Type. Please choose from [ 'light', 'dark' ]. Setting 'light' as fallback.")
     }
 
@@ -34,13 +34,26 @@ class BkoiGlMap extends Map {
   }
 }
 
-// Exports
-export {
-  BkoiGlMap as Map,
+const exported = {
+  Map: BkoiGlMap,
   NavigationControl,
   GeolocateControl,
   ScaleControl,
   Popup,
   Marker,
-  FullscreenControl
+  FullscreenControl,
+  accessToken,
+  config,
+  get accessToken() {
+    return config.ACCESS_TOKEN
+  },
+  /**
+   * @param {string} token
+   */
+  set accessToken(token) {
+    config.ACCESS_TOKEN = token
+  }
 }
+
+// Exports
+export default exported

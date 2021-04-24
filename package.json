@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.2.2",
-    "mapbox-gl-draw-circle": "^1.1.2",
     "maplibre-gl": "^1.14.0"
   }
 }
