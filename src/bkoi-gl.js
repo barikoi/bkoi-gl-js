@@ -1,4 +1,4 @@
-import { Map, NavigationControl, GeolocateControl, ScaleControl, Popup, Marker, FullscreenControl, accessToken, config } from 'maplibre-gl'
+import { Map, NavigationControl, GeolocateControl, ScaleControl, Popup, Marker, FullscreenControl, accessToken, config, LngLatBounds } from 'maplibre-gl'
 
 // Default Style Types
 const defaultStyleTypes = {
@@ -52,7 +52,8 @@ const exported = {
    */
   set accessToken(token) {
     config.ACCESS_TOKEN = token
-  }
+  },
+  LngLatBounds
 }
 
 // Exports
