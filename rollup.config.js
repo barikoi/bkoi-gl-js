@@ -4,12 +4,14 @@ import { eslint } from 'rollup-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
+import clear from 'rollup-plugin-clear'
+import copy from 'rollup-plugin-copy'
 
 export default [
     {
-        input: './src/bkoi-gl.js',
+        input: 'src/index.js',
         output: {
-            file: './dist/bkoi-gl.js',
+            file: 'dist/bkoi-gl.js',
             format: 'iife',
             name: 'bkoigl',
             globals: {
@@ -17,6 +19,7 @@ export default [
             }
         },
         plugins: [
+            clear({ targets: ['dist'] }),
             nodeResolve(),
             commonjs(),
             eslint(),
@@ -24,28 +27,12 @@ export default [
                 exclude: 'node_modules/**',
                 babelHelpers: 'bundled'
             }),
-            terser()
-        ]
-    },
-    {
-        input: './src/bkoi-gl-draw.js',
-        output: {
-            file: './dist/bkoi-gl-draw.js',
-            format: 'iife',
-            name: 'bkoidraw',
-            globals: {
-                '@mapbox/mapbox-gl-draw': 'mapboxdraw'
-            }
-        },
-        plugins: [
-            nodeResolve(),
-            commonjs(),
-            eslint(),
-            babel({
-                exclude: 'node_modules/**',
-                babelHelpers: 'bundled'
-            }),
-            terser()
+            terser(),
+            copy({
+                targets: [
+                    { src: 'src/index.css', dest: 'dist', rename: 'bkoi-gl.css' }
+                ]
+            })
         ]
     }
 ]
