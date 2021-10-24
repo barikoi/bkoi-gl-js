@@ -21,40 +21,35 @@ import {
   prewarm,
   clearPrewarmedResources
 } from 'maplibre-gl'
+import { bkoiConfig } from './util/config'
+import { isBarikoiStyle } from './util/validator'
 // import WorkerPool from 'maplibre-gl/src/util/worker_pool'
 // import { clearTileCache } from 'maplibre-gl/src/util/tile_request_cache'
-
-// Default Style Types
-const defaultStyleTypes = {
-  light: 'https://map.barikoi.com/styles/osm-liberty/style.json',
-  dark: 'https://map.barikoi.com/styles/barikoi-dark/style.json'
-}
 
 // Extend Map
 class BkoiGlMap extends Map {
   constructor(mapOptions) {
-    if(mapOptions.styleType && !defaultStyleTypes[ mapOptions.styleType ]) {
-      console.warn("Invalid Style Type. Please choose from [ 'light', 'dark' ]. Setting 'light' as fallback.")
+    if((!mapOptions.accessToken && !bkoiConfig.ACCESS_TOKEN) && (!mapOptions.style || isBarikoiStyle(mapOptions.style))) {
+      console.error('Please provide a valid accessToken to use Barikoi assets.')
     }
 
     super({
       ...mapOptions,
+      accessToken: mapOptions.mapboxAccessToken ? mapOptions.mapboxAccessToken : null,
       style: mapOptions.style ?
-        mapOptions.style :
-        (mapOptions.styleType && defaultStyleTypes[ mapOptions.styleType ]) ?
-        defaultStyleTypes[ mapOptions.styleType ] :
-        defaultStyleTypes.light
+        isBarikoiStyle(mapOptions.style) ?
+          mapOptions.style + '?key=' +
+            (mapOptions.accessToken ?
+              mapOptions.accessToken :
+              bkoiConfig.ACCESS_TOKEN)
+          :
+          mapOptions.style
+        :
+        bkoiConfig.DEFAULT_STYLE + '?key=' +
+          (mapOptions.accessToken ?
+            mapOptions.accessToken :
+            bkoiConfig.ACCESS_TOKEN)
     })
-  }
-
-  // Set Map Style based on styleType
-  setStyleType(styleType) {
-    if(styleType && defaultStyleTypes[ styleType ]) {
-      this.setStyle(defaultStyleTypes[ styleType ])
-
-    } else {
-      throw new Error("Invalid Style Type. Please choose from [ 'light', 'dark' ].")
-    }
   }
 }
 
@@ -81,12 +76,21 @@ const exported = {
   prewarm,
   clearPrewarmedResources,
   get accessToken() {
-    return config.ACCESS_TOKEN
+    return bkoiConfig.ACCESS_TOKEN
   },
   /**
    * @param {string} token
    */
   set accessToken(token) {
+    bkoiConfig.ACCESS_TOKEN = token
+  },
+  get mapboxAccessToken() {
+    return config.ACCESS_TOKEN
+  },
+  /**
+   * @param {string} token
+   */
+  set mapboxAccessToken(token) {
     config.ACCESS_TOKEN = token
   },
   get baseApiUrl() {

@@ -5,8 +5,9 @@ Bkoi GL JS RoadMap
     --- GeolocateControl    (Fly to user location control)      --done
     --- Popup   (Show popup on location)    --done
     --- Marker  (Show Marker on location)   --done
-    --- Style   (MapStyle?)
+    --- Style   (MapStyle?)     --done
     --- LngLat  ?
     --- Point   ?
     --- Get/Set accessToken of Map
     --- Get/Set baseApiUrl of Map Server
+    --- Add accessToken for Barikoi Map     --done
