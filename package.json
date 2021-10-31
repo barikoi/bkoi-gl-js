@@ -1,6 +1,6 @@
 {
   "name": "bkoi-gl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "bkoi-gl",
     "barikoi"
   ],
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "homepage": "https://docs.barikoi.com/docs/map-add/",
   "dependencies": {
     "maplibre-gl": "^1.14.0"
