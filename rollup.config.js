@@ -1,6 +1,6 @@
 // Rollup plugins
 import babel from '@rollup/plugin-babel'
-import eslint from '@rollup/plugin-eslint'
+import { eslint } from 'rollup-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'

@@ -1,4 +1,5 @@
 import {
+  version,
   supported,
   setRTLTextPlugin,
   getRTLTextPluginStatus,
@@ -34,7 +35,7 @@ class BkoiGlMap extends Map {
 
     super({
       ...mapOptions,
-      accessToken: null,
+      accessToken: mapOptions.mapboxAccessToken ? mapOptions.mapboxAccessToken : null,
       style: mapOptions.style ?
         isBarikoiStyle(mapOptions.style) ?
           mapOptions.style + '?key=' +
@@ -53,6 +54,7 @@ class BkoiGlMap extends Map {
 }
 
 const exported = {
+  version,
   supported,
   setRTLTextPlugin,
   getRTLTextPluginStatus,
@@ -81,6 +83,24 @@ const exported = {
    */
   set accessToken(token) {
     bkoiConfig.ACCESS_TOKEN = token
+  },
+  get mapboxAccessToken() {
+    return config.ACCESS_TOKEN
+  },
+  /**
+   * @param {string} token
+   */
+  set mapboxAccessToken(token) {
+    config.ACCESS_TOKEN = token
+  },
+  get baseApiUrl() {
+    return config.API_URL
+  },
+  /**
+   * @param {string} url
+   */
+  set baseApiUrl(url) {
+    config.API_URL = url
   },
   // get workerCount() {
   //   return WorkerPool.workerCount
