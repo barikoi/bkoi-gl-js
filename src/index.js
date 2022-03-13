@@ -25,6 +25,7 @@ import { bkoiConfig } from './util/config'
 import { isBarikoiStyle } from './util/validator'
 // import WorkerPool from 'maplibre-gl/src/util/worker_pool'
 // import { clearTileCache } from 'maplibre-gl/src/util/tile_request_cache'
+import barikoiLogoBlack from './assets/barikoi_logo_black.png'
 
 // Extend Map
 class BkoiGlMap extends Map {
@@ -50,6 +51,35 @@ class BkoiGlMap extends Map {
             mapOptions.accessToken :
             bkoiConfig.ACCESS_TOKEN)
     })
+    
+    // Add Barikoi Attribution
+    this.on('load', () => {
+      this._addBarikoiAttribution()
+    })
+  }
+
+  // Add Barikoi Attribution on Map Load
+  _addBarikoiAttribution() {
+    const brAttrContainer = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left')
+
+    if(brAttrContainer) {
+      // Logo Container
+      const logoContainer = document.createElement('div')
+      logoContainer.className = 'barikoi-logo'
+      logoContainer.style.boxSizing = 'border-box'
+
+      // Logo
+      const logo = document.createElement('img')
+      logo.setAttribute('src', barikoiLogoBlack)
+      logo.setAttribute('alt', 'Barikoi')
+      logo.setAttribute('width', '48px')
+      logo.style.boxSizing = 'border-box'
+      logo.style.margin = '0px 0px 10px 10px'
+
+      // Append Logo
+      logoContainer.appendChild(logo)
+      brAttrContainer.prepend(logoContainer)
+    }
   }
 }
 

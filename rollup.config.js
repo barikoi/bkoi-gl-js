@@ -6,6 +6,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
 import clear from 'rollup-plugin-clear'
 import copy from 'rollup-plugin-copy'
+import image from '@rollup/plugin-image'
 
 export default [
     {
@@ -22,6 +23,7 @@ export default [
             clear({ targets: ['dist'] }),
             nodeResolve(),
             commonjs(),
+            image(),
             eslint(),
             babel({
                 exclude: 'node_modules/**',
