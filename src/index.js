@@ -64,9 +64,14 @@ class BkoiGlMap extends Map {
 
     if(brAttrContainer) {
       // Logo Container
-      const logoContainer = document.createElement('div')
+      const logoContainer = document.createElement('a')
       logoContainer.className = 'barikoi-logo'
+      logoContainer.setAttribute('href', 'https://www.barikoi.com')
+      logoContainer.setAttribute('target', '_blank')
       logoContainer.style.boxSizing = 'border-box'
+      logoContainer.style.pointerEvents = 'auto'
+      logoContainer.style.cursor = 'pointer'
+      logoContainer.style.display = 'block'
 
       // Logo
       const logo = document.createElement('img')
