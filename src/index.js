@@ -25,7 +25,7 @@ import { bkoiConfig } from './util/config'
 import { isBarikoiStyle } from './util/validator'
 // import WorkerPool from 'maplibre-gl/src/util/worker_pool'
 // import { clearTileCache } from 'maplibre-gl/src/util/tile_request_cache'
-import barikoiLogoBlack from './assets/barikoi_logo_black.png'
+import barikoiLogoBlack from './assets/barikoi_logo_black.svg'
 
 // Extend Map
 class BkoiGlMap extends Map {
@@ -60,12 +60,19 @@ class BkoiGlMap extends Map {
 
   // Add Barikoi Attribution on Map Load
   _addBarikoiAttribution() {
+    // Check if Logo Already Added
+    const barikoiLogoContainer = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left .barikoi-logo-container')
+    if(barikoiLogoContainer) {
+      return
+    }
+
+    // Add Barikoi Logo
     const brAttrContainer = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left')
 
     if(brAttrContainer) {
       // Logo Container
       const logoContainer = document.createElement('a')
-      logoContainer.className = 'barikoi-logo'
+      logoContainer.className = 'barikoi-logo-container'
       logoContainer.setAttribute('href', 'https://www.barikoi.com')
       logoContainer.setAttribute('target', '_blank')
       logoContainer.style.boxSizing = 'border-box'
@@ -74,16 +81,28 @@ class BkoiGlMap extends Map {
       logoContainer.style.display = 'block'
 
       // Logo
+      const mapContainer = this.getContainer()
       const logo = document.createElement('img')
       logo.setAttribute('src', barikoiLogoBlack)
       logo.setAttribute('alt', 'Barikoi')
-      logo.setAttribute('width', '48px')
       logo.style.boxSizing = 'border-box'
-      logo.style.margin = '0px 0px 10px 10px'
+      logo.style.margin = '0px 0px 4px 10px'
+      logo.style.width = `clamp(40px, ${ mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44 }px, 48px)`
+      logo.style.objectFit = 'fill'
 
       // Append Logo
       logoContainer.appendChild(logo)
       brAttrContainer.prepend(logoContainer)
+
+      // On Map Container Resize Observer
+      new ResizeObserver(() => {
+        const barikoiLogo = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left .barikoi-logo-container > img')
+        const mapContainer = this.getContainer()
+        if(barikoiLogo) {
+          barikoiLogo.style.width = `clamp(40px, ${ mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44 }px, 48px)`
+        }
+      })
+      .observe(mapContainer)
     }
   }
 }
