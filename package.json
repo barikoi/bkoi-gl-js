@@ -5,11 +5,6 @@
   "main": "index.js",
   "module": "index.js",
   "style": "dist/style/bkoi-gl.css",
-  "files": [
-    "dist/cjs",
-    "dist/esm",
-    "dist/style"
-  ],
   "scripts": {
     "start": "node index.js",
     "build": "rollup --config"
