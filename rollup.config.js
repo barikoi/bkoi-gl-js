@@ -42,13 +42,15 @@ export default [
         external: [ /@babel\/runtime/, 'maplibre-gl' ],
         output: [
             {
-                file: 'dist/cjs/bkoi-gl.js',
+                dir: 'dist/cjs',
                 format: 'cjs',
+                preserveModules: true,
                 exports: 'auto'
             },
             {
-                file: 'dist/esm/bkoi-gl.js',
+                dir: 'dist/esm',
                 format: 'es',
+                preserveModules: true,
                 exports: 'auto'
             }
         ],
