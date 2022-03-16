@@ -1,6 +1,6 @@
 {
   "name": "bkoi-gl",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
   "main": "index.js",
   "module": "index.js",
