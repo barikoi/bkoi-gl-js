@@ -2,7 +2,14 @@
   "name": "bkoi-gl",
   "version": "1.0.6",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
-  "main": "index.js",
+  "main": "dist/cjs/bkoi-gl.js",
+  "module": "dist/esm/bkoi-gl.js",
+  "style": "dist/style/bkoi-gl.css",
+  "files": [
+    "dist/cjs",
+    "dist/esm",
+    "dist/style"
+  ],
   "scripts": {
     "start": "node index.js",
     "build": "rollup --config"
@@ -19,6 +26,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
