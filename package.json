@@ -16,7 +16,7 @@
   "license": "BSD-3-Clause",
   "homepage": "https://docs.barikoi.com/docs/map-add/",
   "dependencies": {
-    "maplibre-gl": "^1.14.0"
+    "maplibre-gl": "3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
