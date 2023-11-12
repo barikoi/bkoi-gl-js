@@ -14,7 +14,7 @@
     "barikoi"
   ],
   "license": "BSD-3-Clause",
-  "homepage": "https://docs.barikoi.com/docs/map-add/",
+  "homepage": "https://docs.barikoi.com/docs/Barikoi%20GL%20JS/maps-api/",
   "dependencies": {
     "maplibre-gl": "3.4.0"
   },
