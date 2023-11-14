@@ -61,13 +61,13 @@ class BkoiGlMap extends Map {
   // Add Barikoi Attribution on Map Load
   _addBarikoiAttribution() {
     // Check if Logo Already Added
-    const barikoiLogoContainer = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left .barikoi-logo-container')
+    const barikoiLogoContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container')
     if(barikoiLogoContainer) {
       return
     }
 
     // Add Barikoi Logo
-    const brAttrContainer = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left')
+    const brAttrContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left')
 
     if(brAttrContainer) {
       // Logo Container
@@ -96,7 +96,7 @@ class BkoiGlMap extends Map {
 
       // On Map Container Resize Observer
       new ResizeObserver(() => {
-        const barikoiLogo = document.querySelector('.mapboxgl-control-container .mapboxgl-ctrl-bottom-left .barikoi-logo-container > img')
+        const barikoiLogo = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container > img')
         const mapContainer = this.getContainer()
         if(barikoiLogo) {
           barikoiLogo.style.width = `clamp(40px, ${ mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44 }px, 48px)`
