@@ -11,13 +11,29 @@
   "style": "dist/style/bkoi-gl.css",
   "scripts": {
     "start": "node index.js",
-    "build": "rollup --config"
+    "build": "rollup --config",
+    "prepare": "husky"
   },
   "keywords": [
     "bkoi-gl",
-    "barikoi"
+    "barikoi",
+    "Barikoi",
+    "Bangladesh",
+    "location",
+    "geocoding",
+    "reverse geocoding",
+    "autocomplete",
+    "API",
+    "maps",
+    "address",
+    "location data",
+    "geospatial",
+    "address lookup",
+    "places",
+    "geocoding API",
+    "location API"
   ],
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "homepage": "https://docs.barikoi.com/docs/maps-api",
   "dependencies": {
     "maplibre-gl": "^4.6.0"
@@ -27,16 +43,21 @@
     "@babel/eslint-parser": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.0",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^22.5.1",
+    "eslint-config-mourner": "^3.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^9.1.5",
     "rollup": "^2.79.1",
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-eslint": "^7.0.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "eslint-config-mourner": "^3.0.0",
-    "eslint-plugin-import": "^2.25.2"
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

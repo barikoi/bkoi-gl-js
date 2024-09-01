@@ -1,4 +1,4 @@
-// Rollup plugins
+// Import plugins
 import babel from '@rollup/plugin-babel'
 import { eslint } from 'rollup-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
@@ -45,13 +45,15 @@ export default [
                 dir: 'dist/cjs',
                 format: 'cjs',
                 preserveModules: true,
-                exports: 'auto'
+                exports: 'auto',
+                sourcemap: true // Enable sourcemaps for CJS
             },
             {
                 dir: 'dist/esm',
                 format: 'es',
                 preserveModules: true,
-                exports: 'auto'
+                exports: 'auto',
+                sourcemap: true // Enable sourcemaps for ESM
             }
         ],
         plugins: [

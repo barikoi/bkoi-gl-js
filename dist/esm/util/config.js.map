@@ -1,0 +1,1 @@
+{"version":3,"file":"config.js","sources":["../../../src/util/config.js"],"sourcesContent":["export const bkoiConfig = {\n    ACCESS_TOKEN: null,\n    DEFAULT_STYLE: 'https://map.barikoi.com/styles/osm-liberty/style.json'\n}"],"names":["bkoiConfig","ACCESS_TOKEN","DEFAULT_STYLE"],"mappings":"AAAO,IAAMA,EAAa,CACtBC,aAAc,KACdC,cAAe"}

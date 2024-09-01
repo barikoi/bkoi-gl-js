@@ -1,6 +1,8 @@
+// @ts-nocheck
 import maplibre from 'maplibre-gl'
 import { bkoiConfig } from './util/config.js'
 import { isBarikoiStyle } from './util/validator.js'
+import barikoiLogoBlack from './assets/barikoi_logo_black.svg'
 
 const {
     version,
@@ -26,9 +28,6 @@ const {
     clearPrewarmedResources
 } = maplibre
 
-// import WorkerPool from 'maplibre-gl/src/util/worker_pool'
-// import { clearTileCache } from 'maplibre-gl/src/util/tile_request_cache'
-import barikoiLogoBlack from './assets/barikoi_logo_black.svg'
 
 // Extend Map
 class BkoiGlMap extends Map {
@@ -159,15 +158,6 @@ const exported = {
     set baseApiUrl(url) {
         config.API_URL = url
     },
-    // get workerCount() {
-    //   return WorkerPool.workerCount
-    // },
-    // /**
-    //  * @param {number} count
-    //  */
-    // set workerCount(count) {
-    //   WorkerPool.workerCount = count
-    // },
     get maxParallelImageRequests() {
         return config.MAX_PARALLEL_IMAGE_REQUESTS
     },
@@ -177,13 +167,6 @@ const exported = {
     set maxParallelImageRequests(numRequests) {
         config.MAX_PARALLEL_IMAGE_REQUESTS = numRequests
     },
-    // /**
-    //    * @function clearStorage
-    //    * @param {Function} callback
-    //    */
-    // clearStorage: callback => {
-    //   clearTileCache(callback)
-    // },
     workerUrl: ''
 }
 
