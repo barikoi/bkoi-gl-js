@@ -12,7 +12,7 @@
 npm i bkoi-gl
 ```
 
-#### Using React
+#### Using With React
 
 ``` javascript
 import { useEffect, useRef } from "react";
@@ -50,7 +50,7 @@ const containerStyles = {
 };
 ```
 
-#### Using Nextjs
+#### Using With Nextjs
 
 In BKoiGL.jsx
 
@@ -125,9 +125,9 @@ Note: While using Nextjs App Router Make Sure you use 'use client' directive
 
 ### Using with CDN
 
-Guide for CDN use can be found [here.](https://docs.barikoi.com/docs/Barikoi%20GL%20JS/maps-api/)
+Guide for CDN use can be found [here.](https://docs.barikoi.com/docs/maps-api)
 
 
 ## Learning Resources
 
-* [API documentation](https://docs.barikoi.com/docs/Barikoi%20GL%20JS/maps-api/) 
+* [API documentation](https://docs.barikoi.com/docs/maps-api) 

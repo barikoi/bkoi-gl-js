@@ -1,7 +1,7 @@
 export function isBarikoiStyle(style) {
-  if(typeof style === 'string' && style.includes('barikoi.com')) {
-    return true
-  }
+    if(typeof style === 'string' && style.includes('barikoi.com')) {
+        return true
+    }
 
-  return false
+    return false
 }

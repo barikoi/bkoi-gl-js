@@ -21,9 +21,9 @@ export default [
         },
         plugins: [
             clear({ targets: ['dist'] }),
+            image(),
             nodeResolve(),
             commonjs(),
-            image(),
             eslint(),
             babel({
                 exclude: 'node_modules/**',
@@ -56,9 +56,9 @@ export default [
         ],
         plugins: [
             clear({ targets: [ 'dist/cjs', 'dist/esm', 'dist/style' ] }),
+            image(),
             nodeResolve(),
             commonjs(),
-            image(),
             eslint(),
             babel({
                 exclude: 'node_modules/**',
