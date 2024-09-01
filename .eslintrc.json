@@ -19,7 +19,7 @@
         ],
         "linebreak-style": [
             "warn",
-            "windows"
+            "unix"
         ],
         "quotes": [
             "warn",
@@ -27,7 +27,7 @@
         ],
         "semi": [
             "warn",
-            "always"
+            "never"
         ]
     }
 }

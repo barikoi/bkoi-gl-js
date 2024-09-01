@@ -30,7 +30,7 @@ import barikoiLogoBlack from './assets/barikoi_logo_black.svg'
 // Extend Map
 class BkoiGlMap extends Map {
   constructor(mapOptions) {
-    if((!mapOptions.accessToken && !bkoiConfig.ACCESS_TOKEN) && (!mapOptions.style || isBarikoiStyle(mapOptions.style))) {
+    if ((!mapOptions.accessToken && !bkoiConfig.ACCESS_TOKEN) && (!mapOptions.style || isBarikoiStyle(mapOptions.style))) {
       console.error('Please provide a valid accessToken to use Barikoi assets.')
     }
 
@@ -40,18 +40,18 @@ class BkoiGlMap extends Map {
       style: mapOptions.style ?
         isBarikoiStyle(mapOptions.style) ?
           mapOptions.style + '?key=' +
-            (mapOptions.accessToken ?
-              mapOptions.accessToken :
-              bkoiConfig.ACCESS_TOKEN)
+          (mapOptions.accessToken ?
+            mapOptions.accessToken :
+            bkoiConfig.ACCESS_TOKEN)
           :
           mapOptions.style
         :
         bkoiConfig.DEFAULT_STYLE + '?key=' +
-          (mapOptions.accessToken ?
-            mapOptions.accessToken :
-            bkoiConfig.ACCESS_TOKEN)
+        (mapOptions.accessToken ?
+          mapOptions.accessToken :
+          bkoiConfig.ACCESS_TOKEN)
     })
-    
+
     // Add Barikoi Attribution
     this.on('load', () => {
       this._addBarikoiAttribution()
@@ -62,14 +62,14 @@ class BkoiGlMap extends Map {
   _addBarikoiAttribution() {
     // Check if Logo Already Added
     const barikoiLogoContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container')
-    if(barikoiLogoContainer) {
+    if (barikoiLogoContainer) {
       return
     }
 
     // Add Barikoi Logo
     const brAttrContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left')
 
-    if(brAttrContainer) {
+    if (brAttrContainer) {
       // Logo Container
       const logoContainer = document.createElement('a')
       logoContainer.className = 'barikoi-logo-container'
@@ -87,7 +87,7 @@ class BkoiGlMap extends Map {
       logo.setAttribute('alt', 'Barikoi')
       logo.style.boxSizing = 'border-box'
       logo.style.margin = '0px 0px 4px 10px'
-      logo.style.width = `clamp(40px, ${ mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44 }px, 48px)`
+      logo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
       logo.style.objectFit = 'fill'
 
       // Append Logo
@@ -98,11 +98,11 @@ class BkoiGlMap extends Map {
       new ResizeObserver(() => {
         const barikoiLogo = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container > img')
         const mapContainer = this.getContainer()
-        if(barikoiLogo) {
-          barikoiLogo.style.width = `clamp(40px, ${ mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44 }px, 48px)`
+        if (barikoiLogo) {
+          barikoiLogo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
         }
       })
-      .observe(mapContainer)
+        .observe(mapContainer)
     }
   }
 }
