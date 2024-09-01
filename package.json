@@ -5,7 +5,7 @@
     "node": "^18.13.0"
   },
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "module": "index.js",
   "style": "dist/style/bkoi-gl.css",

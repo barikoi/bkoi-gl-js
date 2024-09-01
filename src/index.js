@@ -21,8 +21,8 @@ import {
   prewarm,
   clearPrewarmedResources
 } from 'maplibre-gl'
-import { bkoiConfig } from './util/config'
-import { isBarikoiStyle } from './util/validator'
+import { bkoiConfig } from './util/config.js'
+import { isBarikoiStyle } from './util/validator.js'
 // import WorkerPool from 'maplibre-gl/src/util/worker_pool'
 // import { clearTileCache } from 'maplibre-gl/src/util/tile_request_cache'
 import barikoiLogoBlack from './assets/barikoi_logo_black.svg'

@@ -1,4 +1,4 @@
-import exported from './src/index'
+import exported from './src/index.js'
 
 export const {
     version,
