@@ -1,40 +1,23 @@
 {
-  "name": "bkoi-gl",
-  "version": "2.0.0",
-  "engines": {
-    "node": "^18.13.0"
-  },
+  "name": "@nurmdrafi/bkoi-gl",
+  "version": "1.0.1",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
   "type": "module",
   "main": "index.js",
   "module": "index.js",
   "style": "dist/style/bkoi-gl.css",
+  "author": "nurmdrafi",
+  "readme": "README.md",
+  "license": "MIT",
+  "homepage": "https://docs.barikoi.com/docs/maps-api",
+  "engines": {
+    "node": "^18.13.0"
+  },
   "scripts": {
     "start": "node index.js",
     "build": "rollup --config",
     "prepare": "husky"
   },
-  "keywords": [
-    "bkoi-gl",
-    "barikoi",
-    "Barikoi",
-    "Bangladesh",
-    "location",
-    "geocoding",
-    "reverse geocoding",
-    "autocomplete",
-    "API",
-    "maps",
-    "address",
-    "location data",
-    "geospatial",
-    "address lookup",
-    "places",
-    "geocoding API",
-    "location API"
-  ],
-  "license": "MIT",
-  "homepage": "https://docs.barikoi.com/docs/maps-api",
   "dependencies": {
     "maplibre-gl": "^4.6.0"
   },
@@ -50,7 +33,6 @@
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^22.5.1",
     "eslint-config-mourner": "^3.0.0",
     "eslint-plugin-import": "^2.25.2",
     "husky": "^9.1.5",
@@ -59,5 +41,23 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-eslint": "^7.0.0",
     "rollup-plugin-terser": "^7.0.2"
-  }
+  },
+  "keywords": [
+    "bkoi-gl",
+    "barikoi",
+    "bangladesh",
+    "location",
+    "geocoding",
+    "reverse geocoding",
+    "autocomplete",
+    "API",
+    "maps",
+    "address",
+    "location data",
+    "geospatial",
+    "address lookup",
+    "places",
+    "geocoding API",
+    "location API"
+  ]
 }

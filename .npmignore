@@ -1,0 +1,12 @@
+# folders
+.husky
+.vscode
+node_modules
+
+# files
+.eslintrc.json
+.npmignore
+commitlint.config.js
+index.html
+package-lock.json
+rollup.config.js

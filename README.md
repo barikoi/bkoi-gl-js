@@ -1,38 +1,49 @@
-<h1 style="text-align:center;">Barikoi GL JS</h1>
+# Barikoi GL JS
 
-<h5 style="text-align:center;">
-  Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>
-</h5>
+## Description
+**Barikoi GL JS** is a JavaScript library built on top of MapLibre GL, designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. It is ideal for use in modern web applications, including React and Next.js projects.
+
+Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>, this package provides tools to integrate maps and location services effortlessly.
+
+## Features
+- High-performance map rendering using WebGL.
+- Easy integration with React and Next.js.
+- Customizable map controls and interactions.
+- Support for Barikoi geolocation services.
+- Lightweight and optimized for production.
 
 ## Installation
-
-### NPM Module
-
+To install the package via npm, run the following command:
 ```bash
-npm i bkoi-gl
+npm i @nurmdrafi/bkoi-gl
+```
+Or via yarn:
+```bash
+yarn add @nurmdrafi/bkoi-gl
 ```
 
-#### Using With React
+## Usage
+### Using With React or Next.js
 
-``` javascript
+Here’s an example of how to use the library in a React component:
+```javascript
 import { useEffect, useRef } from "react";
-// @ts-ignore <-- Ignore Typescript Warning, While using with TS -->
-import { Map } from "bkoi-gl";
-import "bkoi-gl/dist/style/bkoi-gl.css";
+import { Map } from "bkoi-gl"; // Import Package
+import "bkoi-gl/dist/style/bkoi-gl.css"; // Import CSS
 
-export default function App() {
+const BarikoiMapGL = () => {
   // Refs
-  const mapContainer: any = useRef(null);
-  const map: any = useRef(null);
+  const mapContainer = useRef(null);
+  const map = useRef(null);
 
   useEffect(() => {
-    if (map.current) return; // stops map from intializing more than once
+    if (map.current) return; // Ensures map initializes only once
     map.current = new Map({
       container: mapContainer.current,
-      center: [90.39017821904588, 23.719800220780733],
+      center: [90.39017821904588, 23.719800220780733], // Dhaka coordinates
       zoom: 10,
       doubleClickZoom: false,
-      accessToken: "your-access-tokon"
+      accessToken: "YOUR_BARIKOI_API_KEY_HERE" // Replace with your Barikoi API key
     });
   }, []);
 
@@ -42,92 +53,37 @@ export default function App() {
 // JSX Styles
 const containerStyles = {
   width: "100%",
-  height: "100%",
+  height: "100vh",
   minHeight: "400px",
   overflow: "hidden",
-  display: "flex",
-  flex: 1
 };
+
+export default BarikoiMapGL
 ```
+**Note:** When using Next.js, import `<BarikoiMapGL/>` component dynamically using `next/dynamic`, and for `/app` router make sure to use `use client` directive.
 
-#### Using With Nextjs
-
-In BKoiGL.jsx
-
-``` javascript
-import { useEffect, useRef, useState } from 'react'
-// @ts-ignore <-- Ignore Typescript Warning, While using with TS -->
-import { Map } from 'bkoi-gl'
-import 'bkoi-gl/dist/style/bkoi-gl.css'
-
-export default function BKoiGL() {
-  const [isClient, setClient] = useState(0)
-  // Refs
-  const mapContainer: any = useRef(null)
-  const map: any = useRef(null)
-
-  useEffect(() => {
-    setClient(1)
-  }, [])
-
-  useEffect(() => {
-    if (map.current || !isClient) return //stops map from intializing more than once
-    map.current = new Map({
-      container: mapContainer.current,
-      center: [90.39017821904588, 23.719800220780733],
-      zoom: 10,
-      doubleClickZoom: false,
-      accessToken: 'your-access-token'
-    })
-
-  }, [isClient])
-  
-  if (!isClient) {
-    return ''
-  }
-
-  return (
-    <div ref={mapContainer} style={containerStyles} />
-  )
-}
-
-// JSX Styles
-const containerStyles = {
-  boxSizing: 'border-box' as 'border-box',
-  width: '100%',
-  height: '100%',
-  minHeight: '400px',
-  overflow: 'hidden',
-  display: 'flex',
-  flex: 1
-}
-
-```
-And finally import the BKoiGL component with nextjs's dynamic import where you rendering the map, In this case, inside index.jsx
-
-```javascript
-import dynamic from 'next/dynamic'
-// @ts-ignore
-const BKoiGL = dynamic(() => import ("../components/common/BKoiGL"), { ssr: false })
-
-export default function Home() {
-  return (
-    <div>
-      <BKoiGL />
-    </div>
-  )
-}
-```
-
-
-Note: While using Nextjs App Router Make Sure you use 'use client' directive
-
+**Note:** When using Next.js, ensure dynamic imports for the `<BarikoiMapGL/> `component by using `next/dynamic`. If you're using the `/app` directory in Next.js, remember to include the `"use client"` directive at the top of your component.
 
 ### Using with CDN
+Add the following script to your HTML:
+```html
+<script src="https://cdn.barikoi.com/bkoi-gl-js/dist/bkoi-gl.js"></script>
+```
+Comprehensive guide is available [here.](https://docs.barikoi.com/docs/maps-api)
 
-Guide for CDN use can be found [here.](https://docs.barikoi.com/docs/maps-api)
+## Get Barikoi API key
+To access Barikoi's API services, you need to:
+1. Register on [Barikoi Developer Dashboard](https://developer.barikoi.com/register).
+2. Verify with your phone number.
+3. Claim your API key.
 
+Once registered, you'll be able to access the full suite of Barikoi API services. If you exceed the free usage limits, you'll need to subscribe to a paid plan.
 
 ## Learning Resources
+* [Barikoi API Documentation](https://docs.barikoi.com/docs/maps-api)
 
-* [API documentation](https://docs.barikoi.com/docs/maps-api) 
+## License
+This library is licensed under the MIT License. See the [LICENSE](https://www.npmjs.com/package/LICENSE) file for details.
+
+## Support
+For any issues or questions, please contact [support@barikoi.com](mailto:support@barikoi.com).
