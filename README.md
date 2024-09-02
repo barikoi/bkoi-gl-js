@@ -60,8 +60,6 @@ const containerStyles = {
 
 export default BarikoiMapGL
 ```
-**Note:** When using Next.js, import `<BarikoiMapGL/>` component dynamically using `next/dynamic`, and for `/app` router make sure to use `use client` directive.
-
 **Note:** When using Next.js, ensure dynamic imports for the `<BarikoiMapGL/> `component by using `next/dynamic`. If you're using the `/app` directory in Next.js, remember to include the `"use client"` directive at the top of your component.
 
 ### Using with CDN
