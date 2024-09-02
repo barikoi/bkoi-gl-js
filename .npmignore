@@ -4,6 +4,7 @@
 node_modules
 
 # files
+.babelrc
 .eslintrc.json
 .npmignore
 commitlint.config.js

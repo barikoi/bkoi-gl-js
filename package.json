@@ -59,5 +59,9 @@
     "places",
     "geocoding API",
     "location API"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barikoi/bkoi-gl-js.git"
+  }
 }
