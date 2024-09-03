@@ -28,7 +28,7 @@ yarn add @nurmdrafi/bkoi-gl
 Here’s an example of how to use the library in a React component:
 ```javascript
 import { useEffect, useRef } from "react";
-import { Map } from "bkoi-gl"; // Import Package
+import { Map, Marker } from "bkoi-gl"; // Import Package
 import "bkoi-gl/dist/style/bkoi-gl.css"; // Import CSS
 
 const BarikoiMapGL = () => {
@@ -45,6 +45,10 @@ const BarikoiMapGL = () => {
       doubleClickZoom: false,
       accessToken: "YOUR_BARIKOI_API_KEY_HERE" // Replace with your Barikoi API key
     });
+
+      const marker = new Marker()
+    .setLngLat([90.39017821904588, 23.719800220780733]) // Set marker coordinates (Dhaka)
+    .addTo(map.current); // Add marker to the map
   }, []);
 
   return <div ref={mapContainer} style={containerStyles} />;

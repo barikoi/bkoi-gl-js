@@ -6,6 +6,7 @@ node_modules
 # files
 .babelrc
 .eslintrc.json
+.gitignore
 .npmignore
 commitlint.config.js
 index.html

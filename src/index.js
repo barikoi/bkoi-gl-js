@@ -2,7 +2,6 @@
 import maplibre from 'maplibre-gl'
 import { bkoiConfig } from './util/config.js'
 import { isBarikoiStyle } from './util/validator.js'
-import barikoiLogoBlack from './assets/barikoi_logo_black.svg'
 
 const {
     version,
@@ -39,6 +38,7 @@ class BkoiGlMap extends Map {
         super({
             ...mapOptions,
             accessToken: mapOptions.mapboxAccessToken ? mapOptions.mapboxAccessToken : null,
+            attributionControl: false,  // Disable default attribution control
             style: mapOptions.style ?
                 isBarikoiStyle(mapOptions.style) ?
                     mapOptions.style + '?key=' +
@@ -62,52 +62,55 @@ class BkoiGlMap extends Map {
 
     // Add Barikoi Attribution on Map Load
     _addBarikoiAttribution() {
-    // Check if Logo Already Added
-        const barikoiLogoContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container')
-        if (barikoiLogoContainer) {
-            return
+        // Map Container
+        const mapContainer = this.getContainer()
+
+        // Attribute Container
+        const barikoiAttributeContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib-inner')
+
+        // Logo Container
+        const logoContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left')
+        
+        if(!barikoiAttributeContainer){
+            // Add a new AttributionControl with your custom content
+            this.addControl(new maplibre.AttributionControl({
+                customAttribution: ''
+            }))
         }
+        // Barikoi Logo Container
+        const barikoiLogoContainer = document.createElement('a')
+        barikoiLogoContainer.className = 'barikoi-logo-container'
+        barikoiLogoContainer.setAttribute('href', 'https://www.barikoi.com')
+        barikoiLogoContainer.setAttribute('target', '_blank')
+        barikoiLogoContainer.style.boxSizing = 'border-box'
+        barikoiLogoContainer.style.pointerEvents = 'auto'
+        barikoiLogoContainer.style.cursor = 'pointer'
+        barikoiLogoContainer.style.display = 'block'
+    
+        // Logo
+        const logo = document.createElement('img')
+        logo.setAttribute('src', 'https://docs.barikoi.com/img/barikoi-logo-black.svg')
+        logo.setAttribute('alt', 'Barikoi')
+        logo.style.boxSizing = 'border-box'
+        logo.style.margin = '0px 0px 4px 10px'
+        logo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
+        logo.style.objectFit = 'fill'
+    
+        // Append Logo
+        barikoiLogoContainer.appendChild(logo)
+        logoContainer.prepend(barikoiLogoContainer)
 
-        // Add Barikoi Logo
-        const brAttrContainer = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left')
-
-        if (brAttrContainer) {
-            // Logo Container
-            const logoContainer = document.createElement('a')
-            logoContainer.className = 'barikoi-logo-container'
-            logoContainer.setAttribute('href', 'https://www.barikoi.com')
-            logoContainer.setAttribute('target', '_blank')
-            logoContainer.style.boxSizing = 'border-box'
-            logoContainer.style.pointerEvents = 'auto'
-            logoContainer.style.cursor = 'pointer'
-            logoContainer.style.display = 'block'
-
-            // Logo
-            const mapContainer = this.getContainer()
-            const logo = document.createElement('img')
-            logo.setAttribute('src', barikoiLogoBlack)
-            logo.setAttribute('alt', 'Barikoi')
-            logo.style.boxSizing = 'border-box'
-            logo.style.margin = '0px 0px 4px 10px'
-            logo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
-            logo.style.objectFit = 'fill'
-
-            // Append Logo
-            logoContainer.appendChild(logo)
-            brAttrContainer.prepend(logoContainer)
-
-            // On Map Container Resize Observer
-            new ResizeObserver(() => {
-                const barikoiLogo = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container > img')
-                const mapContainer = this.getContainer()
-                if (barikoiLogo) {
-                    barikoiLogo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
-                }
-            })
-                .observe(mapContainer)
-        }
+        // On Map Container Resize Observer
+        new ResizeObserver(() => {
+            const barikoiLogo = document.querySelector('.maplibregl-control-container .maplibregl-ctrl-bottom-left .barikoi-logo-container > img')
+            if (barikoiLogo) {
+                barikoiLogo.style.width = `clamp(40px, ${mapContainer ? Math.round(mapContainer.clientWidth * 0.05) : 44}px, 48px)`
+            }
+        })
+            .observe(mapContainer)
     }
 }
+
 
 const exported = {
     version,
