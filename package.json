@@ -13,6 +13,11 @@
   "engines": {
     "node": "^18.13.0"
   },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "scripts": {
     "start": "node index.js",
     "build": "rollup --config",
