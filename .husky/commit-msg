@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
-
 echo "Received commit message: $1"
 
 NAME=$(git config user.name)
