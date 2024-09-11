@@ -15,11 +15,11 @@ Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>, thi
 ## Installation
 To install the package via npm, run the following command:
 ```bash
-npm i @nurmdrafi/bkoi-gl
+npm i bkoi-gl
 ```
 Or via yarn:
 ```bash
-yarn add @nurmdrafi/bkoi-gl
+yarn add bkoi-gl
 ```
 
 ## Usage
