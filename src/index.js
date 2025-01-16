@@ -3,7 +3,6 @@ import maplibre from 'maplibre-gl';
 import MapboxDraw from 'maplibre-gl-draw'; // Import maplibre-gl-draw
 import { bkoiConfig } from './util/config.js';
 import { isBarikoiStyle } from './util/validator.js';
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 const {
   version,
   supported,

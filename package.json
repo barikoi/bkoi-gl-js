@@ -24,7 +24,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@mapbox/mapbox-gl-draw": "^1.5.0",
     "bkoi-gl": "^2.0.0",
     "maplibre-gl": "^4.6.0",
     "maplibre-gl-draw": "^1.6.9"
