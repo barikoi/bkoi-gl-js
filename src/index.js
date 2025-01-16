@@ -1,8 +1,9 @@
 // @ts-nocheck
 import maplibre from 'maplibre-gl';
+import MapboxDraw from 'maplibre-gl-draw'; // Import maplibre-gl-draw
 import { bkoiConfig } from './util/config.js';
 import { isBarikoiStyle } from './util/validator.js';
-
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 const {
   version,
   supported,
@@ -64,6 +65,10 @@ class BkoiGlMap extends Map {
     // Add Barikoi Attribution
     this.on('load', () => {
       this._addBarikoiAttribution();
+      // Initialize Draw if polygon drawing is enabled
+      if (mapOptions.polygon) {
+        this._initializeDraw(mapOptions.drawOptions || {});
+      }
     });
   }
 
@@ -134,6 +139,33 @@ class BkoiGlMap extends Map {
         }px, 48px)`;
       }
     }).observe(mapContainer);
+  }
+  // Initialize maplibre-gl-draw
+  _initializeDraw(drawOptions) {
+    const defaultOptions = {
+      displayControlsDefault: false,
+      controls: {
+        polygon: true, // Enable polygon drawing by default
+        trash: true,
+      },
+      ...drawOptions,
+    };
+
+    const draw = new MapboxDraw(defaultOptions);
+    this.addControl(draw);
+
+    // // Add event listener for drawing events (optional)
+    // this.on('draw.create', (e) => {
+    //   return e.features;
+    // });
+
+    // this.on('draw.update', (e) => {
+    //   return e.features;
+    // });
+
+    // this.on('draw.delete', (e) => {
+    //   return e.features;
+    // });
   }
 }
 
