@@ -153,19 +153,6 @@ class BkoiGlMap extends Map {
 
     const draw = new MapboxDraw(defaultOptions);
     this.addControl(draw);
-
-    // // Add event listener for drawing events (optional)
-    // this.on('draw.create', (e) => {
-    //   return e.features;
-    // });
-
-    // this.on('draw.update', (e) => {
-    //   return e.features;
-    // });
-
-    // this.on('draw.delete', (e) => {
-    //   return e.features;
-    // });
   }
 }
 
