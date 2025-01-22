@@ -24,6 +24,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "antd": "^5.23.2",
     "bkoi-gl": "^2.0.0",
     "maplibre-gl": "^4.6.0",
     "maplibre-gl-draw": "^1.6.9"

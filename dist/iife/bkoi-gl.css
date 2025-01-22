@@ -771,3 +771,18 @@ a.maplibregl-ctrl-logo.maplibregl-compact {
   border: 2px dotted #fff;
   opacity: 0.5;
 }
+
+.style-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.drawer-toggle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.style-item:hover {
+  background-color: #f9f9f9;
+}
