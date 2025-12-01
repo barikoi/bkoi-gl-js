@@ -11,7 +11,7 @@
   "license": "MIT",
   "homepage": "https://docs.barikoi.com/docs/maps-api",
   "engines": {
-    "node": "^18.13.0"
+    "node": "^24.11.0"
   },
   "files": [
     "dist",
@@ -24,9 +24,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "antd": "^5.23.2",
-    "bkoi-gl": "^2.0.0",
-    "maplibre-gl": "^4.6.0",
+    "maplibre-gl": "^5.13.0",
     "maplibre-gl-draw": "^1.6.9"
   },
   "devDependencies": {
