@@ -1,1 +1,0 @@
-{"version":3,"file":"validator.js","sources":["../../../src/util/validator.js"],"sourcesContent":["export function isBarikoiStyle(style) {\n    if(typeof style === 'string' && style.includes('barikoi.com')) {\n        return true\n    }\n\n    return false\n}"],"names":["style","includes"],"mappings":"2FAAO,SAAwBA,GAC3B,QAAoB,iBAAVA,IAAsBA,EAAMC,SAAS,eAKnD"}

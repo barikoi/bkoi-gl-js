@@ -28,11 +28,19 @@
   <div id="map"></div>
 
   <script>
-    bkoigl.accessToken = ""; // required
+    bkoigl.accessToken = "NDE2NzpVNzkyTE5UMUoy"; // required
     new bkoigl.Map({
       container: "map",
       center: [90.3938010872331, 23.821600277500405],
-      zoom: 12
+      zoom: 12,
+      fullScreenControl: true,
+      polygon: true,
+      drawOptions: {
+        controls: {
+          polygon: true,
+          trash: true
+        }
+      }
     });
   </script>
 </body>
