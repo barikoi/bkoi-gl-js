@@ -11,17 +11,35 @@ The package is maintained as an npm module with ES module support, targeting mod
 ### Core Components
 
 1. **BkoiGlMap Class** (`src/index.js`)
-   - Extends MapLibre's `Map` class
-   - Handles Barikoi-specific initialization
-   - Manages attribution, drawing, and styling features
 
-2. **Configuration System** (`src/util/config.js`)
-   - Stores access tokens and default styles
-   - Provides centralized configuration management
+   - **Purpose**: Main entry point for the bkoi-gl-js library, a Maplibre GL JS wrapper with Barikoi-specific mapping features
+   - Extends MapLibre's `Map` class with Barikoi integration
+   - Key features implemented:
+     - BkoiGlMap class: Extended Map class with Barikoi integration
+     - Barikoi attribution: Custom logo and attribution controls
+     - Drawing tools: Polygon/line/point drawing using Mapbox GL Draw
+     - Configuration: Access token and API URL management
+   - Exports the complete bkoi-gl-js API for use in applications
 
-3. **Validation Utilities** (`src/util/validator.js`)
-   - Contains helper functions for style validation
-   - Detects Barikoi vs. custom map styles
+2. **CSS Styles** (`src/index.css`)
+
+   - **Purpose**: Contains CSS styles for the bkoi-gl-js library, a wrapper around Maplibre GL JS with Barikoi-specific features
+   - Key components styled:
+     - Barikoi logo control: Custom logo displayed on the map
+     - Draw tools: Styles for polygon drawing controls using Mapbox GL Draw
+     - Map interactions: Cursor styles for various map interaction modes
+   - Imports base Maplibre GL CSS and extends it with Barikoi-specific customizations
+
+3. **Configuration System** (`src/utils/config.js`)
+
+   - **Purpose**: Contains default configuration settings for the bkoi-gl-js library
+   - Stores Barikoi access tokens and default map style URLs
+   - Provides centralized configuration management used throughout the library
+
+4. **Validation Utilities** (`src/utils/validator.js`)
+   - **Purpose**: Contains utility functions for validating Barikoi-specific inputs
+   - Includes functions like checking if a map style URL is a Barikoi style
+   - Helps ensure proper integration with Barikoi services
 
 ### Build System
 
@@ -63,7 +81,7 @@ bkoi-gl-js/
 ├── src/
 │   ├── index.js          # Main library code
 │   ├── index.css         # Styles
-│   └── util/
+│   └── utils/
 │       ├── config.js     # Configuration
 │       └── validator.js  # Validation helpers
 ├── examples/             # Usage examples
@@ -78,14 +96,14 @@ bkoi-gl-js/
 ### Map Initialization
 
 ```javascript
-import { Map } from 'bkoi-gl';
+import { Map } from "bkoi-gl";
 
 // Basic usage
 const map = new Map({
-  container: 'map',
+  container: "map",
   center: [90.39, 23.72], // Dhaka coordinates
   zoom: 10,
-  accessToken: 'BARIKOI_API_KEY'
+  accessToken: "YOUR_BARIKOI_API_KEY_HERE",
 });
 ```
 
@@ -94,7 +112,6 @@ const map = new Map({
 - `accessToken`: Required for Barikoi styles
 - `polygon`: Enable drawing tools
 - `drawOptions`: Configure drawing controls
-- `styles`: Array of style objects for style drawer
 
 ### Barikoi Attribution
 
@@ -106,38 +123,15 @@ When `polygon: true` is set:
 
 ```javascript
 const map = new Map({
-  container: 'map',
+  container: "map",
   // ... other options
   polygon: true,
   drawOptions: {
     controls: {
       polygon: true,
-      trash: true
-    }
-  }
-});
-```
-
-### Style Drawer
-
-Allows users to switch between map styles:
-
-```javascript
-const map = new Map({
-  container: 'map',
-  // ... other options
-  styles: [
-    {
-      name: 'Light',
-      style: 'https://map.barikoi.com/styles/light/style.json',
-      image: 'preview-light.png'
+      trash: true,
     },
-    {
-      name: 'Dark',
-      style: 'https://map.barikoi.com/styles/dark/style.json',
-      image: 'preview-dark.png'
-    }
-  ]
+  },
 });
 ```
 
@@ -146,17 +140,16 @@ const map = new Map({
 ### Access Tokens
 
 ```javascript
-import { accessToken } from 'bkoi-gl';
+import { accessToken } from "bkoi-gl";
 
 // Set globally
-accessToken = 'BARIKOI_API_KEY';
+accessToken = "YOUR_BARIKOI_API_KEY_HERE";
 
 // Or per instance
 const map = new Map({
-  accessToken: 'BARIKOI_API_KEY'
+  accessToken: "YOUR_BARIKOI_API_KEY_HERE",
 });
 ```
-
 
 ## Contributing
 
@@ -191,10 +184,9 @@ docs: update API documentation
 
 ### Testing
 
-- Test in `examples/index.html`
-- Verify builds work: `npm run build`
+- Test in `examples/your-feature` by using local server
 - Check browser console for errors
-- Test React/Next.js integration
+- Test Vanilla js and React/Next.js integration
 
 ## Maintenance Tasks
 
@@ -215,6 +207,7 @@ docs: update API documentation
 
 3. Install and test: `npm install && npm run build`
 4. Check for breaking changes in:
+
    - API signatures
    - Event handling
    - CSS class names
@@ -263,7 +256,7 @@ class BkoiGlMap extends Map {
 
   customFeature(options) {
     // Implementation
-    this.on('load', () => {
+    this.on("load", () => {
       // DOM manipulation or API calls
     });
   }
@@ -272,13 +265,13 @@ class BkoiGlMap extends Map {
 
 #### Adding Configuration
 
-Extend `bkoiConfig` in `src/util/config.js`:
+Extend `bkoiConfig` in `src/utils/config.js`:
 
 ```javascript
 export const bkoiConfig = {
   ACCESS_TOKEN: null,
-  DEFAULT_STYLE: 'https://map.barikoi.com/styles/osm-liberty/style.json',
-  NEW_FEATURE_ENABLED: false
+  DEFAULT_STYLE: "https://map.barikoi.com/styles/osm-liberty/style.json",
+  NEW_FEATURE_ENABLED: false,
 };
 ```
 
@@ -298,10 +291,10 @@ constructor(mapOptions) {
 
 #### Utility Functions
 
-Add helpers in `src/util/`:
+Add helpers in `src/utils/`:
 
 ```javascript
-// src/util/custom-helpers.js
+// src/utils/custom-helpers.js
 export function customValidator(input) {
   // Validation logic
 }
@@ -316,6 +309,7 @@ npm run build
 ```
 
 Generates outputs in `dist/`:
+
 - `esm/`: ES modules
 - `cjs/`: CommonJS
 - `iife/`: Browser-ready bundle
@@ -332,41 +326,18 @@ Generates outputs in `dist/`:
 The IIFE build can be used directly:
 
 ```html
-<script src="https://cdn.barikoi.com/bkoi-gl-js/dist/bkoi-gl.js"></script>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
+/>
+<script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
 <script>
-  const map = new bkoigl.Map({ /* options */ });
+  const map = new bkoigl.Map({
+    /* options */
+  });
 </script>
 ```
-
-## Troubleshooting
-
-### Common Issues
-
-#### API Key Errors
-- Ensure `accessToken` is set for Barikoi styles
-- Check API key validity on Barikoi dashboard
-
-#### Map Not Loading
-- Check container element exists
-- Verify center/zoom values are valid
-- Check browser console for MapLibre errors
-
-#### Attribution Issues
-- Ensure map container has proper dimensions
-- Check for CSS conflicts with `.maplibregl-*` classes
-- Verify ResizeObserver support in target browsers
-
-#### Build Errors
-- Clear node_modules: `rm -rf node_modules && npm install`
-- Check Node.js version compatibility
-- Verify external dependencies are available
-
-### Debug Tips
-
-- Enable MapLibre debug mode: `localStorage.setItem('maplibre:debug', 'true')`
-- Check network tab for failed asset requests
-- Use browser dev tools to inspect map container DOM
-- Test with minimal example first
 
 ## Support Resources
 

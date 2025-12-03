@@ -19,8 +19,8 @@
 
 import maplibre from 'maplibre-gl'
 import MapboxDraw from 'maplibre-gl-draw'
-import { bkoiConfig } from './util/config.js'
-import { isBarikoiStyle } from './util/validator.js'
+import { bkoiConfig } from './utils/config.js'
+import { isBarikoiStyle } from './utils/validator.js'
 const {
     version,
     supported,
