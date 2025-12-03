@@ -30,7 +30,7 @@
       container: "map",
       center: [90.3938010872331, 23.821600277500405],
       zoom: 12,
-      polygon: true,
+      polygon: true, // Enable Polygon Drawing
       drawOptions: {
         controls: {
           polygon: true,
@@ -43,6 +43,18 @@
     map.addControl(new bkoigl.NavigationControl(), "top-right");
     map.addControl(new bkoigl.GeolocateControl(), "top-right");
     map.addControl(new bkoigl.ScaleControl(), "bottom-right");
+
+    map.on('draw.create', (e) => {
+      console.log('Polygon created:', e.features);
+    });
+
+    map.on('draw.update', (e) => {
+      console.log('Polygon updated:', e.features);
+    });
+
+    map.on('draw.delete', (e) => {
+      console.log('Polygon deleted:', e.features);
+    });    
   </script>
 </body>
 

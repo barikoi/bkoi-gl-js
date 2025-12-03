@@ -182,11 +182,31 @@ docs: update API documentation
 4. Do NOT push other branch
 5. Ask maintainer for review
 
-### Testing
 
-- Test in `examples/your-feature` by using local server
-- Check browser console for errors
-- Test Vanilla js and React/Next.js integration
+## Local Testing
+
+**Do NOT use `npm link` for local testing.**
+Instead, use the `.tgz` tarball method for reliable, isolated testing:
+
+1. **Build the package:**
+   ```bash
+   npm run build
+   ```
+   
+2. **Generate a tarball:**
+   ```bash
+   npm pack
+   ```
+   This creates a file like `bkoi-gl-3.0.0.tgz` in your project root.
+
+3. **Test in another project:**
+   ```bash
+   npm install /absolute/path/to/bkoi-gl-3.0.0.tgz
+   ```
+   This simulates a real npm install, ensuring all dependencies and peer dependencies are resolved as they would be for end users.
+
+4. **Update and retest:**
+   After making changes, repeat the build and pack steps, then reinstall the new `.tgz` in your test project.
 
 ## Maintenance Tasks
 

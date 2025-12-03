@@ -86,7 +86,7 @@ yarn add bkoi-gl
         container: "map",
         center: [90.3938010872331, 23.821600277500405],
         zoom: 12,
-        polygon: true,
+        polygon: true, // Enable Polygon Drawing
         drawOptions: {
           controls: {
             polygon: true,
@@ -95,6 +95,20 @@ yarn add bkoi-gl
         },
       });
 
+      // Listen to events
+      map.on('draw.create', (e) => {
+        console.log('Polygon created:', e.features);
+      });
+
+      map.on('draw.update', (e) => {
+        console.log('Polygon updated:', e.features);
+      });
+
+      map.on('draw.delete', (e) => {
+        console.log('Polygon deleted:', e.features);
+      });
+
+      // Add Controls
       map.addControl(new bkoigl.FullscreenControl(), "top-right");
       map.addControl(new bkoigl.NavigationControl(), "top-right");
       map.addControl(new bkoigl.GeolocateControl(), "top-right");
