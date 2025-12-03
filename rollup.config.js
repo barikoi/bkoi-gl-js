@@ -1,6 +1,5 @@
 // Import plugins
 import babel from '@rollup/plugin-babel'
-import { eslint } from 'rollup-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
@@ -24,7 +23,6 @@ export default [
             image(),
             nodeResolve(),
             commonjs(),
-            eslint(),
             babel({
                 exclude: 'node_modules/**',
                 babelHelpers: 'bundled',
@@ -61,7 +59,6 @@ export default [
             image(),
             nodeResolve(),
             commonjs(),
-            eslint(),
             babel({
                 exclude: 'node_modules/**',
                 babelHelpers: 'runtime',
