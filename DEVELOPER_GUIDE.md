@@ -69,26 +69,24 @@ npm start
 
 # Build for production
 npm run build
-
-# Prepare husky hooks
-npm run prepare
 ```
 
 ### Project Structure
 
 ```
 bkoi-gl-js/
-├── src/
-│   ├── index.js          # Main library code
-│   ├── index.css         # Styles
-│   └── utils/
-│       ├── config.js     # Configuration
-│       └── validator.js  # Validation helpers
-├── examples/             # Usage examples
-├── dist/                 # Built outputs
-├── rollup.config.js      # Build configuration
-├── package.json
-└── README.md
+├── src/                    # Source code
+│   ├── index.js           # Main library entry point
+│   ├── index.css          # Library styles
+│   └── utils/             # Helper functions
+├── examples/              # Integration demos (for documentation)
+│   ├── vanilla/           # Plain JavaScript demo
+│   ├── react/             # React integration demo
+│   ├── next/              # Next.js integration demo
+│   └── vite/              # Vite integration demo
+├── dist/                  # Built outputs (generated)
+├── bkoi-gl-*.tgz         # Packaged releases (generated)
+└── package.json           # Dependencies and scripts
 ```
 
 ## Key Features & APIs
@@ -153,14 +151,6 @@ const map = new Map({
 
 ## Contributing
 
-### Code Style
-
-The project uses ESLint with a custom Mourner config. Run linting:
-
-```bash
-npx eslint src/
-```
-
 ### Commit Conventions
 
 Uses conventional commits with commitlint:
@@ -170,43 +160,145 @@ Uses conventional commits with commitlint:
 
 # Examples
 feat: add polygon drawing support
+feat(map): add new control types
 fix: resolve attribution positioning bug
+fix(draw): fix polygon deletion event
 docs: update API documentation
+docs(examples): add Next.js integration example
+refactor: simplify map initialization logic
 ```
 
 ### Development Workflow
 
-1. Create a feature branch
-2. Make changes with tests
-3. Run build and linting
-4. Do NOT push other branch
-5. Ask maintainer for review
-
-
-## Local Testing
-
-**Do NOT use `npm link` for local testing.**
-Instead, use the `.tgz` tarball method for reliable, isolated testing:
-
-1. **Build the package:**
+1. **Fork the repository** to your GitHub account
+2. **Clone your fork** locally:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/bkoi-gl-js.git
+   cd bkoi-gl-js
+   ```
+3. **Create a feature branch** from `dev`:
+   ```bash
+   git checkout dev
+   git pull origin dev
+   git checkout -b feature/your-feature-name
+   ```
+4. Make changes following existing code patterns
+5. Build and test locally:
    ```bash
    npm run build
    ```
-   
-2. **Generate a tarball:**
+6. Test in separate projects (see Testing & Local Development section)
+7. Commit your changes and push to your fork:
+   ```bash
+   git add .
+   git commit -m "feat: description of your changes"
+   git push origin feature/your-feature-name
+   ```
+8. **Create a pull request** from your fork's branch to the main repository's `dev` branch
+
+**Note:** Do NOT push to main branch directly. All changes should go through pull requests for review.
+
+### Code Review Guidelines
+
+**Before submitting PR:**
+
+- [ ] Code follows existing patterns in the codebase
+- [ ] No console.log statements in production code
+- [ ] MapLibre GL APIs used correctly
+- [ ] Barikoi integration maintained
+- [ ] Build passes: `npm run build`
+
+**PR Description should include:**
+
+- What feature/fix was implemented
+- Which frameworks were tested
+- Screenshots if UI changes
+- Breaking changes noted
+
+## Testing & Local Development
+
+**Do NOT use `npm link` for testing.** Instead, use the `.tgz` tarball method for reliable, isolated testing across all supported frameworks.
+
+### Development Testing Workflow
+
+1. **Make changes** to the library code in `src/`
+2. **Build the package:**
+   ```bash
+   npm run build
+   ```
+3. **Generate a tarball:**
+
    ```bash
    npm pack
    ```
-   This creates a file like `bkoi-gl-3.0.0.tgz` in your project root.
 
-3. **Test in another project:**
+   This creates `bkoi-gl-3.0.0.tgz` in your project root.
+
+4. **Test in separate projects:**
+   Copy the generated `.tgz` file to a separate test project or install it using a relative/absolute path:
+
    ```bash
-   npm install /absolute/path/to/bkoi-gl-3.0.0.tgz
-   ```
-   This simulates a real npm install, ensuring all dependencies and peer dependencies are resolved as they would be for end users.
+   # Option 1: Copy file to existing test project
+   cp bkoi-gl-3.0.0.tgz ../test-project/
+   cd ../test-project
+   npm install ./bkoi-gl-3.0.0.tgz
 
-4. **Update and retest:**
-   After making changes, repeat the build and pack steps, then reinstall the new `.tgz` in your test project.
+   # Option 2: Install using relative path
+   cd ../test-project
+   npm install ../bkoi-gl-js/bkoi-gl-3.0.0.tgz
+
+   # Option 3: Install using absolute path
+   cd /path/to/test/project
+   npm install /absolute/path/to/bkoi-gl-js/bkoi-gl-3.0.0.tgz
+   ```
+
+  **Note:** The `examples/` folder contains pre-built integration demos for documentation purposes. For actual testing during development, always create separate test projects that install the `.tgz` file to ensure proper dependency resolution and isolation.
+
+### Testing Checklist
+
+Before committing changes, verify:
+
+- [ ] **Vanilla JS**: Map renders, controls work, drawing tools function
+- [ ] **React**: Component mounts, hooks work, no React warnings
+- [ ] **Next.js**: SSR compatible, dynamic imports work
+- [ ] **Vite**: Builds successfully, HMR works
+- [ ] **Barikoi**: Attribution displays, API key handling works
+
+### Troubleshooting Tests
+
+- **Build fails**: Check for TypeScript errors or missing dependencies
+- **Import errors**: Verify `npm run build` completed successfully
+- **Map not rendering**: Check container div has dimensions, API key is set
+- **Drawing tools broken**: Ensure `polygon: true` in map options
+- **Version conflicts**: Clear `node_modules` and reinstall tarball
+
+## Release Process
+
+1. Update version in `package.json`
+2. Build for production: `npm run build`
+3. Test the build in separate projects using tarball method
+4. Generate final tarball: `npm pack`
+5. Test tarball installation in separate project
+6. Publish to npm: `npm publish`
+7. Update CDN if applicable
+8. Create GitHub release with changelog
+
+### CDN Usage (After Publication)
+
+After publishing to npm, the IIFE build can be used directly from CDN:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
+/>
+<script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
+<script>
+  const map = new bkoigl.Map({
+    /* options */
+  });
+</script>
+```
 
 ## Maintenance Tasks
 
@@ -340,24 +432,6 @@ Generates outputs in `dist/`:
 2. Test dist files
 3. Publish: `npm publish`
 4. Update CDN if applicable
-
-### CDN Usage
-
-The IIFE build can be used directly:
-
-```html
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
-/>
-<script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
-<script>
-  const map = new bkoigl.Map({
-    /* options */
-  });
-</script>
-```
 
 ## Support Resources
 

@@ -10,6 +10,10 @@
   "readme": "README.md",
   "license": "MIT",
   "homepage": "https://docs.barikoi.com/docs/maps-api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barikoi/bkoi-gl-js.git"
+  },
   "engines": {
     "node": "^24.11.0"
   },
@@ -64,9 +68,5 @@
     "places",
     "geocoding API",
     "location API"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/barikoi/bkoi-gl-js.git"
-  }
+  ]
 }
