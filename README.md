@@ -23,7 +23,7 @@ For comprehensive examples and React/Next.js integrations, check out [react-bkoi
 
 ## Getting Started
 
-## Get Barikoi API key
+### Get Barikoi API Key
 
 To access Barikoi's API services, you need to:
 
@@ -32,6 +32,7 @@ To access Barikoi's API services, you need to:
 3. Claim your API key.
 
 Once registered, you'll be able to access the full suite of Barikoi API services. If you exceed the free usage limits, you'll need to subscribe to a paid plan.
+
 
 ### Installation
 

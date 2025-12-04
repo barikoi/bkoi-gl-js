@@ -1,4 +1,4 @@
-# bkoi-gl-js Developer Guide
+# Barikoi GL JS Developer Guide
 
 ## Overview
 
