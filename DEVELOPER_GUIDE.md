@@ -79,7 +79,7 @@ bkoi-gl-js/
 │   ├── index.js           # Main library entry point
 │   ├── index.css          # Library styles
 │   └── utils/             # Helper functions
-├── examples/              # Integration demos (for documentation)
+├── examples/              # Integration demos
 │   ├── vanilla/           # Plain JavaScript demo
 │   ├── react/             # React integration demo
 │   ├── next/              # Next.js integration demo
