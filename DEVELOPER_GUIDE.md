@@ -75,7 +75,7 @@ npm run build
 
 ```
 bkoi-gl-js/
-├── src/                    # Source code
+├── src/                   # Source code
 │   ├── index.js           # Main library entry point
 │   ├── index.css          # Library styles
 │   └── utils/             # Helper functions
@@ -85,7 +85,7 @@ bkoi-gl-js/
 │   ├── next/              # Next.js integration demo
 │   └── vite/              # Vite integration demo
 ├── dist/                  # Built outputs (generated)
-├── bkoi-gl-*.tgz         # Packaged releases (generated)
+├── bkoi-gl-*.tgz          # Packaged releases (generated)
 └── package.json           # Dependencies and scripts
 ```
 
