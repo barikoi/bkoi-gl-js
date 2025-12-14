@@ -8,6 +8,16 @@
  * default styling options.
  */
 
+/**
+ * @typedef {Object} BkoiConfig
+ * @property {string|null} ACCESS_TOKEN
+ * @property {string} DEFAULT_STYLE
+ */
+
+/**
+ * Barikoi configuration object
+ * @type {BkoiConfig}
+ */
 export const bkoiConfig = {
     ACCESS_TOKEN: null,
     DEFAULT_STYLE: 'https://map.barikoi.com/styles/osm-liberty/style.json'

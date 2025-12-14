@@ -7,6 +7,11 @@
  * These validators help ensure proper integration with Barikoi services.
  */
 
+/**
+ * Check if a style URL is a Barikoi style
+ * @param {string | object} style 
+ * @returns {boolean}
+ */
 export function isBarikoiStyle(style) {
     if(typeof style === 'string' && style.includes('barikoi.com')) {
         return true
