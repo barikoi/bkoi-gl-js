@@ -4,6 +4,7 @@ A comprehensive guide to migrate bkoi-gl-js from JavaScript to TypeScript while 
 
 ## Table of Contents
 
+- [Architecture Decision: Single Entry Point](#architecture-decision-single-entry-point)
 - [Phase 1: Setup & Configuration](#phase-1-setup--configuration)
 - [Phase 2: Create TypeScript Type Definitions](#phase-2-create-typescript-type-definitions)
 - [Phase 3: Convert Main Files to TypeScript](#phase-3-convert-main-files-to-typescript)
@@ -11,6 +12,54 @@ A comprehensive guide to migrate bkoi-gl-js from JavaScript to TypeScript while 
 - [Phase 5: Migration Steps](#phase-5-migration-steps)
 - [Phase 6: Additional Improvements](#phase-6-additional-improvements)
 - [Understanding the Build Output](#understanding-the-build-output)
+
+---
+
+## Architecture Decision: Single Entry Point
+
+### Why Remove Root index.js?
+
+The original project may have had a root `index.js` file that re-exported everything from `src/index.js`. This pattern is **no longer necessary** with modern build tools.
+
+**Problems with dual entry points:**
+- ❌ Maintenance overhead (two files to keep in sync)
+- ❌ CDN can't access root index.js (only serves dist/ folder)
+- ❌ Confusion about which file is the "real" entry point
+- ❌ Build complexity
+
+**Benefits of single entry point (`src/index.ts`):**
+- ✅ Single source of truth
+- ✅ Works for NPM (ESM/CJS) via built output in `dist/`
+- ✅ Works for CDN (IIFE) via `dist/iife/bkoi-gl.js`
+- ✅ Simpler to maintain
+- ✅ Follows modern library patterns (maplibre-gl v5, three.js, etc.)
+
+### How Different Consumers Access Your Library
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    src/index.ts                         │
+│              (Single Entry Point)                        │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ├─── Build ───→ dist/esm/   (NPM: import)
+                   ├─── Build ───→ dist/cjs/   (NPM: require)
+                   └─── Build ───→ dist/iife/  (CDN: <script>)
+```
+
+**NPM consumers** use package.json to find the built files:
+```json
+{
+  "main": "./dist/cjs/index.js",    // require('bkoi-gl')
+  "module": "./dist/esm/index.js",  // import 'bkoi-gl'
+  "types": "./dist/esm/index.d.ts"  // TypeScript types
+}
+```
+
+**CDN consumers** load the IIFE bundle directly:
+```html
+<script src="https://unpkg.com/bkoi-gl/dist/iife/bkoi-gl.js"></script>
+```
 
 ---
 
@@ -70,6 +119,8 @@ Replace your current package.json with this updated version:
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "unpkg": "./dist/iife/bkoi-gl.js",
+  "jsdelivr": "./dist/iife/bkoi-gl.js",
   "exports": {
     ".": {
       "import": {
@@ -79,7 +130,8 @@ Replace your current package.json with this updated version:
       "require": {
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
-      }
+      },
+      "script": "./dist/iife/bkoi-gl.js"
     },
     "./dist/style/bkoi-gl.css": "./dist/style/bkoi-gl.css"
   },
@@ -552,10 +604,37 @@ export class BkoiGlMap extends Map {
   }
 }
 
-// Export configuration and utilities
+// Re-export utilities
 export { bkoiConfig } from './utils/config';
 export { isBarikoiStyle } from './utils/validator';
 export type * from './types';
+
+// Export all maplibre features individually for tree-shaking
+export {
+  version,
+  supported,
+  setRTLTextPlugin,
+  getRTLTextPluginStatus,
+  NavigationControl,
+  GeolocateControl,
+  AttributionControl,
+  ScaleControl,
+  FullscreenControl,
+  Popup,
+  Marker,
+  Style,
+  LngLat,
+  LngLatBounds,
+  Point,
+  MercatorCoordinate,
+  Evented,
+  config,
+  prewarm,
+  clearPrewarmedResources,
+};
+
+// Export BkoiGlMap as Map (main export)
+export { BkoiGlMap as Map };
 
 // Default export with all Maplibre features + Barikoi extensions
 const exported = {
@@ -739,11 +818,25 @@ npm install --save-dev typescript @types/node tslib @types/maplibre-gl @rollup/p
 
 #### Step 4: Create Type Definitions
 
-1. Create `src/types/index.ts` (see Phase 2.1)
-2. Create `src/utils/config.ts` (see Phase 2.2)
-3. Create `src/utils/validator.ts` (see Phase 2.3)
+1. Create `src/types/` directory:
+```bash
+mkdir -p src/types
+```
 
-#### Step 5: Rename Files
+2. Create `src/types/index.ts` (see Phase 2.1)
+3. Update `src/utils/config.ts` (see Phase 2.2)
+4. Update `src/utils/validator.ts` (see Phase 2.3)
+
+#### Step 5: Remove Root index.js
+
+**Important**: Delete the root `index.js` file if it exists. We're using `src/index.ts` as the single entry point for all builds (NPM and CDN).
+
+```bash
+# Remove root index.js
+rm index.js
+```
+
+#### Step 6: Rename Files
 
 ```bash
 # Rename JavaScript files to TypeScript
@@ -799,25 +892,88 @@ dist/
 
 Create a test project to verify everything works:
 
+**Test 1: NPM Package (ESM)**
+
 ```bash
-mkdir test-project
-cd test-project
+mkdir test-npm-esm
+cd test-npm-esm
 npm init -y
 npm install ../path-to-your-package
+```
 
-# Create test file
-cat > test.ts << 'EOF'
-import bkoigl from 'bkoi-gl';
+Create `test.mjs`:
+```javascript
+import bkoigl, { Map } from 'bkoi-gl';
 
-const map = new bkoigl.Map({
+// Test default export
+console.log('Default export:', bkoigl);
+const map1 = new bkoigl.Map({
   container: 'map',
   accessToken: 'test-token',
   center: [90.3938, 23.8103],
-  zoom: 12,
-  polygon: true
+  zoom: 12
 });
-EOF
+
+// Test named export
+const map2 = new Map({
+  container: 'map2',
+  accessToken: 'test-token',
+  center: [90.3938, 23.8103],
+  zoom: 12
+});
+
+console.log('✅ ESM import works!');
 ```
+
+Run: `node test.mjs`
+
+**Test 2: NPM Package (CJS)**
+
+Create `test.cjs`:
+```javascript
+const bkoigl = require('bkoi-gl');
+const { Map } = require('bkoi-gl');
+
+console.log('Default export:', bkoigl);
+console.log('Named export:', Map);
+console.log('✅ CJS require works!');
+```
+
+Run: `node test.cjs`
+
+**Test 3: CDN (Browser)**
+
+Create `test.html`:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../dist/iife/bkoi-gl.css">
+  <style>
+    #map { width: 100%; height: 500px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  
+  <script src="../dist/iife/bkoi-gl.js"></script>
+  <script>
+    console.log('Global bkoigl:', bkoigl);
+    
+    const map = new bkoigl.Map({
+      container: 'map',
+      accessToken: 'your-token-here',
+      center: [90.3938, 23.8103],
+      zoom: 12
+    });
+    
+    console.log('✅ IIFE/CDN works!');
+  </script>
+</body>
+</html>
+```
+
+Open in browser and check console.
 
 #### Step 11: Commit Changes
 
