@@ -3,8 +3,25 @@
   "version": "3.0.0",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
   "type": "module",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "unpkg": "./dist/iife/bkoi-gl.js",
+  "jsdelivr": "./dist/iife/bkoi-gl.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "script": "./dist/iife/bkoi-gl.js"
+    },
+    "./dist/style/bkoi-gl.css": "./dist/style/bkoi-gl.css"
+  },
   "style": "dist/style/bkoi-gl.css",
   "author": "barikoi",
   "readme": "README.md",
@@ -17,7 +34,6 @@
   "engines": {
     "node": "^24.11.0"
   },
-  "types": "dist/types/index.d.ts",
   "files": [
     "dist",
     "src",
@@ -25,9 +41,10 @@
   ],
   "scripts": {
     "start": "node index.js",
-    "build": "rollup --config",
-    "types": "tsc",
-    "prepare": "husky"
+    "build": "npm run typecheck && rollup --config",
+    "build:ts": "tsc --noEmit",
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "maplibre-gl": "^5.13.0",
