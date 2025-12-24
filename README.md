@@ -20,6 +20,7 @@ For comprehensive examples and React/Next.js integrations, check out [react-bkoi
 - Lightweight and optimized for production.
 - Drawing tools for polygons.
 - Multiple build formats (ESM, CJS, IIFE).
+- Full TypeScript support.
 
 ## Getting Started
 
@@ -96,9 +97,9 @@ Add the following links to the `<head>` section of your HTML file:
   href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
 />
 <script>
-  bkoigl.accessToken = "YOUR_BARIKOI_API_KEY_HERE";
   const map = new bkoigl.Map({
     container: "map",
+    accessToken: "YOUR_BARIKOI_API_KEY_HERE",
     center: [90.3938010872331, 23.821600277500405], // Dhaka coordinates
     zoom: 10,
   });
