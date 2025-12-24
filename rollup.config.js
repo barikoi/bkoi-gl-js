@@ -6,6 +6,12 @@ import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
 import image from '@rollup/plugin-image';
 
+const commonPlugins = [
+  image(),
+  nodeResolve(),
+  commonjs(),
+];
+
 export default [
   // IIFE build for browsers
   {
@@ -22,13 +28,12 @@ export default [
     },
     external: ['maplibre-gl', 'maplibre-gl-draw'],
     plugins: [
-      clear({ targets: ['dist'] }),
-      image(),
-      nodeResolve(),
-      commonjs(),
+      clear({ targets: ['dist/iife'] }),
+      ...commonPlugins,
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false,
+        declarationMap: false,
         sourceMap: true,
       }),
       terser(),
@@ -40,35 +45,51 @@ export default [
     ],
   },
   
-  // ESM and CJS builds
+  // CJS build
   {
     input: 'src/index.ts',
     external: ['maplibre-gl', 'maplibre-gl-draw'],
-    output: [
-      {
-        dir: 'dist/cjs',
-        format: 'cjs',
-        preserveModules: true,
-        exports: 'auto',
-        sourcemap: true,
-      },
-      {
-        dir: 'dist/esm',
-        format: 'es',
-        preserveModules: true,
-        exports: 'auto',
-        sourcemap: true,
-      },
-    ],
+    output: {
+      dir: 'dist/cjs',
+      format: 'cjs',
+      preserveModules: true,
+      exports: 'auto',
+      sourcemap: true,
+    },
     plugins: [
-      clear({ targets: ['dist/cjs', 'dist/esm', 'dist/style'] }),
-      image(),
-      nodeResolve(),
-      commonjs(),
+      clear({ targets: ['dist/cjs'] }),
+      ...commonPlugins,
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: './dist/cjs',
+        outDir: './dist/cjs',
+        rootDir: './src',
+        sourceMap: true,
+      }),
+      terser(),
+    ],
+  },
+
+  // ESM build
+  {
+    input: 'src/index.ts',
+    external: ['maplibre-gl', 'maplibre-gl-draw'],
+    output: {
+      dir: 'dist/esm',
+      format: 'es',
+      preserveModules: true,
+      exports: 'auto',
+      sourcemap: true,
+    },
+    plugins: [
+      clear({ targets: ['dist/esm', 'dist/style'] }),
+      ...commonPlugins,
       typescript({
         tsconfig: './tsconfig.json',
         declaration: true,
         declarationDir: './dist/esm',
+        outDir: './dist/esm',
         rootDir: './src',
         sourceMap: true,
       }),
