@@ -22,11 +22,8 @@ import { isBarikoiStyle } from './utils/validator';
 import type { BkoiMapOptions, StyleConfig } from './types';
 
 const {
-  version,
-  supported,
   setRTLTextPlugin,
   getRTLTextPluginStatus,
-  config,
   prewarm,
   clearPrewarmedResources,
 } = maplibre;
@@ -158,18 +155,18 @@ export class BkoiGlMap extends Map {
    * @param drawOptions - Configuration options for the drawing tools
    * @private
    */
-  private initializeDraw(drawOptions: Partial<MapboxDraw.DrawOptions>): void {
-    const defaultOptions: MapboxDraw.DrawOptions = {
+  private initializeDraw(drawOptions: Partial<MapboxDraw.MapboxDrawOptions>): void {
+    const defaultOptions: MapboxDraw.MapboxDrawOptions = {
       displayControlsDefault: false,
       controls: {
         polygon: true,
         trash: true,
       },
       ...drawOptions,
-    } as MapboxDraw.DrawOptions;
+    } as MapboxDraw.MapboxDrawOptions;
 
     this.draw = new MapboxDraw(defaultOptions);
-    this.addControl(this.draw);
+    this.addControl(this.draw as unknown as IControl);
   }
 
   /**
@@ -290,8 +287,6 @@ export type * from './types';
 
 // Export all maplibre features individually for tree-shaking
 export {
-  version,
-  supported,
   setRTLTextPlugin,
   getRTLTextPluginStatus,
   NavigationControl,
@@ -307,7 +302,6 @@ export {
   Point,
   MercatorCoordinate,
   Evented,
-  config,
   prewarm,
   clearPrewarmedResources,
 };
@@ -317,8 +311,6 @@ export { BkoiGlMap as Map };
 
 // Default export with all Maplibre features + Barikoi extensions
 const exported = {
-  version,
-  supported,
   setRTLTextPlugin,
   getRTLTextPluginStatus,
   Map: BkoiGlMap,
@@ -335,7 +327,6 @@ const exported = {
   Point,
   MercatorCoordinate,
   Evented,
-  config,
   prewarm,
   clearPrewarmedResources,
   
@@ -344,27 +335,6 @@ const exported = {
   },
   set accessToken(token: string | null) {
     bkoiConfig.ACCESS_TOKEN = token;
-  },
-  
-  get mapboxAccessToken(): string | undefined {
-    return config.ACCESS_TOKEN;
-  },
-  set mapboxAccessToken(token: string | undefined) {
-    config.ACCESS_TOKEN = token;
-  },
-  
-  get baseApiUrl(): string {
-    return config.API_URL;
-  },
-  set baseApiUrl(url: string) {
-    config.API_URL = url;
-  },
-  
-  get maxParallelImageRequests(): number {
-    return config.MAX_PARALLEL_IMAGE_REQUESTS;
-  },
-  set maxParallelImageRequests(numRequests: number) {
-    config.MAX_PARALLEL_IMAGE_REQUESTS = numRequests;
   },
   
   workerUrl: '',

@@ -1,4 +1,4 @@
-import type { MapOptions, Map, ControlPosition } from 'maplibre-gl';
+import type { MapOptions } from 'maplibre-gl';
 import type MapboxDraw from 'maplibre-gl-draw';
 
 export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'> {
@@ -25,7 +25,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
   /**
    * Configuration options for maplibre-gl-draw
    */
-  drawOptions?: Partial<MapboxDraw.DrawOptions>;
+  drawOptions?: Partial<MapboxDraw.MapboxDrawOptions>;
   
   /**
    * Array of style configurations for the style drawer
