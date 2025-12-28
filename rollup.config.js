@@ -1,7 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import terser from 'rollup-plugin-terser';
 import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
 import image from '@rollup/plugin-image';
@@ -13,7 +13,7 @@ const commonPlugins = [
 ];
 
 export default [
-  // IIFE build for browsers
+  // IIFE build for browsers (bundled, self-contained)
   {
     input: 'src/index.ts',
     output: {
@@ -21,22 +21,22 @@ export default [
       format: 'iife',
       name: 'bkoigl',
       sourcemap: true,
-      globals: {
-        'maplibre-gl': 'maplibre',
-        'maplibre-gl-draw': 'MapboxDraw',
-      },
     },
-    external: ['maplibre-gl', 'maplibre-gl-draw'],
+    external: [], // Bundle everything for self-contained browser usage
     plugins: [
       clear({ targets: ['dist/iife'] }),
       ...commonPlugins,
+      nodeResolve({
+        browser: true, // Resolve for browser environment
+        preferBuiltins: false,
+      }),
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false,
         declarationMap: false,
         sourceMap: true,
       }),
-      terser(),
+
       copy({
         targets: [
           { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' },
@@ -44,11 +44,38 @@ export default [
       }),
     ],
   },
-  
-  // CJS build
+
+  // UMD build for browsers (bundled, self-contained)
   {
     input: 'src/index.ts',
-    external: ['maplibre-gl', 'maplibre-gl-draw'],
+    output: {
+      file: 'dist/umd/bkoi-gl.js',
+      format: 'umd',
+      name: 'bkoigl',
+      sourcemap: true,
+    },
+    external: [], // Bundle everything
+    plugins: [
+      clear({ targets: ['dist/umd'] }),
+      ...commonPlugins,
+      nodeResolve({
+        browser: true,
+        preferBuiltins: false,
+      }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false,
+        declarationMap: false,
+        sourceMap: true,
+      }),
+
+    ],
+  },
+
+  // CJS build (external dependencies)
+  {
+    input: 'src/index.ts',
+    external: ['maplibre-gl', 'maplibre-gl-draw'], // Keep external for npm
     output: {
       dir: 'dist/cjs',
       format: 'cjs',
@@ -67,14 +94,14 @@ export default [
         rootDir: './src',
         sourceMap: true,
       }),
-      terser(),
+
     ],
   },
 
-  // ESM build
+  // ESM build (external dependencies)
   {
     input: 'src/index.ts',
-    external: ['maplibre-gl', 'maplibre-gl-draw'],
+    external: ['maplibre-gl', 'maplibre-gl-draw'], // Keep external for npm
     output: {
       dir: 'dist/esm',
       format: 'es',
@@ -93,7 +120,7 @@ export default [
         rootDir: './src',
         sourceMap: true,
       }),
-      terser(),
+
       copy({
         targets: [
           { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
