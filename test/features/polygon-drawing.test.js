@@ -11,7 +11,7 @@ describe('Polygon Drawing Feature Tests', () => {
     jest.clearAllMocks();
     
     // Require the module
-    bkoiModule = require('../../dist/cjs/index.js');
+    bkoiModule = require('../../dist/index.cjs');
     
     // Get MapboxDraw mock constructor
     const MapboxDraw = require('../../test/mocks/__mocks__/maplibre-gl-draw.js');

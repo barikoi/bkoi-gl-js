@@ -1,6 +1,6 @@
 /**
  * Tests for ESM build format
- * Tests that the dist/esm/index.js build can be imported and has expected exports
+ * Tests that the dist/index.js build can be imported and has expected exports
  */
 
 describe('ESM Build Tests', () => {
@@ -9,12 +9,12 @@ describe('ESM Build Tests', () => {
   beforeAll(async () => {
     // Test that the ESM build file exists and can be imported
     try {
-      bkoiModule = await import('../../dist/esm/index.js');
+      bkoiModule = await import('../../dist/index.js');
     } catch (error) {
       // If import fails, check if file exists
       const fs = require('fs');
       const path = require('path');
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
       if (!fs.existsSync(esmPath)) {
         throw new Error('ESM build file does not exist. Run npm run build first.');
       }
@@ -139,14 +139,14 @@ describe('ESM Build Tests', () => {
 
   describe('ESM-specific Tests', () => {
     test('should support dynamic imports', async () => {
-      const { Map, isBarikoiStyle } = await import('../../dist/esm/index.js');
+      const { Map, isBarikoiStyle } = await import('../../dist/index.js');
       expect(Map).toBeDefined();
       expect(typeof Map).toBe('function');
       expect(typeof isBarikoiStyle).toBe('function');
     });
 
     test('should support named imports', async () => {
-      const { Map, NavigationControl, isBarikoiStyle } = await import('../../dist/esm/index.js');
+      const { Map, NavigationControl, isBarikoiStyle } = await import('../../dist/index.js');
       expect(Map).toBeDefined();
       expect(NavigationControl).toBeDefined();
       expect(isBarikoiStyle).toBeDefined();
@@ -154,7 +154,7 @@ describe('ESM Build Tests', () => {
 
     test('should support tree-shaking (selective imports)', async () => {
       // Test that we can import only what we need
-      const { isBarikoiStyle } = await import('../../dist/esm/index.js');
+      const { isBarikoiStyle } = await import('../../dist/index.js');
       expect(typeof isBarikoiStyle).toBe('function');
 
       // Verify the function works

@@ -49,7 +49,7 @@ describe('IIFE Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const iifePath = path.resolve(__dirname, '../../dist/iife/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
 
       const iifeContent = fs.readFileSync(iifePath, 'utf8');
       const esmContent = fs.readFileSync(esmPath, 'utf8');
@@ -63,7 +63,7 @@ describe('IIFE Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const iifePath = path.resolve(__dirname, '../../dist/iife/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
 
       const iifeContent = fs.readFileSync(iifePath, 'utf8');
       const cjsContent = fs.readFileSync(cjsPath, 'utf8');
@@ -102,7 +102,7 @@ describe('IIFE Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const iifePath = path.resolve(__dirname, '../../dist/iife/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
 
       const iifeSize = fs.statSync(iifePath).size;
       const esmSize = fs.statSync(esmPath).size;
@@ -115,7 +115,7 @@ describe('IIFE Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const iifePath = path.resolve(__dirname, '../../dist/iife/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
 
       const iifeSize = fs.statSync(iifePath).size;
       const cjsSize = fs.statSync(cjsPath).size;

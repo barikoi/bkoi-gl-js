@@ -6,7 +6,7 @@
 describe('Accessibility Tests', () => {
   beforeAll(() => {
     // Mock the Map constructor globally to avoid real instantiation
-    const bkoiModule = require('../../dist/cjs/index.js');
+    const bkoiModule = require('../../dist/index.cjs');
     const mockMapInstance = {
       addControl: jest.fn(),
       getContainer: jest.fn(() => document.createElement('div')),
@@ -31,7 +31,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('aria-label', 'Interactive map');
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -67,7 +67,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('tabindex', '0');
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -103,7 +103,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('aria-live', 'polite');
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -142,7 +142,7 @@ describe('Accessibility Tests', () => {
       container.id = 'control-accessibility';
       document.body.appendChild(container);
 
-      bkoiModule = require('../../dist/cjs/index.js');
+      bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -169,7 +169,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should have accessible navigation controls', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const navControl = new bkoiModule.NavigationControl();
 
       // Mock control element creation
@@ -190,7 +190,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should have accessible geolocation control', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const geolocateControl = new bkoiModule.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
         showUserHeading: true
@@ -203,7 +203,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should have accessible fullscreen control', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const fullscreenControl = new bkoiModule.FullscreenControl();
 
       map.addControl(fullscreenControl);
@@ -221,7 +221,7 @@ describe('Accessibility Tests', () => {
       container.id = 'marker-accessibility';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       map = new bkoiModule.Map({
         container: 'marker-accessibility',
         style: 'https://map.barikoi.com/styles/streets',
@@ -231,7 +231,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should create accessible markers', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const markerElement = document.createElement('div');
       markerElement.setAttribute('role', 'button');
@@ -247,7 +247,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should create accessible popups', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const popup = new bkoiModule.Popup({
         closeButton: true,
@@ -270,7 +270,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should handle keyboard interaction for popups', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const popup = new bkoiModule.Popup({
         closeButton: true,
@@ -292,7 +292,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('tabindex', '0');
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'keyboard-nav',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -305,7 +305,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should support Tab key navigation through interactive elements', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'tab-nav';
@@ -354,7 +354,7 @@ describe('Accessibility Tests', () => {
       helpText.textContent = 'Use arrow keys to pan, +/- to zoom, Enter to select';
       container.appendChild(helpText);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'shortcuts',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -367,7 +367,7 @@ describe('Accessibility Tests', () => {
 
   describe('Screen Reader Support', () => {
     test('should provide meaningful labels for interactive elements', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'sr-support';
@@ -400,7 +400,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('aria-atomic', 'true');
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'dynamic-content',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -425,7 +425,7 @@ describe('Accessibility Tests', () => {
       statusRegion.id = 'map-status';
       container.appendChild(statusRegion);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'status-announcements',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -446,7 +446,7 @@ describe('Accessibility Tests', () => {
       container.id = 'high-contrast';
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'high-contrast',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -472,7 +472,7 @@ describe('Accessibility Tests', () => {
       container.id = 'color-preference';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to check for media query calls
       const mockMapInstance = {
@@ -503,7 +503,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should provide sufficient color contrast for text elements', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const popup = new bkoiModule.Popup()
         .setHTML(`
@@ -524,7 +524,7 @@ describe('Accessibility Tests', () => {
       container.id = 'focus-management';
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'focus-management',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -536,7 +536,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should restore focus appropriately', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'focus-restore';
@@ -559,7 +559,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should prevent focus traps', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'no-focus-trap';
@@ -599,7 +599,7 @@ describe('Accessibility Tests', () => {
       container.id = 'reduced-motion';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to check for media query calls
       const mockMapInstance = {
@@ -634,7 +634,7 @@ describe('Accessibility Tests', () => {
       container.id = 'animation-controls';
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'animation-controls',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -659,7 +659,7 @@ describe('Accessibility Tests', () => {
       errorRegion.id = 'map-errors';
       container.appendChild(errorRegion);
 
-      const map = new (require('../../dist/cjs/index.js')).Map({
+      const map = new (require('../../dist/index.cjs')).Map({
         container: 'error-announcements',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -673,7 +673,7 @@ describe('Accessibility Tests', () => {
     });
 
     test('should provide helpful error messages', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Test invalid configurations with helpful messages
       expect(() => {

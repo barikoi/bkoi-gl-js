@@ -11,7 +11,7 @@ describe('Attribution Control Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    bkoiModule = require('../../dist/cjs/index.js');
+    bkoiModule = require('../../dist/index.cjs');
 
     const container = document.createElement('div');
     container.id = 'test-map';

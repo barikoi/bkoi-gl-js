@@ -6,7 +6,7 @@
 describe('Performance Tests', () => {
   beforeAll(() => {
     // Mock the Map constructor globally to avoid real instantiation
-    const bkoiModule = require('../../dist/cjs/index.js');
+    const bkoiModule = require('../../dist/index.cjs');
     const mockMapInstance = {
       addControl: jest.fn(),
       getContainer: jest.fn(() => document.createElement('div')),
@@ -33,7 +33,7 @@ describe('Performance Tests', () => {
       container.style.height = '300px';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -70,7 +70,7 @@ describe('Performance Tests', () => {
       const startTime = performance.now();
       const maps = [];
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -121,7 +121,7 @@ describe('Performance Tests', () => {
       container.id = 'perf-controls';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       map = new bkoiModule.Map({
         container: 'perf-controls',
         style: 'https://map.barikoi.com/styles/streets',
@@ -131,7 +131,7 @@ describe('Performance Tests', () => {
     });
 
     test('should add controls efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const controls = [
@@ -154,7 +154,7 @@ describe('Performance Tests', () => {
     });
 
     test('should handle control updates efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const navControl = new bkoiModule.NavigationControl();
 
       map.addControl(navControl);
@@ -183,7 +183,7 @@ describe('Performance Tests', () => {
       container.id = 'perf-markers';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       map = new bkoiModule.Map({
         container: 'perf-markers',
         style: 'https://map.barikoi.com/styles/streets',
@@ -193,7 +193,7 @@ describe('Performance Tests', () => {
     });
 
     test('should create markers efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const markers = [];
@@ -213,7 +213,7 @@ describe('Performance Tests', () => {
     });
 
     test('should create popups efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const popups = [];
@@ -234,7 +234,7 @@ describe('Performance Tests', () => {
     });
 
     test('should handle marker-popup combinations efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const combinations = [];
@@ -261,7 +261,7 @@ describe('Performance Tests', () => {
 
   describe('Geospatial Operations Performance', () => {
     test('should perform coordinate operations efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const coordinates = [];
@@ -279,7 +279,7 @@ describe('Performance Tests', () => {
     });
 
     test('should perform bounds operations efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const bounds = new bkoiModule.LngLatBounds([89.0, 22.0], [91.0, 24.0]);
@@ -303,7 +303,7 @@ describe('Performance Tests', () => {
     });
 
     test('should handle point operations efficiently', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       const points = [];
@@ -323,7 +323,7 @@ describe('Performance Tests', () => {
 
   describe('Memory Usage Tests', () => {
     test('should not have excessive memory growth with repeated operations', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Create initial memory snapshot (simulated)
       const initialOperations = 10;
@@ -373,7 +373,7 @@ describe('Performance Tests', () => {
     });
 
     test('should clean up event listeners properly', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'cleanup-test';
@@ -405,7 +405,7 @@ describe('Performance Tests', () => {
       const path = require('path');
 
       // Check CJS bundle size
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
       if (fs.existsSync(cjsPath)) {
         const cjsSize = fs.statSync(cjsPath).size;
         expect(cjsSize).toBeLessThan(1024 * 1024); // Under 1MB
@@ -413,7 +413,7 @@ describe('Performance Tests', () => {
       }
 
       // Check ESM bundle size
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
       if (fs.existsSync(esmPath)) {
         const esmSize = fs.statSync(esmPath).size;
         expect(esmSize).toBeLessThan(1024 * 1024); // Under 1MB
@@ -434,7 +434,7 @@ describe('Performance Tests', () => {
       const startTime = performance.now();
 
       // Simulate tree-shaking by importing only what we need
-      const { isBarikoiStyle } = require('../../dist/cjs/index.js');
+      const { isBarikoiStyle } = require('../../dist/index.cjs');
 
       const endTime = performance.now();
       const importTime = endTime - startTime;
@@ -448,7 +448,7 @@ describe('Performance Tests', () => {
 
   describe('Concurrent Operations Performance', () => {
     test('should handle concurrent map operations', async () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const operations = [];
 
       for (let i = 0; i < 5; i++) {
@@ -485,7 +485,7 @@ describe('Performance Tests', () => {
     });
 
     test('should maintain performance under load', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const startTime = performance.now();
 
       // Create high load scenario

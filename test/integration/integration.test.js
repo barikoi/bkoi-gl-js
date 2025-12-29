@@ -6,7 +6,7 @@
 describe('Integration Tests', () => {
   beforeAll(() => {
     // Mock the Map constructor globally to avoid real instantiation
-    const bkoiModule = require('../../dist/cjs/index.js');
+    const bkoiModule = require('../../dist/index.cjs');
     const mockMapInstance = {
       addControl: jest.fn(),
       getContainer: jest.fn(() => document.createElement('div')),
@@ -31,7 +31,7 @@ describe('Integration Tests', () => {
       container.style.height = '300px';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -66,7 +66,7 @@ describe('Integration Tests', () => {
       container.id = 'map-custom';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -108,7 +108,7 @@ describe('Integration Tests', () => {
       container.id = 'map-controls';
       document.body.appendChild(container);
 
-      bkoiModule = require('../../dist/cjs/index.js');
+      bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -135,7 +135,7 @@ describe('Integration Tests', () => {
     });
 
     test('should add multiple controls to map', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const navControl = new bkoiModule.NavigationControl({ showCompass: true, showZoom: true });
       const scaleControl = new bkoiModule.ScaleControl({ maxWidth: 200, unit: 'metric' });
@@ -149,7 +149,7 @@ describe('Integration Tests', () => {
     });
 
     test('should integrate geolocation control with map', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const geolocateControl = new bkoiModule.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
@@ -171,7 +171,7 @@ describe('Integration Tests', () => {
       container.id = 'map-markers';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       map = new bkoiModule.Map({
         container: 'map-markers',
         style: 'https://map.barikoi.com/styles/streets',
@@ -181,7 +181,7 @@ describe('Integration Tests', () => {
     });
 
     test('should create marker with popup', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const popup = new bkoiModule.Popup({ closeButton: true, closeOnClick: false })
         .setLngLat([90.4125, 23.8103])
@@ -197,7 +197,7 @@ describe('Integration Tests', () => {
     });
 
     test('should handle multiple markers', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const locations = [
         { lng: 90.4125, lat: 23.8103, title: 'Dhaka' },
@@ -225,7 +225,7 @@ describe('Integration Tests', () => {
 
   describe('Style and Layer Integration', () => {
     test('should validate Barikoi styles', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const validStyles = [
         'https://map.barikoi.com/styles/barikoi-light/style.json',
@@ -255,7 +255,7 @@ describe('Integration Tests', () => {
       container.id = 'map-style';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const map = new bkoiModule.Map({
         container: 'map-style',
         style: 'https://map.barikoi.com/styles/streets',
@@ -275,7 +275,7 @@ describe('Integration Tests', () => {
       container.id = 'map-events';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const map = new bkoiModule.Map({
         container: 'map-events',
         style: 'https://map.barikoi.com/styles/streets',
@@ -296,7 +296,7 @@ describe('Integration Tests', () => {
     });
 
     test('should handle control events', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Create a mock control with event handling
       const mockGeolocateControl = {
@@ -329,7 +329,7 @@ describe('Integration Tests', () => {
 
   describe('Geospatial Operations Integration', () => {
     test('should handle coordinate transformations', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const lngLat = new bkoiModule.LngLat(90.4125, 23.8103);
       const bounds = new bkoiModule.LngLatBounds([90.0, 23.0], [91.0, 24.0]);
@@ -343,7 +343,7 @@ describe('Integration Tests', () => {
     });
 
     test('should handle point operations', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       const point = new bkoiModule.Point(100, 200);
       expect(point).toBeDefined();
@@ -361,7 +361,7 @@ describe('Integration Tests', () => {
       const originalFetch = global.fetch;
       global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       expect(() => {
         new bkoiModule.Map({
@@ -374,7 +374,7 @@ describe('Integration Tests', () => {
     });
 
     test('should handle invalid configurations', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
 
       expect(() => {
         new bkoiModule.Map({
@@ -391,7 +391,7 @@ describe('Integration Tests', () => {
 
   describe('Memory Management Integration', () => {
     test('should handle multiple map instances', () => {
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const maps = [];
 
       for (let i = 0; i < 3; i++) {
@@ -420,7 +420,7 @@ describe('Integration Tests', () => {
       container.id = 'map-cleanup';
       document.body.appendChild(container);
 
-      const bkoiModule = require('../../dist/cjs/index.js');
+      const bkoiModule = require('../../dist/index.cjs');
       const map = new bkoiModule.Map({
         container: 'map-cleanup',
         style: 'https://map.barikoi.com/styles/streets'

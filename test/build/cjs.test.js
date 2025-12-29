@@ -1,6 +1,6 @@
 /**
  * Tests for CJS build format
- * Tests that the dist/cjs/index.js build can be required and has expected exports
+ * Tests that the dist/index.cjs build can be required and has expected exports
  */
 
 describe('CJS Build Tests', () => {
@@ -9,12 +9,12 @@ describe('CJS Build Tests', () => {
   beforeAll(() => {
     // Test that the CJS build file exists and can be required
     try {
-      bkoiModule = require('../../dist/cjs/index.js');
+      bkoiModule = require('../../dist/index.cjs');
     } catch (error) {
       // If require fails, check if file exists
       const fs = require('fs');
       const path = require('path');
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
       if (!fs.existsSync(cjsPath)) {
         throw new Error('CJS build file does not exist. Run npm run build first.');
       }
@@ -203,7 +203,7 @@ describe('CJS Build Tests', () => {
     let bkoiModule;
 
     beforeEach(() => {
-      bkoiModule = require('../../dist/cjs/index.js');
+      bkoiModule = require('../../dist/index.cjs');
 
       const container = document.createElement('div');
       container.id = 'map';

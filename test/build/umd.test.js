@@ -48,7 +48,7 @@ describe('UMD Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
 
       const umdContent = fs.readFileSync(umdPath, 'utf8');
       const esmContent = fs.readFileSync(esmPath, 'utf8');
@@ -62,7 +62,7 @@ describe('UMD Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
 
       const umdContent = fs.readFileSync(umdPath, 'utf8');
       const cjsContent = fs.readFileSync(cjsPath, 'utf8');
@@ -101,7 +101,7 @@ describe('UMD Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/esm/index.js');
+      const esmPath = path.resolve(__dirname, '../../dist/index.js');
 
       const umdSize = fs.statSync(umdPath).size;
       const esmSize = fs.statSync(esmPath).size;
@@ -114,7 +114,7 @@ describe('UMD Build Tests', () => {
       const fs = require('fs');
       const path = require('path');
       const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/cjs/index.js');
+      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
 
       const umdSize = fs.statSync(umdPath).size;
       const cjsSize = fs.statSync(cjsPath).size;
