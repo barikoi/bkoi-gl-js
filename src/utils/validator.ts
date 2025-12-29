@@ -14,6 +14,6 @@ export function isBarikoiStyle(style: string | null | undefined): boolean {
   }
 
   // Check for the specific Barikoi style URL pattern: /styles/{style-name}/style.json
-  const barikoiStylePattern = /^https:\/\/map\.barikoi\.com\/styles\/[^\/]+\/style\.json$/;
+  const barikoiStylePattern = /^https:\/\/map\.barikoi\.com\/styles\/[^/]+\/style\.json$/;
   return barikoiStylePattern.test(style);
 }

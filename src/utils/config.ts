@@ -4,7 +4,7 @@ export interface BkoiConfig {
 }
 
 // Load environment variables
-require('dotenv').config();
+// dotenv.config();
 
 export const bkoiConfig: BkoiConfig = {
   ACCESS_TOKEN: process.env.BKOI_ACCESS_TOKEN || process.env.TEST_BARIKOI_API_KEY || null,
