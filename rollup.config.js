@@ -21,30 +21,30 @@ export default [
         file: 'dist/iife/bkoi-gl.js',
         format: 'iife',
         name: 'bkoigl',
-        sourcemap: true,
+        sourcemap: true, 
       },
       {
         file: 'dist/umd/bkoi-gl.js',
         format: 'umd',
         name: 'bkoigl',
-        sourcemap: true,
+        sourcemap: true, 
       }
     ],
     external: [],
     plugins: [
-      clear({ targets: ['dist'] }), // Clean everything once
+      clear({ targets: ['dist'] }), 
       ...commonPlugins,
       nodeResolve({ browser: true, preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false, // No types for browser builds
+        declaration: false,
         declarationMap: false,
         sourceMap: true,
       }),
       copy({
         targets: [
           { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
-          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' }, // Keep for CDN
+          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' }, 
         ],
       }),
     ],
@@ -72,7 +72,7 @@ export default [
       ...commonPlugins,
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false, // We will bundle types separately
+        declaration: false, 
         declarationMap: false,
         sourceMap: true,
       }),
@@ -86,7 +86,7 @@ export default [
       file: 'dist/index.d.ts',
       format: 'es',
     },
-    external: ['maplibre-gl', 'maplibre-gl-draw', /\.css$/], // Ignore CSS in types
+    external: ['maplibre-gl', 'maplibre-gl-draw', /\.css$/], 
     plugins: [dts()],
   },
 ];
