@@ -1,10 +1,10 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import terser from 'rollup-plugin-terser';
 import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
 import image from '@rollup/plugin-image';
+import dts from 'rollup-plugin-dts';
 
 const commonPlugins = [
   image(),
@@ -13,119 +13,80 @@ const commonPlugins = [
 ];
 
 export default [
-  // IIFE build for browsers (bundled, self-contained)
+  // 1. Browser Builds (IIFE & UMD)
   {
     input: 'src/index.ts',
-    output: {
-      file: 'dist/iife/bkoi-gl.js',
-      format: 'iife',
-      name: 'bkoigl',
-      sourcemap: true,
-    },
-    external: [], // Bundle everything for self-contained browser usage
+    output: [
+      {
+        file: 'dist/iife/bkoi-gl.js',
+        format: 'iife',
+        name: 'bkoigl',
+        sourcemap: true,
+      },
+      {
+        file: 'dist/umd/bkoi-gl.js',
+        format: 'umd',
+        name: 'bkoigl',
+        sourcemap: true,
+      }
+    ],
+    external: [],
     plugins: [
-      clear({ targets: ['dist/iife'] }),
+      clear({ targets: ['dist'] }), // Clean everything once
       ...commonPlugins,
-      nodeResolve({
-        browser: true, // Resolve for browser environment
-        preferBuiltins: false,
-      }),
+      nodeResolve({ browser: true, preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false,
+        declaration: false, // No types for browser builds
         declarationMap: false,
         sourceMap: true,
       }),
-
-      copy({
-        targets: [
-          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' },
-        ],
-      }),
-    ],
-  },
-
-  // UMD build for browsers (bundled, self-contained)
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/umd/bkoi-gl.js',
-      format: 'umd',
-      name: 'bkoigl',
-      sourcemap: true,
-    },
-    external: [], // Bundle everything
-    plugins: [
-      clear({ targets: ['dist/umd'] }),
-      ...commonPlugins,
-      nodeResolve({
-        browser: true,
-        preferBuiltins: false,
-      }),
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: false,
-        declarationMap: false,
-        sourceMap: true,
-      }),
-
-    ],
-  },
-
-  // CJS build (external dependencies)
-  {
-    input: 'src/index.ts',
-    external: ['maplibre-gl', 'maplibre-gl-draw'], // Keep external for npm
-    output: {
-      dir: 'dist/cjs',
-      format: 'cjs',
-      preserveModules: true,
-      exports: 'auto',
-      sourcemap: true,
-    },
-    plugins: [
-      clear({ targets: ['dist/cjs'] }),
-      ...commonPlugins,
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: true,
-        declarationDir: './dist/cjs',
-        outDir: './dist/cjs',
-        rootDir: './src',
-        sourceMap: true,
-      }),
-
-    ],
-  },
-
-  // ESM build (external dependencies)
-  {
-    input: 'src/index.ts',
-    external: ['maplibre-gl', 'maplibre-gl-draw'], // Keep external for npm
-    output: {
-      dir: 'dist/esm',
-      format: 'es',
-      preserveModules: true,
-      exports: 'auto',
-      sourcemap: true,
-    },
-    plugins: [
-      clear({ targets: ['dist/esm', 'dist/style'] }),
-      ...commonPlugins,
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: true,
-        declarationDir: './dist/esm',
-        outDir: './dist/esm',
-        rootDir: './src',
-        sourceMap: true,
-      }),
-
       copy({
         targets: [
           { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
+          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' }, // Keep for CDN
         ],
       }),
     ],
+  },
+
+  // 2. Bundled CJS & ESM (Single files)
+  {
+    input: 'src/index.ts',
+    external: ['maplibre-gl', 'maplibre-gl-draw'],
+    output: [
+      {
+        file: 'dist/index.cjs',
+        format: 'cjs',
+        exports: 'named',
+        sourcemap: true,
+      },
+      {
+        file: 'dist/index.js',
+        format: 'es',
+        exports: 'named',
+        sourcemap: true,
+      }
+    ],
+    plugins: [
+      ...commonPlugins,
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false, // We will bundle types separately
+        declarationMap: false,
+        sourceMap: true,
+      }),
+    ],
+  },
+
+  // 3. Type Definitions (Bundled into one file)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/index.d.ts',
+      format: 'es',
+    },
+    external: ['maplibre-gl', 'maplibre-gl-draw', /\.css$/], // Ignore CSS in types
+    plugins: [dts()],
   },
 ];
