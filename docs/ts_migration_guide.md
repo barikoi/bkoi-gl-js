@@ -42,17 +42,19 @@ The original project may have had a root `index.js` file that re-exported everyt
 │              (Single Entry Point)                        │
 └──────────────────┬──────────────────────────────────────┘
                    │
-                   ├─── Build ───→ dist/esm/   (NPM: import)
-                   ├─── Build ───→ dist/cjs/   (NPM: require)
-                   └─── Build ───→ dist/iife/  (CDN: <script>)
+                   ├─── Build ───→ dist/index.js       (NPM: import - single bundled file)
+                   ├─── Build ───→ dist/index.cjs      (NPM: require - single bundled file)
+                   ├─── Build ───→ dist/index.d.ts     (TypeScript types - single bundled file)
+                   ├─── Build ───→ dist/iife/          (CDN: <script> - IIFE bundle)
+                   └─── Build ───→ dist/umd/           (CDN: UMD bundle)
 ```
 
 **NPM consumers** use package.json to find the built files:
 ```json
 {
-  "main": "./dist/cjs/index.js",    // require('bkoi-gl')
-  "module": "./dist/esm/index.js",  // import 'bkoi-gl'
-  "types": "./dist/esm/index.d.ts"  // TypeScript types
+  "main": "./dist/index.cjs",         // require('bkoi-gl') - single bundled file
+  "module": "./dist/index.js",        // import 'bkoi-gl' - single bundled file
+  "types": "./dist/index.d.ts"        // TypeScript types - single bundled file
 }
 ```
 
@@ -113,25 +115,26 @@ Replace your current package.json with this updated version:
 ```json
 {
   "name": "bkoi-gl",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A WebGL interactive maps library to use Barikoi maps and API",
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "unpkg": "./dist/iife/bkoi-gl.js",
   "jsdelivr": "./dist/iife/bkoi-gl.js",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/cjs/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
       },
-      "script": "./dist/iife/bkoi-gl.js"
+      "script": "./dist/iife/bkoi-gl.js",
+      "umd": "./dist/umd/bkoi-gl.js"
     },
     "./dist/style/bkoi-gl.css": "./dist/style/bkoi-gl.css"
   },
@@ -706,87 +709,112 @@ Replace your current rollup.config.js with:
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
 import clear from 'rollup-plugin-clear';
 import copy from 'rollup-plugin-copy';
 import image from '@rollup/plugin-image';
+import dts from 'rollup-plugin-dts';
+
+const commonPlugins = [
+  image(),
+  nodeResolve(),
+  commonjs(),
+];
 
 export default [
-  // IIFE build for browsers
+  // 1. Browser Builds (IIFE & UMD)
   {
     input: 'src/index.ts',
-    output: {
-      file: 'dist/iife/bkoi-gl.js',
-      format: 'iife',
-      name: 'bkoigl',
-      sourcemap: true,
-      globals: {
-        'maplibre-gl': 'maplibre',
-        'maplibre-gl-draw': 'MapboxDraw',
+    output: [
+      {
+        file: 'dist/iife/bkoi-gl.js',
+        format: 'iife',
+        name: 'bkoigl',
+        sourcemap: true, 
       },
-    },
-    external: ['maplibre-gl', 'maplibre-gl-draw'],
+      {
+        file: 'dist/umd/bkoi-gl.js',
+        format: 'umd',
+        name: 'bkoigl',
+        sourcemap: true, 
+      }
+    ],
+    external: [],
     plugins: [
-      clear({ targets: ['dist'] }),
-      image(),
-      nodeResolve(),
-      commonjs(),
+      clear({ targets: ['dist'] }), 
+      ...commonPlugins,
+      nodeResolve({ browser: true, preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false,
+        declarationMap: false,
         sourceMap: true,
       }),
-      terser(),
       copy({
         targets: [
-          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' },
+          { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
+          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' }, 
         ],
       }),
     ],
   },
-  
-  // ESM and CJS builds
+
+  // 2. Bundled CJS & ESM (Single files)
   {
     input: 'src/index.ts',
     external: ['maplibre-gl', 'maplibre-gl-draw'],
     output: [
       {
-        dir: 'dist/cjs',
+        file: 'dist/index.cjs',
         format: 'cjs',
-        preserveModules: true,
-        exports: 'auto',
+        exports: 'named',
         sourcemap: true,
       },
       {
-        dir: 'dist/esm',
+        file: 'dist/index.js',
         format: 'es',
-        preserveModules: true,
-        exports: 'auto',
+        exports: 'named',
         sourcemap: true,
-      },
+      }
     ],
     plugins: [
-      clear({ targets: ['dist/cjs', 'dist/esm', 'dist/style'] }),
-      image(),
-      nodeResolve(),
-      commonjs(),
+      ...commonPlugins,
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: true,
-        declarationDir: './dist/esm',
-        rootDir: './src',
+        declaration: false, 
+        declarationMap: false,
         sourceMap: true,
-      }),
-      terser(),
-      copy({
-        targets: [
-          { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
-        ],
       }),
     ],
   },
+
+  // 3. Type Definitions (Bundled into one file)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/index.d.ts',
+      format: 'es',
+    },
+    external: ['maplibre-gl', 'maplibre-gl-draw', /\.css$/], 
+    plugins: [dts()],
+  },
 ];
 ```
+
+**Key Points:**
+
+1. **Three separate build configurations:**
+   - **IIFE/UMD**: Browser bundles with all dependencies included
+   - **ESM/CJS**: Single bundled files for npm (external dependencies)
+   - **Type Definitions**: Single bundled .d.ts file using rollup-plugin-dts
+
+2. **Single-file outputs** instead of preserveModules:
+   - `dist/index.js` - ESM bundle
+   - `dist/index.cjs` - CJS bundle
+   - `dist/index.d.ts` - TypeScript definitions bundle
+
+3. **External dependencies** (maplibre-gl, maplibre-gl-draw) not bundled in ESM/CJS
+
+4. **CSS handling** with rollup-plugin-copy
 
 ---
 
@@ -872,20 +900,20 @@ Check that these files exist:
 
 ```
 dist/
-├── esm/
-│   ├── index.js
-│   ├── index.d.ts        ← Type definitions
-│   ├── index.js.map
-│   └── utils/
-│       ├── config.js
-│       ├── config.d.ts   ← Type definitions
-│       └── ...
-├── cjs/
-│   ├── index.js
-│   ├── index.d.ts        ← Type definitions
-│   └── ...
-└── iife/
-    └── bkoi-gl.js
+├── index.js              ← ES module bundle
+├── index.js.map          ← Source map for ESM
+├── index.cjs             ← CommonJS bundle
+├── index.cjs.map         ← Source map for CJS
+├── index.d.ts            ← TypeScript type definitions (single bundled file)
+├── iife/
+│   ├── bkoi-gl.js        ← IIFE browser bundle
+│   ├── bkoi-gl.js.map    ← Source map for IIFE
+│   └── bkoi-gl.css       ← Styles (copy)
+├── umd/
+│   ├── bkoi-gl.js        ← UMD bundle
+│   └── bkoi-gl.js.map    ← Source map for UMD
+└── style/
+    └── bkoi-gl.css       ← Styles (main)
 ```
 
 #### Step 10: Test in a Sample Project
@@ -1153,18 +1181,18 @@ const map = new bkoigl.Map({
 
 ```json
 {
-  "main": "./dist/cjs/index.js",      // Runtime code for CommonJS
-  "module": "./dist/esm/index.js",    // Runtime code for ES Modules
-  "types": "./dist/esm/index.d.ts",   // Type information
+  "main": "./dist/index.cjs",         // Runtime code for CommonJS (single bundled file)
+  "module": "./dist/index.js",        // Runtime code for ES Modules (single bundled file)
+  "types": "./dist/index.d.ts",       // Type information (single bundled file)
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/esm/index.d.ts",  // Types for ESM
-        "default": "./dist/esm/index.js"   // Runtime for ESM
+        "types": "./dist/index.d.ts",    // Types for ESM
+        "default": "./dist/index.js"     // Runtime for ESM
       },
       "require": {
-        "types": "./dist/cjs/index.d.ts",  // Types for CJS
-        "default": "./dist/cjs/index.js"   // Runtime for CJS
+        "types": "./dist/index.d.ts",    // Types for CJS
+        "default": "./dist/index.cjs"    // Runtime for CJS
       }
     }
   }

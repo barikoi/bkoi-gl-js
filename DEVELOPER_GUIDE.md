@@ -43,10 +43,10 @@ The package is maintained as an npm module with ES module support, targeting mod
 
 ### Build System
 
-- **Rollup**: Bundles ES modules to multiple formats (ESM, CJS, IIFE)
-- **Babel**: Transpiles modern JavaScript for browser compatibility
-- **External Dependencies**: MapLibre GL and maplibre-gl-draw are not bundled
-- **CSS Processing**: Includes style bundling and minification
+- **Rollup**: Bundles TypeScript to multiple formats (ESM, CJS, IIFE, UMD)
+- **TypeScript**: Compiles TypeScript source code and generates type definitions
+- **External Dependencies**: MapLibre GL and maplibre-gl-draw are marked as external for ESM/CJS, bundled for IIFE/UMD
+- **CSS Processing**: Includes style bundling and copying to distribution folders
 
 ## Getting Started
 
@@ -422,9 +422,12 @@ npm run build
 
 Generates outputs in `dist/`:
 
-- `esm/`: ES modules
-- `cjs/`: CommonJS
-- `iife/`: Browser-ready bundle
+- `index.js`: ES module (bundled single file)
+- `index.cjs`: CommonJS (bundled single file)
+- `index.d.ts`: TypeScript type definitions (bundled single file)
+- `iife/bkoi-gl.js`: Browser-ready IIFE bundle (with sourcemap)
+- `umd/bkoi-gl.js`: UMD bundle for compatibility (with sourcemap)
+- `style/bkoi-gl.css`: Stylesheet for map components
 
 ### Production Deployment
 
