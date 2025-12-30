@@ -44,7 +44,6 @@ export default [
       copy({
         targets: [
           { src: 'src/index.css', dest: 'dist/style', rename: 'bkoi-gl.css' },
-          { src: 'src/index.css', dest: 'dist/iife', rename: 'bkoi-gl.css' }, 
         ],
       }),
     ],

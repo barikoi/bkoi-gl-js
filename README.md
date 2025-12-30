@@ -5,7 +5,7 @@
 
 ## Description
 
-**Barikoi GL JS** is a JavaScript library built on top of [MapLibre GL JS](https://maplibre.org/maplibre-gl-js-docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
+**Barikoi GL JS** is a JavaScript library built on top of [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
 
 Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>, this package provides tools to integrate maps and location services effortlessly.
 
@@ -108,17 +108,21 @@ Add the following links to the `<head>` section of your HTML file:
 
 ### React/Next.js
 
-```javascript
+```typescript
+"use client";
+
 import { useEffect, useRef } from "react";
-import { Map } from "bkoi-gl";
+import { BkoiGlMap, Map } from "bkoi-gl";
 import "bkoi-gl/dist/style/bkoi-gl.css";
 
-function BasicMap() {
-  const mapContainer = useRef(null);
-  const map = useRef(null);
+const BasicMap = () => {
+  const mapContainer = useRef<HTMLDivElement | null>(null);
+  const map = useRef<BkoiGlMap | null>(null);
 
   useEffect(() => {
     if (map.current) return;
+    if (!mapContainer.current) return;
+
     map.current = new Map({
       container: mapContainer.current,
       center: [90.39017821904588, 23.719800220780733], // Dhaka coordinates
@@ -132,7 +136,6 @@ function BasicMap() {
       ref={mapContainer}
       style={{
         width: "100%",
-        height: "400px",
         height: "100vh",
         minHeight: "400px",
         overflow: "hidden",
@@ -140,6 +143,8 @@ function BasicMap() {
     />
   );
 }
+
+export default BasicMap;
 ```
 
 ## Examples

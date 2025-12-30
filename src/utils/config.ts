@@ -3,10 +3,7 @@ export interface BkoiConfig {
   DEFAULT_STYLE: string;
 }
 
-// Load environment variables
-// dotenv.config();
-
 export const bkoiConfig: BkoiConfig = {
-  ACCESS_TOKEN: process.env.BKOI_ACCESS_TOKEN || process.env.TEST_BARIKOI_API_KEY || null,
+  ACCESS_TOKEN: null,
   DEFAULT_STYLE: 'https://map.barikoi.com/styles/barikoi-light/style.json'
 };
