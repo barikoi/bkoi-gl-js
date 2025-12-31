@@ -5,7 +5,7 @@
 
 describe('Accessibility Tests', () => {
   beforeAll(() => {
-    // Mock the Map constructor globally to avoid real instantiation
+    // Mock the Map, Marker, and Popup constructors globally to avoid real instantiation
     const bkoiModule = require('../../dist/index.cjs');
     const mockMapInstance = {
       addControl: jest.fn(),
@@ -17,10 +17,29 @@ describe('Accessibility Tests', () => {
       fire: jest.fn(),
       remove: jest.fn(),
       loaded: jest.fn(() => true),
-      isStyleLoaded: jest.fn(() => true)
+      isStyleLoaded: jest.fn(() => true),
+      _getUIString: jest.fn(() => 'Mock UI String')
     };
 
     bkoiModule.Map = jest.fn(() => mockMapInstance);
+
+    // Mock Marker
+    bkoiModule.Marker = jest.fn().mockImplementation(() => ({
+      setLngLat: jest.fn().mockReturnThis(),
+      addTo: jest.fn().mockReturnThis(),
+      remove: jest.fn(),
+      getElement: jest.fn(() => document.createElement('div'))
+    }));
+
+    // Mock Popup
+    bkoiModule.Popup = jest.fn().mockImplementation(() => ({
+      setLngLat: jest.fn().mockReturnThis(),
+      setHTML: jest.fn().mockReturnThis(),
+      setText: jest.fn().mockReturnThis(),
+      addTo: jest.fn().mockReturnThis(),
+      remove: jest.fn(),
+      isOpen: jest.fn(() => false)
+    }));
   });
 
   describe('Map Container Accessibility', () => {
@@ -49,7 +68,7 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      new bkoiModule.Map({
         container: 'accessible-map',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -85,7 +104,7 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      new bkoiModule.Map({
         container: 'keyboard-map',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -121,7 +140,7 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      new bkoiModule.Map({
         container: 'sr-map',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -134,15 +153,12 @@ describe('Accessibility Tests', () => {
   });
 
   describe('Control Accessibility', () => {
-    let map;
-    let bkoiModule;
-
-    beforeEach(() => {
+    test('should have accessible navigation controls', () => {
       const container = document.createElement('div');
-      container.id = 'control-accessibility';
+      container.id = 'control-accessibility-nav';
       document.body.appendChild(container);
 
-      bkoiModule = require('../../dist/index.cjs');
+      const bkoiModule = require('../../dist/index.cjs');
 
       // Mock the Map constructor to avoid real instantiation
       const mockMapInstance = {
@@ -160,16 +176,13 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      map = new bkoiModule.Map({
-        container: 'control-accessibility',
+      const map = new bkoiModule.Map({
+        container: 'control-accessibility-nav',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
         zoom: 10
       });
-    });
 
-    test('should have accessible navigation controls', () => {
-      const bkoiModule = require('../../dist/index.cjs');
       const navControl = new bkoiModule.NavigationControl();
 
       // Mock control element creation
@@ -190,7 +203,35 @@ describe('Accessibility Tests', () => {
     });
 
     test('should have accessible geolocation control', () => {
+      const container = document.createElement('div');
+      container.id = 'control-accessibility-geo';
+      document.body.appendChild(container);
+
       const bkoiModule = require('../../dist/index.cjs');
+
+      // Mock the Map constructor to avoid real instantiation
+      const mockMapInstance = {
+        addControl: jest.fn(),
+        getContainer: jest.fn(() => container),
+        setStyle: jest.fn(),
+        once: jest.fn(),
+        on: jest.fn(),
+        off: jest.fn(),
+        fire: jest.fn(),
+        remove: jest.fn(),
+        loaded: jest.fn(() => true),
+        isStyleLoaded: jest.fn(() => true)
+      };
+
+      jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
+
+      const map = new bkoiModule.Map({
+        container: 'control-accessibility-geo',
+        style: 'https://map.barikoi.com/styles/streets',
+        center: [90.4125, 23.8103],
+        zoom: 10
+      });
+
       const geolocateControl = new bkoiModule.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
         showUserHeading: true
@@ -203,7 +244,35 @@ describe('Accessibility Tests', () => {
     });
 
     test('should have accessible fullscreen control', () => {
+      const container = document.createElement('div');
+      container.id = 'control-accessibility-fullscreen';
+      document.body.appendChild(container);
+
       const bkoiModule = require('../../dist/index.cjs');
+
+      // Mock the Map constructor to avoid real instantiation
+      const mockMapInstance = {
+        addControl: jest.fn(),
+        getContainer: jest.fn(() => container),
+        setStyle: jest.fn(),
+        once: jest.fn(),
+        on: jest.fn(),
+        off: jest.fn(),
+        fire: jest.fn(),
+        remove: jest.fn(),
+        loaded: jest.fn(() => true),
+        isStyleLoaded: jest.fn(() => true)
+      };
+
+      jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
+
+      const map = new bkoiModule.Map({
+        container: 'control-accessibility-fullscreen',
+        style: 'https://map.barikoi.com/styles/streets',
+        center: [90.4125, 23.8103],
+        zoom: 10
+      });
+
       const fullscreenControl = new bkoiModule.FullscreenControl();
 
       map.addControl(fullscreenControl);
@@ -214,24 +283,18 @@ describe('Accessibility Tests', () => {
   });
 
   describe('Marker and Popup Accessibility', () => {
-    let map;
-
-    beforeEach(() => {
+    test('should create accessible markers', () => {
       const container = document.createElement('div');
-      container.id = 'marker-accessibility';
+      container.id = 'marker-accessibility-markers';
       document.body.appendChild(container);
 
       const bkoiModule = require('../../dist/index.cjs');
-      map = new bkoiModule.Map({
-        container: 'marker-accessibility',
+      const map = new bkoiModule.Map({
+        container: 'marker-accessibility-markers',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
         zoom: 12
       });
-    });
-
-    test('should create accessible markers', () => {
-      const bkoiModule = require('../../dist/index.cjs');
 
       const markerElement = document.createElement('div');
       markerElement.setAttribute('role', 'button');
@@ -243,11 +306,22 @@ describe('Accessibility Tests', () => {
         .addTo(map);
 
       expect(marker).toBeDefined();
+      expect(map).toBeDefined();
       // In real implementation, marker should have proper accessibility attributes
     });
 
     test('should create accessible popups', () => {
+      const container = document.createElement('div');
+      container.id = 'marker-accessibility-popups';
+      document.body.appendChild(container);
+
       const bkoiModule = require('../../dist/index.cjs');
+      const _map = new bkoiModule.Map({
+        container: 'marker-accessibility-popups',
+        style: 'https://map.barikoi.com/styles/streets',
+        center: [90.4125, 23.8103],
+        zoom: 12
+      });
 
       const popup = new bkoiModule.Popup({
         closeButton: true,
@@ -263,14 +337,25 @@ describe('Accessibility Tests', () => {
             </div>
           </div>
         `)
-        .addTo(map);
+        .addTo(_map);
 
       expect(popup).toBeDefined();
+      expect(_map).toBeDefined();
       // In real implementation, popup should maintain semantic structure
     });
 
     test('should handle keyboard interaction for popups', () => {
+      const container = document.createElement('div');
+      container.id = 'marker-accessibility-keyboard';
+      document.body.appendChild(container);
+
       const bkoiModule = require('../../dist/index.cjs');
+      const _map = new bkoiModule.Map({
+        container: 'marker-accessibility-keyboard',
+        style: 'https://map.barikoi.com/styles/streets',
+        center: [90.4125, 23.8103],
+        zoom: 12
+      });
 
       const popup = new bkoiModule.Popup({
         closeButton: true,
@@ -278,7 +363,7 @@ describe('Accessibility Tests', () => {
       })
         .setLngLat([90.4125, 23.8103])
         .setHTML('<div>Focusable content</div>')
-        .addTo(map);
+        .addTo(_map);
 
       // Popup should support keyboard navigation
       expect(popup).toBeDefined();
@@ -292,7 +377,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('tabindex', '0');
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      new (require('../../dist/index.cjs')).Map({
         container: 'keyboard-nav',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -354,7 +439,7 @@ describe('Accessibility Tests', () => {
       helpText.textContent = 'Use arrow keys to pan, +/- to zoom, Enter to select';
       container.appendChild(helpText);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      new (require('../../dist/index.cjs')).Map({
         container: 'shortcuts',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -400,7 +485,7 @@ describe('Accessibility Tests', () => {
       container.setAttribute('aria-atomic', 'true');
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      const _map = new (require('../../dist/index.cjs')).Map({
         container: 'dynamic-content',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -425,7 +510,7 @@ describe('Accessibility Tests', () => {
       statusRegion.id = 'map-status';
       container.appendChild(statusRegion);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      const _map = new (require('../../dist/index.cjs')).Map({
         container: 'status-announcements',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -490,7 +575,7 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      const _map = new bkoiModule.Map({
         container: 'color-preference',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -524,7 +609,7 @@ describe('Accessibility Tests', () => {
       container.id = 'focus-management';
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      const _map = new (require('../../dist/index.cjs')).Map({
         container: 'focus-management',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -542,7 +627,7 @@ describe('Accessibility Tests', () => {
       container.id = 'focus-restore';
       document.body.appendChild(container);
 
-      const map = new bkoiModule.Map({
+      const _map = new bkoiModule.Map({
         container: 'focus-restore',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -553,7 +638,7 @@ describe('Accessibility Tests', () => {
       const popup = new bkoiModule.Popup()
         .setLngLat([90.4125, 23.8103])
         .setHTML('<button autofocus>Close</button>')
-        .addTo(map);
+        .addTo(_map);
 
       expect(popup).toBeDefined();
     });
@@ -565,7 +650,7 @@ describe('Accessibility Tests', () => {
       container.id = 'no-focus-trap';
       document.body.appendChild(container);
 
-      const map = new bkoiModule.Map({
+      const _map = new bkoiModule.Map({
         container: 'no-focus-trap',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -579,7 +664,7 @@ describe('Accessibility Tests', () => {
       })
         .setLngLat([90.4125, 23.8103])
         .setHTML('<div><button>Action 1</button><button>Action 2</button></div>')
-        .addTo(map);
+        .addTo(_map);
 
       expect(popup).toBeDefined();
     });
@@ -617,7 +702,7 @@ describe('Accessibility Tests', () => {
 
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      const _map = new bkoiModule.Map({
         container: 'reduced-motion',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -634,7 +719,7 @@ describe('Accessibility Tests', () => {
       container.id = 'animation-controls';
       document.body.appendChild(container);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      const _map = new (require('../../dist/index.cjs')).Map({
         container: 'animation-controls',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -642,7 +727,7 @@ describe('Accessibility Tests', () => {
         fadeDuration: 0 // Disable animations for users who prefer it
       });
 
-      expect(map).toBeDefined();
+      expect(_map).toBeDefined();
     });
   });
 
@@ -659,7 +744,7 @@ describe('Accessibility Tests', () => {
       errorRegion.id = 'map-errors';
       container.appendChild(errorRegion);
 
-      const map = new (require('../../dist/index.cjs')).Map({
+      const _map = new (require('../../dist/index.cjs')).Map({
         container: 'error-announcements',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],

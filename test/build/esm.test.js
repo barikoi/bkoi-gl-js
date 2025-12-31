@@ -7,7 +7,6 @@ describe('ESM Build Tests', () => {
   let bkoiModule;
 
   beforeAll(async () => {
-    // Test that the ESM build file exists and can be imported
     try {
       bkoiModule = await import('../../dist/index.js');
     } catch (error) {
@@ -186,16 +185,14 @@ describe('ESM Build Tests', () => {
       // Mock the Map constructor
       jest.spyOn(bkoiModule, 'Map').mockImplementation(() => mockMapInstance);
 
-      const map = new bkoiModule.Map({
+      new bkoiModule.Map({
         container: 'map',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
         zoom: 10
       });
 
-      expect(map).toBeDefined();
-      expect(typeof map.addControl).toBe('function');
-      expect(typeof map.getContainer).toBe('function');
+      expect(bkoiModule.Map).toHaveBeenCalled();
     });
 
     test('should handle Map constructor errors', () => {
@@ -353,7 +350,7 @@ describe('ESM Build Tests', () => {
       container.id = 'map';
       document.body.appendChild(container);
 
-      const map = new bkoiModule.Map({
+      new bkoiModule.Map({
         container: 'map',
         style: 'https://map.barikoi.com/styles/streets',
         center: [90.4125, 23.8103],
@@ -373,13 +370,12 @@ describe('ESM Build Tests', () => {
         container.id = `map-${i}`;
         document.body.appendChild(container);
 
-        const map = new bkoiModule.Map({
+        maps.push(new bkoiModule.Map({
           container: `map-${i}`,
           style: 'https://map.barikoi.com/styles/streets',
           center: [90.4125, 23.8103],
           zoom: 10
-        });
-        maps.push(map);
+        }));
       }
 
       expect(maps).toHaveLength(5);

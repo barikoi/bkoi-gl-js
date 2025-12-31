@@ -1,3 +1,16 @@
+/**
+ * @fileoverview bkoi-gl-js Main Library Entry Point
+ * @description This file implements the core bkoi-gl-js library, providing a MapLibre GL JS wrapper
+ * with Barikoi-specific enhancements including drawing tools, style management, and authentication.
+
+ * The library extends MapLibre GL JS with:
+ * - Barikoi API integration and authentication
+ * - Interactive polygon/line/point drawing tools
+ * - Dynamic style switching with UI drawer
+ * - Automatic attribution and branding
+ * - TypeScript support with comprehensive type definitions
+ */
+
 import maplibre, {
   Map,
   MapOptions,
@@ -29,28 +42,39 @@ const {
 } = maplibre;
 
 /**
- * Extended Map class with Barikoi integration
- * 
- * This class extends the base Maplibre GL Map with Barikoi-specific features:
- * - Custom Barikoi map styles with authentication
- * - Barikoi attribution and branding
- * - Drawing tools for polygons, lines, and points
- * - Style drawer for switching between map styles
- * 
- * @example
- * ```typescript
- * const map = new BkoiGlMap({
- *   container: 'map',
- *   accessToken: 'your-barikoi-token',
- *   center: [90.3938, 23.8103],
- *   zoom: 12,
- *   polygon: true
- * });
- * ```
+ * @class BkoiGlMap
+ * @description Extended MapLibre GL Map class with Barikoi integration.
+ *
+ * This class extends the base MapLibre GL Map with Barikoi-specific features:
+ * - Automatic API authentication for Barikoi styles
+ * - Interactive drawing tools using Mapbox GL Draw
+ * - Style switching drawer with thumbnail previews
+ * - Barikoi branding and attribution
+ *
+ * @extends {Map}
  */
 export class BkoiGlMap extends Map {
+  /**
+   * @private
+   * @description Reference to the MapboxDraw instance when drawing tools are enabled.
+   * This property is undefined when polygon drawing is not activated.
+   */
   private draw?: MapboxDraw;
 
+  /**
+   * @constructor
+   * @description Creates a new BkoiGlMap instance with Barikoi integration.
+   *
+   * Initializes a MapLibre GL map with Barikoi-specific features including:
+   * - Automatic authentication for Barikoi styles
+   * - Optional drawing tools initialization
+   * - Style drawer setup
+   * - Barikoi branding and attribution
+   *
+   * @param {BkoiMapOptions} mapOptions - Configuration options for the map
+   *
+   * @throws {Error} When Barikoi API access token is required but not provided
+   */
   constructor(mapOptions: BkoiMapOptions) {
     // Validate access token for Barikoi styles
     if (
@@ -84,11 +108,11 @@ export class BkoiGlMap extends Map {
     // Initialize features on map load
     this.once('load', () => {
       this.addBarikoiAttribution();
-      
+
       if (mapOptions.polygon) {
         this.initializeDraw(mapOptions.drawOptions || {});
       }
-      
+
       if (mapOptions.styles) {
         this.initializeStyleDrawer(mapOptions.styles);
       }
@@ -96,8 +120,15 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Setup custom attribution control with Barikoi, OpenMapTiles, and OSM links
    * @private
+   * @method setupAttributionControl
+   * @description Initializes the attribution control with custom Barikoi attribution.
+   *
+   * Sets up a MapLibre GL attribution control with compact styling and prepares
+   * it for custom Barikoi attribution content that gets injected after map load.
+   * The attribution control is positioned at bottom-right.
+   *
+   * @returns {void}
    */
   private setupAttributionControl(): void {
     const attributionControl = new AttributionControl({
@@ -113,12 +144,12 @@ export class BkoiGlMap extends Map {
         const attributionContainer = container.querySelector(
           '.maplibregl-ctrl-attrib'
         );
-        
+
         if (attributionContainer) {
           const inner = attributionContainer.querySelector(
             '.maplibregl-ctrl-attrib-inner'
           );
-          
+
           if (inner) {
             inner.innerHTML =
               '© <a href="https://www.barikoi.com" target="_blank">Barikoi</a> © <a href="https://openmaptiles.org" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>';
@@ -129,8 +160,15 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Add Barikoi logo attribution control to the map
    * @private
+   * @method addBarikoiAttribution
+   * @description Adds the Barikoi logo control to the map.
+   *
+   * Creates and adds a custom control displaying the Barikoi logo that links
+   * to the Barikoi website. The logo is positioned at bottom-left and uses
+   * CSS styling defined in index.css.
+   *
+   * @returns {void}
    */
   private addBarikoiAttribution(): void {
     const logoControl: IControl = {
@@ -151,9 +189,17 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Initialize maplibre-gl-draw for polygon drawing
-   * @param drawOptions - Configuration options for the drawing tools
    * @private
+   * @method initializeDraw
+   * @description Initializes the MapboxDraw drawing tools for the map.
+   *
+   * Creates a new MapboxDraw instance with default options optimized for polygon drawing,
+   * merges in any custom options provided, and adds the drawing controls to the map.
+   * By default, only polygon and trash controls are enabled for simplicity.
+   *
+   * @param {Partial<MapboxDraw.MapboxDrawOptions>} drawOptions - Custom options to merge with defaults
+   *
+   * @returns {void}
    */
   private initializeDraw(drawOptions: Partial<MapboxDraw.MapboxDrawOptions>): void {
     const defaultOptions: MapboxDraw.MapboxDrawOptions = {
@@ -170,9 +216,18 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Initialize style drawer UI for switching between map styles
-   * @param styles - Array of style configurations
    * @private
+   * @method initializeStyleDrawer
+   * @description Creates and initializes the interactive style drawer UI.
+   *
+   * Builds a collapsible drawer containing style selection options with thumbnails.
+   * Each style is represented by an image thumbnail that shows the style name on hover
+   * and allows switching to that style when clicked. The drawer includes a toggle
+   * button to show/hide the style options.
+   *
+   * @param {StyleConfig[]} styles - Array of style configurations to display in the drawer
+   *
+   * @returns {void}
    */
   private initializeStyleDrawer(styles: StyleConfig[]): void {
     const mapContainer = this.getContainer();
@@ -205,12 +260,19 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Create a single style item for the drawer
-   * @param style - Style URL
-   * @param image - Thumbnail image URL
-   * @param name - Display name
-   * @returns HTML element for the style item
    * @private
+   * @method createStyleItem
+   * @description Creates a single style selection item for the style drawer.
+   *
+   * Builds an interactive DOM element representing one map style option.
+   * The item includes a thumbnail image with hover effects that reveal the style name,
+   * and clicking the item switches the map to that style.
+   *
+   * @param {string} style - The style URL or identifier
+   * @param {string} image - URL of the thumbnail image for the style
+   * @param {string} name - Human-readable name of the style
+   *
+   * @returns {HTMLDivElement} The created style item DOM element
    */
   private createStyleItem(style: string, image: string, name: string): HTMLDivElement {
     const styleItem = document.createElement('div');
@@ -271,9 +333,14 @@ export class BkoiGlMap extends Map {
   }
 
   /**
-   * Get the MapboxDraw instance if initialized
-   * @returns The MapboxDraw instance or undefined if not initialized
-   * @public
+   * @method getDraw
+   * @description Retrieves the MapboxDraw instance if drawing tools are enabled.
+   *
+   * Returns the MapboxDraw instance that was initialized when the `polygon` option
+   * was set to true in the map constructor. This allows access to the full
+   * MapboxDraw API for programmatic drawing operations.
+   *
+   * @returns {MapboxDraw | undefined} The MapboxDraw instance if drawing tools are enabled, undefined otherwise
    */
   public getDraw(): MapboxDraw | undefined {
     return this.draw;
@@ -281,11 +348,30 @@ export class BkoiGlMap extends Map {
 }
 
 // Re-export utilities
+/**
+ * @description Global configuration object for bkoi-gl-js library settings.
+ */
 export { bkoiConfig } from './utils/config';
+
+/**
+ * @description Utility function to validate if a style URL is a Barikoi style.
+ * @param {string | null | undefined} style - The style URL to validate
+ * @returns {boolean} True if the style is a valid Barikoi style URL
+ */
 export { isBarikoiStyle } from './utils/validator';
+
+/**
+ * @description Re-exports all TypeScript type definitions from the types module.
+ * Includes BkoiMapOptions, StyleConfig, and BkoiConfig interfaces.
+ */
 export type * from './types';
 
 // Export all maplibre features individually for tree-shaking
+/**
+ * @description Re-exports all MapLibre GL JS features for tree-shaking compatibility.
+ * These exports allow importing only the specific MapLibre features you need,
+ * reducing bundle size when using modern bundlers.
+ */
 export {
   setRTLTextPlugin,
   getRTLTextPluginStatus,
@@ -307,9 +393,41 @@ export {
 };
 
 // Export BkoiGlMap as Map (main export)
+/**
+ * @description Main export: BkoiGlMap class aliased as Map for convenience.
+ *
+ * This is the primary way to create maps with Barikoi integration.
+ */
 export { BkoiGlMap as Map };
 
 // Default export with all Maplibre features + Barikoi extensions
+/**
+ * @description Default export providing all MapLibre GL JS features plus Barikoi extensions.
+ *
+ * This export includes everything from MapLibre GL JS plus additional Barikoi-specific
+ * features and a convenient accessToken getter/setter.
+ *
+ * @property {BkoiGlMap} Map - The enhanced map class with Barikoi integration
+ * @property {string | null} accessToken - Global Barikoi API token getter/setter
+ * @property {string} workerUrl - MapLibre worker URL (usually empty string)
+ * @property {Function} setRTLTextPlugin - MapLibre RTL text plugin setter
+ * @property {Function} getRTLTextPluginStatus - MapLibre RTL text plugin status getter
+ * @property {Function} prewarm - MapLibre resource prewarming function
+ * @property {Function} clearPrewarmedResources - MapLibre resource cleanup function
+ * @property {typeof NavigationControl} NavigationControl - MapLibre navigation control
+ * @property {typeof GeolocateControl} GeolocateControl - MapLibre geolocation control
+ * @property {typeof AttributionControl} AttributionControl - MapLibre attribution control
+ * @property {typeof ScaleControl} ScaleControl - MapLibre scale control
+ * @property {typeof FullscreenControl} FullscreenControl - MapLibre fullscreen control
+ * @property {typeof Popup} Popup - MapLibre popup class
+ * @property {typeof Marker} Marker - MapLibre marker class
+ * @property {typeof Style} Style - MapLibre style utilities
+ * @property {typeof LngLat} LngLat - MapLibre coordinate class
+ * @property {typeof LngLatBounds} LngLatBounds - MapLibre bounds class
+ * @property {typeof Point} Point - MapLibre point utilities
+ * @property {typeof MercatorCoordinate} MercatorCoordinate - MapLibre projection utilities
+ * @property {typeof Evented} Evented - MapLibre event system base class
+ */
 const exported = {
   setRTLTextPlugin,
   getRTLTextPluginStatus,
@@ -329,14 +447,27 @@ const exported = {
   Evented,
   prewarm,
   clearPrewarmedResources,
-  
+
+  /**
+   * @description Global Barikoi API access token getter/setter.
+   *
+   * Provides convenient access to set the global Barikoi API token that will be used
+   * by all map instances that don't have their own accessToken specified.
+   *
+   * @type {string | null}
+   */
   get accessToken(): string | null {
     return bkoiConfig.ACCESS_TOKEN;
   },
   set accessToken(token: string | null) {
     bkoiConfig.ACCESS_TOKEN = token;
   },
-  
+
+  /**
+   * @description MapLibre GL JS worker URL.
+   * Usually left as empty string for default behavior.
+   * @type {string}
+   */
   workerUrl: '',
 };
 

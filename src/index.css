@@ -1,16 +1,18 @@
-/*
- * bkoi-gl-js CSS Styles
- *
- * This file contains the CSS styles for the bkoi-gl-js library, which is a wrapper
- * around Maplibre GL JS with additional features for Barikoi mapping services.
- *
- * Key components styled in this file:
- * - Barikoi logo control: Custom logo displayed on the map
- * - Draw tools: Styles for polygon drawing controls using Mapbox GL Draw
- * - Map interactions: Cursor styles for various map interaction modes
- *
- * The file imports the base Maplibre GL CSS and extends it with Barikoi-specific
- * customizations and additional UI components.
+/**
+ * @fileoverview bkoi-gl-js CSS Styles
+ * @description This file contains the CSS styles for the bkoi-gl-js library, a wrapper
+ * around MapLibre GL JS with additional features for Barikoi mapping services.
+
+ * The styles include:
+ * - Barikoi logo control: Custom branded logo displayed on maps
+ * - Draw tools: Interactive polygon/line/point drawing controls
+ * - Map interactions: Cursor styles for various interaction modes
+ * - Style drawer: UI for switching between map styles
+ */
+
+/**
+ * @section Base Imports
+ * Import the base MapLibre GL CSS and extend it with Barikoi-specific customizations
  */
 
 /* Import Maplibre CSS */

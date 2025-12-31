@@ -30,7 +30,7 @@ describe('Style Drawer Feature Tests', () => {
               this._loadCallbacks.forEach(cb => {
                 try {
                   cb({ type: 'load' });
-                } catch (e) {
+                } catch {
                   // Ignore errors
                 }
               });
@@ -636,4 +636,3 @@ describe('Style Drawer Feature Tests', () => {
     });
   });
 });
-

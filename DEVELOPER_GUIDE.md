@@ -10,7 +10,7 @@ The package is maintained as an npm module with ES module support, targeting mod
 
 ### Core Components
 
-1. **BkoiGlMap Class** (`src/index.js`)
+1. **BkoiGlMap Class** (`src/index.ts`)
 
    - **Purpose**: Main entry point for the bkoi-gl-js library, a Maplibre GL JS wrapper with Barikoi-specific mapping features
    - Extends MapLibre's `Map` class with Barikoi integration
@@ -30,13 +30,13 @@ The package is maintained as an npm module with ES module support, targeting mod
      - Map interactions: Cursor styles for various map interaction modes
    - Imports base Maplibre GL CSS and extends it with Barikoi-specific customizations
 
-3. **Configuration System** (`src/utils/config.js`)
+3. **Configuration System** (`src/utils/config.ts`)
 
    - **Purpose**: Contains default configuration settings for the bkoi-gl-js library
    - Stores Barikoi access tokens and default map style URLs
    - Provides centralized configuration management used throughout the library
 
-4. **Validation Utilities** (`src/utils/validator.js`)
+4. **Validation Utilities** (`src/utils/validator.ts`)
    - **Purpose**: Contains utility functions for validating Barikoi-specific inputs
    - Includes functions like checking if a map style URL is a Barikoi style
    - Helps ensure proper integration with Barikoi services
@@ -44,15 +44,15 @@ The package is maintained as an npm module with ES module support, targeting mod
 ### Build System
 
 - **Rollup**: Bundles TypeScript to multiple formats (ESM, CJS, IIFE, UMD)
-- **TypeScript**: Compiles TypeScript source code and generates type definitions
-- **External Dependencies**: MapLibre GL and maplibre-gl-draw are marked as external for ESM/CJS, bundled for IIFE/UMD
-- **CSS Processing**: Includes style bundling and copying to distribution folders
+- **TypeScript**: Compiles TypeScript source code and generates type definitions (.d.ts, .d.cts)
+- **Dependencies**: All dependencies (including MapLibre GL and maplibre-gl-draw) are bundled in all formats
+- **CSS Processing**: Source styles are copied to distribution folders
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js ^24.11.0
+- Node.js >=18.0.0
 - npm
 
 ### Installation
@@ -75,18 +75,59 @@ npm run build
 
 ```
 bkoi-gl-js/
-├── src/                   # Source code
-│   ├── index.js           # Main library entry point
-│   ├── index.css          # Library styles
-│   └── utils/             # Helper functions
-├── examples/              # Integration demos
-│   ├── vanilla/           # Plain JavaScript demo
-│   ├── react/             # React integration demo
-│   ├── next/              # Next.js integration demo
-│   └── vite/              # Vite integration demo
-├── dist/                  # Built outputs (generated)
-├── bkoi-gl-*.tgz          # Packaged releases (generated)
-└── package.json           # Dependencies and scripts
+├── src/                          # Source code
+│   ├── index.ts                  # Main library entry point
+│   ├── index.css                 # Library styles
+│   ├── types/                    # TypeScript type definitions
+│   │   └── index.ts
+│   └── utils/                    # Helper functions
+│       ├── config.ts
+│       └── validator.ts
+├── test/                         # Comprehensive test suite (333 tests)
+│   ├── accessibility/            # Accessibility compliance tests
+│   │   └── accessibility.test.js
+│   ├── build/                    # Build output verification tests
+│   │   ├── cjs.test.js          # CommonJS build tests
+│   │   ├── esm.test.js          # ES module build tests
+│   │   ├── iife.test.js         # IIFE build tests
+│   │   └── umd.test.js          # UMD build tests
+│   ├── features/                 # Feature-specific tests
+│   │   ├── attribution-control.test.js
+│   │   ├── fullscreen-control.test.js
+│   │   ├── geolocate-control.test.js
+│   │   ├── navigation-control.test.js
+│   │   ├── polygon-drawing.test.js
+│   │   ├── scale-control.test.js
+│   │   └── style-drawer.test.js
+│   ├── integration/              # Integration test suite
+│   │   └── integration.test.js
+│   ├── performance/              # Performance test suite
+│   │   └── performance.test.js
+│   ├── accessibility/            # Accessibility compliance tests
+│   │   └── accessibility.test.js
+│   ├── docs/                     # Test documentation
+│   │   └── TEST_ANALYSIS.md
+│   └── config/                   # Test configuration files
+│       ├── babel-setup.js
+│       ├── browser-env.js
+│       └── setup.js
+├── dist/                         # Built outputs (generated)
+│   ├── index.js                  # ES module bundle
+│   ├── index.cjs                 # CommonJS bundle
+│   ├── index.d.ts                # TypeScript definitions (ESM)
+│   ├── index.d.cts               # TypeScript definitions (CJS)
+│   ├── iife/                     # Browser IIFE bundle
+│   │   └── bkoi-gl.js
+│   ├── umd/                      # UMD bundle
+│   │   └── bkoi-gl.js
+│   └── style/                    # CSS styles
+│       └── bkoi-gl.css
+├── examples/                     # Integration demos
+│   └── index.html
+├── coverage/                     # Test coverage reports (generated)
+├── .vscode/                      # VS Code configuration
+├── bkoi-gl-*.tgz                 # Packaged releases (generated)
+└── Config files                 # package.json, rollup.config.js, etc.
 ```
 
 ## Key Features & APIs
@@ -274,14 +315,46 @@ Before committing changes, verify:
 
 ## Release Process
 
-1. Update version in `package.json`
-2. Build for production: `npm run build`
-3. Test the build in separate projects using tarball method
-4. Generate final tarball: `npm pack`
-5. Test tarball installation in separate project
-6. Publish to npm: `npm publish`
-7. Update CDN if applicable
-8. Create GitHub release with changelog
+### Pre-Publishing Checklist
+
+Run these commands before publishing to ensure package quality:
+
+```bash
+# 1. Check package configuration
+npx publint
+
+# 2. Verify TypeScript types
+npx @arethetypeswrong/cli --pack .
+
+# 3. Build the project
+npm run build
+
+# 4. Generate and verify tarball
+npm pack
+
+# 5. Check package size
+# Look for "package size:" in the npm pack output above
+# Ensure it's reasonable for your library (typically < 5MB for bundled libs)
+```
+
+## 📝 Understanding the Tool Outputs
+
+**publint**: Should show "All good!" for a properly configured package.
+
+**@arethetypeswrong/cli**: May show resolution failures for CSS files and subpaths. These are expected and can be ignored - the tool can't resolve non-JavaScript files, which is normal for library packages. The important thing is that the main package resolution works.
+
+**npm pack**: Look for "package size:" in the output. Ensure it's reasonable for your library (typically < 5MB for bundled libraries). The current package is 4.0 MB which is acceptable.
+
+### Publishing Steps
+
+1. **Update version** in `package.json`
+2. **Run the pre-publishing checklist** (above)
+3. **Test the build** in separate projects using the tarball method
+4. **Generate final tarball**: `npm pack`
+5. **Test tarball installation** in a separate project
+6. **Publish to npm**: `npm publish`
+7. **Update CDN** if applicable
+8. **Create GitHub release** with changelog
 
 ### CDN Usage (After Publication)
 
@@ -424,9 +497,10 @@ Generates outputs in `dist/`:
 
 - `index.js`: ES module (bundled single file)
 - `index.cjs`: CommonJS (bundled single file)
-- `index.d.ts`: TypeScript type definitions (bundled single file)
-- `iife/bkoi-gl.js`: Browser-ready IIFE bundle (with sourcemap)
-- `umd/bkoi-gl.js`: UMD bundle for compatibility (with sourcemap)
+- `index.d.ts`: TypeScript type definitions for ESM
+- `index.d.cts`: TypeScript type definitions for CJS
+- `iife/bkoi-gl.js`: Browser-ready IIFE bundle with all dependencies (with sourcemap)
+- `umd/bkoi-gl.js`: UMD bundle with all dependencies (with sourcemap)
 - `style/bkoi-gl.css`: Stylesheet for map components
 
 ### Production Deployment

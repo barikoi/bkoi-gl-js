@@ -17,11 +17,8 @@ module.exports = {
       useESM: true,
     },
   },
-  // Mock external dependencies
-  moduleNameMapper: {
-    '^maplibre-gl$': '<rootDir>/test/mocks/__mocks__/maplibre-gl.js',
-    '^maplibre-gl-draw$': '<rootDir>/test/mocks/__mocks__/maplibre-gl-draw.js',
-  },
+  // No need to mock maplibre-gl since it's bundled in the dist files
+  // Only mock if needed for specific test scenarios
   // Transform ESM imports in test files
   transformIgnorePatterns: [
     'node_modules/(?!maplibre-gl|maplibre-gl-draw)',

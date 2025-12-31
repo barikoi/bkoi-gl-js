@@ -1,6 +1,10 @@
 # Barikoi GL JS
 
 [![npm version](https://img.shields.io/npm/v/bkoi-gl.svg)](https://www.npmjs.com/package/bkoi-gl)
+[![npm downloads](https://img.shields.io/npm/dw/bkoi-gl)](https://www.npmjs.com/package/bkoi-gl)
+[![Bundle Size](https://img.shields.io/bundlephobia/min/bkoi-gl)](https://bundlephobia.com/package/bkoi-gl)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
@@ -56,10 +60,9 @@ Then import the library in your JavaScript/TypeScript files:
 
 ```javascript
 import { Map, Marker, FullscreenControl } from "bkoi-gl";
-import "bkoi-gl/dist/style/bkoi-gl.css";
+import "bkoi-gl/style.css";
 ```
-
-This method provides tree-shaking support and better integration with modern build tools.
+**Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
 
 #### Option 2: CDN (For vanilla JavaScript or quick prototyping)
 
@@ -113,7 +116,7 @@ Add the following links to the `<head>` section of your HTML file:
 
 import { useEffect, useRef } from "react";
 import { BkoiGlMap, Map } from "bkoi-gl";
-import "bkoi-gl/dist/style/bkoi-gl.css";
+import "bkoi-gl/style.css";
 
 const BasicMap = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -129,6 +132,12 @@ const BasicMap = () => {
       zoom: 10,
       accessToken: "YOUR_BARIKOI_API_KEY_HERE",
     });
+
+    // Cleanup on unmount
+    return () => {
+      map.current?.remove();
+      map.current = null;
+    };
   }, []);
 
   return (

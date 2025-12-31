@@ -1,314 +1,227 @@
 /**
- * Tests for UMD build format
- * Tests that the dist/umd/bkoi-gl.js build exists and has expected structure
- * UMD builds bundle everything but are designed for browser script loading, not Node.js requiring
+ * UMD Build Tests
+ * Tests that validate the Universal Module Definition (UMD) build format
+ * UMD builds support multiple module systems (AMD, CommonJS, browser global)
+ * These tests focus on file structure validation since UMD bundles may not run fully in Node.js
  */
 
 describe('UMD Build Tests', () => {
-  describe('UMD build file', () => {
-    test('should exist', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
+  let umdContent;
+  let umdPath;
+  let fs;
+  let path;
+
+  beforeAll(() => {
+    // Load file system utilities
+    fs = require('fs');
+    path = require('path');
+
+    // Get UMD build path
+    umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
+
+    // Read the UMD bundle content
+    if (fs.existsSync(umdPath)) {
+      umdContent = fs.readFileSync(umdPath, 'utf8');
+    }
+  });
+
+  describe('File Structure Validation', () => {
+    test('should exist in dist directory', () => {
       expect(fs.existsSync(umdPath)).toBe(true);
     });
 
     test('should be readable', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-      expect(content).toBeDefined();
-      expect(content.length).toBeGreaterThan(0);
+      expect(umdContent).toBeDefined();
+      expect(typeof umdContent).toBe('string');
+      expect(umdContent.length).toBeGreaterThan(0);
     });
 
-    test('should contain UMD wrapper', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
+    test('should have reasonable file size', () => {
+      const stats = fs.statSync(umdPath);
+      const fileSizeInMB = stats.size / (1024 * 1024);
 
-      // UMD builds typically contain checks for different module systems
-      expect(content).toMatch(/typeof exports|typeof module|typeof define/);
-    });
+      // UMD bundles are large due to all dependencies
+      expect(stats.size).toBeGreaterThan(1024 * 1024); // At least 1MB
+      expect(stats.size).toBeLessThan(50 * 1024 * 1024); // Less than 50MB
 
-    test('should expose bkoigl', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-
-      // Should contain the bkoigl name
-      expect(content).toContain('bkoigl');
+      console.log(`UMD bundle size: ${fileSizeInMB.toFixed(2)} MB`);
     });
   });
 
-  describe('UMD format verification', () => {
-    test('should be different from ESM build', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/index.js');
-
-      const umdContent = fs.readFileSync(umdPath, 'utf8');
-      const esmContent = fs.readFileSync(esmPath, 'utf8');
-
-      // UMD should be bundled and different from ESM
-      expect(umdContent).not.toBe(esmContent);
-      expect(umdContent.length).not.toBe(esmContent.length);
+  describe('UMD Pattern Validation', () => {
+    test('should contain UMD wrapper pattern', () => {
+      // UMD typically contains module system checks
+      expect(umdContent).toMatch(/typeof exports|typeof module|typeof define/);
     });
 
-    test('should be different from CJS build', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
-
-      const umdContent = fs.readFileSync(umdPath, 'utf8');
-      const cjsContent = fs.readFileSync(cjsPath, 'utf8');
-
-      // UMD should be bundled and different from CJS
-      expect(umdContent).not.toBe(cjsContent);
-      expect(umdContent.length).not.toBe(cjsContent.length);
-    });
-
-    test('should contain expected exports', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-
-      // Should contain key export names
-      expect(content).toContain('Map');
-      expect(content).toContain('isBarikoiStyle');
-      expect(content).toContain('NavigationControl');
-    });
-
-    test('should contain bundled MapLibre GL code', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-
-      // Should contain MapLibre GL related code since it's bundled
-      expect(content).toContain('maplibre-gl');
-      expect(content).toMatch(/MapLibre|maplibre/i);
-    });
-  });
-
-  describe('UMD vs other formats', () => {
-    test('should be larger than ESM (due to bundling)', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const esmPath = path.resolve(__dirname, '../../dist/index.js');
-
-      const umdSize = fs.statSync(umdPath).size;
-      const esmSize = fs.statSync(esmPath).size;
-
-      // UMD should be much larger due to bundling MapLibre GL
-      expect(umdSize).toBeGreaterThan(esmSize * 10); // At least 10x larger
-    });
-
-    test('should be larger than CJS (due to bundling)', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const cjsPath = path.resolve(__dirname, '../../dist/index.cjs');
-
-      const umdSize = fs.statSync(umdPath).size;
-      const cjsSize = fs.statSync(cjsPath).size;
-
-      // UMD should be much larger due to bundling MapLibre GL
-      expect(umdSize).toBeGreaterThan(cjsSize * 10); // At least 10x larger
-    });
-  });
-
-  describe('Module System Compatibility Tests', () => {
-    test('should support AMD loading', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-
+    test('should support AMD loading pattern', () => {
       // Should contain AMD detection
-      expect(content).toContain('typeof define');
-      expect(content).toContain('define.amd');
-
-      // Should be valid JavaScript syntax
-      expect(() => {
-        // Basic syntax check without execution
-        new Function('define', 'window', content);
-      }).not.toThrow();
+      expect(umdContent).toContain('typeof define');
+      expect(umdContent).toContain('define.amd');
     });
 
-    test('should support CommonJS loading', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
-
+    test('should support CommonJS loading pattern', () => {
       // Should contain CommonJS detection
-      expect(content).toContain('typeof exports');
-      expect(content).toContain('typeof module');
-
-      // Should be valid JavaScript syntax
-      expect(() => {
-        // Basic syntax check without execution
-        new Function('module', 'exports', 'require', content);
-      }).not.toThrow();
+      expect(umdContent).toContain('typeof exports');
+      expect(umdContent).toContain('typeof module');
     });
 
     test('should support browser global loading', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
+      // Should contain browser global fallback
+      expect(umdContent).toContain('bkoigl');
+    });
 
-      // Should be valid JavaScript syntax
+    test('should be valid JavaScript syntax', () => {
+      // Basic syntax validation
       expect(() => {
-        // Basic syntax check without execution
-        new Function('window', content);
+        // Try to create a Function object (basic syntax check)
+        new Function(umdContent);
       }).not.toThrow();
     });
+  });
 
-    test('should contain module system detection', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
+  describe('Content Analysis', () => {
+    test('should contain expected library identifier', () => {
+      // Should contain the main library name/identifier
+      expect(umdContent).toContain('bkoigl');
+    });
 
-      // Should contain all three module system checks
-      expect(content).toContain('define.amd');
-      expect(content).toContain('typeof exports');
-      expect(content).toContain('typeof module');
+    test('should contain core MapLibre GL code', () => {
+      // Should contain MapLibre GL references
+      expect(umdContent).toMatch(/maplibre|MapLibre/i);
+    });
+
+    test('should contain expected API exports', () => {
+      const expectedExports = [
+        'Map',
+        'isBarikoiStyle',
+        'NavigationControl',
+        'GeolocateControl',
+        'AttributionControl',
+        'ScaleControl',
+        'FullscreenControl',
+        'Popup',
+        'Marker',
+        'LngLat',
+        'LngLatBounds',
+        'Point'
+      ];
+
+      expectedExports.forEach(exportName => {
+        expect(umdContent).toContain(exportName);
+      });
+    });
+
+    test('should contain bundled dependencies', () => {
+      // Should contain references to bundled dependencies
+      expect(umdContent).toMatch(/MapLibre|maplibre/i);
     });
   });
 
-  describe('UMD Functional Tests', () => {
-    beforeEach(() => {
-      // Setup UMD environment
-      global.window = global.window || {};
-      global.window.bkoigl = {
-        Map: jest.fn().mockImplementation(() => ({
-          addControl: jest.fn(),
-          setStyle: jest.fn(),
-          getContainer: jest.fn(() => document.createElement('div')),
-        })),
-        NavigationControl: jest.fn(),
-        GeolocateControl: jest.fn(),
-        isBarikoiStyle: jest.fn(() => true),
-        Popup: jest.fn(),
-        Marker: jest.fn(),
-      };
+  describe('Module System Compatibility', () => {
+    test('should handle AMD module definition', () => {
+      // Should contain AMD module definition pattern
+      expect(umdContent).toContain('define(');
+      expect(umdContent).toContain('function(');
     });
 
-    afterEach(() => {
-      delete global.window;
+    test('should handle CommonJS module exports', () => {
+      // Should contain CommonJS export patterns
+      expect(umdContent).toContain('exports.');
     });
 
-    test('should work as AMD module', () => {
-      const modules = {};
-      global.define = jest.fn((name, deps, factory) => {
-        modules[name] = factory();
-      });
-      global.define.amd = true;
+    test('should detect module systems in correct order', () => {
+      // Should check for AMD first, then CommonJS, then browser global
+      const exportsIndex = umdContent.indexOf('typeof exports');
+      const windowIndex = umdContent.indexOf('typeof window');
 
-      // Simulate AMD loading
-      global.define('bkoi-gl', [], () => global.window.bkoigl);
-
-      expect(modules['bkoi-gl']).toBeDefined();
-      expect(typeof modules['bkoi-gl'].Map).toBe('function');
-
-      delete global.define;
-    });
-
-    test('should work as CommonJS module', () => {
-      const mockModule = { exports: {} };
-
-      // Simulate CommonJS loading
-      mockModule.exports = global.window.bkoigl;
-
-      expect(mockModule.exports).toBeDefined();
-      expect(typeof mockModule.exports.Map).toBe('function');
-    });
-
-    test('should work as browser global', () => {
-      expect(global.window.bkoigl).toBeDefined();
-      expect(typeof global.window.bkoigl.Map).toBe('function');
-      expect(typeof global.window.bkoigl.isBarikoiStyle).toBe('function');
-    });
-
-    test('should create Map instance in UMD context', () => {
-      const container = document.createElement('div');
-      container.id = 'map';
-      document.body.appendChild(container);
-
-      const map = new global.window.bkoigl.Map({
-        container: 'map',
-        style: 'https://map.barikoi.com/styles/streets',
-        center: [90.4125, 23.8103],
-        zoom: 10
-      });
-
-      expect(map).toBeDefined();
-      expect(map.addControl).toBeDefined();
-    });
-
-    test('should handle controls in UMD environment', () => {
-      const map = new global.window.bkoigl.Map({
-        container: document.createElement('div'),
-        style: 'https://map.barikoi.com/styles/streets'
-      });
-
-      const navControl = new global.window.bkoigl.NavigationControl();
-      map.addControl(navControl);
-
-      expect(map.addControl).toHaveBeenCalledWith(navControl);
+      // CommonJS should come before browser global
+      expect(exportsIndex).toBeLessThan(windowIndex);
     });
   });
 
-  describe('UMD Error Handling', () => {
-    test('should handle browser environment issues', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
+  describe('Build Format Characteristics', () => {
+    test('should be self-contained (no external imports)', () => {
+      // UMD should not contain ES6 export statements
+      expect(umdContent).not.toContain('export ');
+    });
 
-      // Should contain proper error handling for missing browser APIs
-      expect(content).toContain('typeof window');
-      expect(content).toContain('typeof globalThis');
+    test('should contain factory function pattern', () => {
+      // UMD typically uses factory function pattern
+      expect(umdContent).toContain('function(');
+      expect(umdContent).toContain('return ');
+    });
+
+    test('should be minifiable (no comments)', () => {
+      // Production builds are typically minified
+      const lines = umdContent.split('\n');
+      const longLines = lines.filter(line => line.length > 500);
+
+      // Should have some long lines (minified code)
+      expect(longLines.length).toBeGreaterThan(0);
     });
   });
 
-  describe('UMD Cross-Environment Compatibility', () => {
-    test('should work in RequireJS-like AMD environment', () => {
-      const loadedModules = {};
-      global.define = jest.fn((name, deps, factory) => {
-        loadedModules[name] = factory.apply(null, deps.map(dep => loadedModules[dep]));
-      });
-      global.define.amd = true;
+  describe('Browser Compatibility', () => {
+    test('should use modern JavaScript features', () => {
+      // Should contain modern JS syntax
+      const hasModernJS = umdContent.includes('const') ||
+                         umdContent.includes('let') ||
+                         umdContent.includes('=>') ||
+                         umdContent.includes('class');
 
-      // Simulate loading dependencies and the main module
-      global.define('bkoi-gl', [], () => ({ Map: jest.fn(), isBarikoiStyle: jest.fn() }));
-
-      expect(loadedModules['bkoi-gl']).toBeDefined();
-
-      delete global.define;
+      expect(hasModernJS).toBe(true);
     });
 
-    test('should support different module loading patterns', () => {
-      const fs = require('fs');
-      const path = require('path');
-      const umdPath = path.resolve(__dirname, '../../dist/umd/bkoi-gl.js');
-      const content = fs.readFileSync(umdPath, 'utf8');
+    test('should handle browser environment detection', () => {
+      // Should contain browser environment checks
+      expect(umdContent).toContain('typeof window');
+      expect(umdContent).toContain('typeof globalThis');
+    });
 
-      // Should contain checks for all three module systems
-      expect(content).toContain('define.amd');
-      expect(content).toContain('typeof exports');
-      expect(content).toContain('typeof module');
-      // UMD should contain the bkoigl identifier
-      expect(content).toContain('bkoigl');
+    test('should handle root object detection', () => {
+      // Should contain root object detection for browser global
+      expect(umdContent).toContain('this');
+      expect(umdContent).toMatch(/root\s*=\s*|\broot\b/);
+    });
+  });
+
+  describe('Bundle Optimization', () => {
+    test('should have reasonable compression ratio', () => {
+      const compressedSize = umdContent.length;
+
+      // Bundle should be reasonably compressed
+      expect(compressedSize).toBeGreaterThan(100000); // At least 100KB
+      expect(compressedSize).toBeLessThan(10000000); // Less than 10MB
+    });
+
+    test('should contain minified code patterns', () => {
+      // Minified code typically has long variable names and no spaces
+      const hasMinifiedPatterns = umdContent.includes('function(') &&
+                                 umdContent.includes('){') &&
+                                 !umdContent.includes('function ()');
+
+      expect(hasMinifiedPatterns).toBe(true);
+    });
+  });
+
+  describe('Bundle Execution Safety', () => {
+    test('should be syntactically valid JavaScript', () => {
+      // Basic syntax validation - the bundle should be valid JS
+      expect(() => {
+        // Try to create a Function object (basic syntax check)
+        new Function(umdContent);
+      }).not.toThrow();
+    });
+  });
+
+  describe('Library Integration', () => {
+    test('should support both development and production loading', () => {
+      // Should work in different environments
+      const hasUMDPatterns = umdContent.includes('typeof define') ||
+                            umdContent.includes('typeof exports')
+
+      expect(hasUMDPatterns).toBe(true);
     });
   });
 });

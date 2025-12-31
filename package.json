@@ -1,108 +1,126 @@
-{
-  "name": "bkoi-gl",
-  "version": "3.1.0",
-  "description": "A WebGL interactive maps library to use Barikoi maps and API",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
+  {
+    "name": "bkoi-gl",
+    "version": "3.1.0",
+    "description": "A WebGL interactive maps library to use Barikoi maps and API",
+    "type": "module",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./dist/index.d.ts",
+          "default": "./dist/index.js"
+        },
+        "require": {
+          "types": "./dist/index.d.cts",
+          "default": "./dist/index.cjs"
+        },
         "default": "./dist/index.js"
       },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.cjs"
+      "./style.css": {
+        "default": "./dist/style/bkoi-gl.css"
       },
-      "script": "./dist/iife/bkoi-gl.js",
-      "umd": "./dist/umd/bkoi-gl.js"
+      "./dist/style/bkoi-gl.css": {
+        "default": "./dist/style/bkoi-gl.css"
+      }
     },
-    "./dist/style/bkoi-gl.css": "./dist/style/bkoi-gl.css"
-  },
-  "style": "dist/style/bkoi-gl.css",
-  "author": "barikoi",
-  "readme": "README.md",
-  "license": "MIT",
-  "homepage": "https://docs.barikoi.com/docs/maps-api",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/barikoi/bkoi-gl-js.git"
-  },
-  "engines": {
-    "node": "^24.11.0"
-  },
-  "files": [
-    "dist",
-    "src",
-    "README.md"
-  ],
-  "scripts": {
-    "start": "node index.js",
-    "build": "npm run typecheck && rollup --config",
-    "prepare": "husky",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "test": "jest --config jest.config.cjs",
-    "test:watch": "jest --config jest.config.cjs --watch",
-    "test:coverage": "jest --config jest.config.cjs --coverage"
-  },
-  "dependencies": {
-    "maplibre-gl": "^5.13.0",
-    "maplibre-gl-draw": "^1.6.9"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "^7.16.0",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.0",
-    "@commitlint/cli": "^19.4.1",
-    "@commitlint/config-conventional": "^19.4.1",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-image": "^3.0.3",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@types/jest": "^30.0.0",
-    "@types/maplibre-gl": "^1.13.2",
-    "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.50.1",
-    "@typescript-eslint/parser": "^8.50.1",
-    "dotenv": "^17.2.3",
-    "eslint": "^8.57.1",
-    "eslint-config-mourner": "^3.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "husky": "^9.1.5",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
-    "regenerator-runtime": "^0.14.1",
-    "rollup": "^4.54.0",
-    "rollup-plugin-clear": "^2.0.7",
-    "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-dts": "^6.3.0",
-    "ts-jest": "^29.4.6",
-    "tslib": "^2.8.1",
-    "typescript": "^5.9.3"
-  },
-  "keywords": [
-    "bkoi-gl",
-    "barikoi",
-    "bangladesh",
-    "location",
-    "geocoding",
-    "reverse geocoding",
-    "autocomplete",
-    "API",
-    "maps",
-    "address",
-    "location data",
-    "geospatial",
-    "address lookup",
-    "places",
-    "geocoding API",
-    "location API"
-  ]
-}
+    "style": "./dist/style/bkoi-gl.css",
+    "author": "barikoi",
+    "readme": "README.md",
+    "license": "MIT",
+    "homepage": "https://docs.barikoi.com/docs/maps-api",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/barikoi/bkoi-gl-js.git"
+    },
+    "engines": {
+      "node": ">=18.0.0"
+    },
+    "sideEffects": [
+      "*.css",
+      "./dist/style/**/*.css"
+    ],
+    "files": [
+      "dist",
+      "README.md",
+      "LICENSE"
+    ],
+    "publishConfig": {
+      "access": "public"
+    },
+    "scripts": {
+      "start": "node index.js",
+      "build": "npm run typecheck && rollup --config",
+      "prepare": "husky",
+      "typecheck": "tsc --noEmit",
+      "lint": "eslint src/**/*.ts test/**/*.js",
+      "lint:fix": "eslint src/**/*.ts test/**/*.js --fix",
+      "test": "jest --config jest.config.cjs",
+      "test:watch": "jest --config jest.config.cjs --watch",
+      "test:coverage": "jest --config jest.config.cjs --coverage",
+      "prepublishOnly": "npm run build && npm test"
+    },
+    "dependencies": {
+      "maplibre-gl": "^5.13.0",
+      "maplibre-gl-draw": "^1.6.9"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.16.0",
+      "@babel/eslint-parser": "^7.16.0",
+      "@babel/plugin-transform-runtime": "^7.17.0",
+      "@babel/preset-env": "^7.16.0",
+      "@commitlint/cli": "^19.4.1",
+      "@commitlint/config-conventional": "^19.4.1",
+      "@rollup/plugin-babel": "^6.0.4",
+      "@rollup/plugin-commonjs": "^26.0.1",
+      "@rollup/plugin-image": "^3.0.3",
+      "@rollup/plugin-node-resolve": "^15.2.3",
+      "@rollup/plugin-terser": "^0.4.4",
+      "@rollup/plugin-typescript": "^11.1.6",
+      "@types/jest": "^30.0.0",
+      "@types/maplibre-gl": "^1.13.2",
+      "@types/node": "^25.0.3",
+      "@typescript-eslint/eslint-plugin": "^8.50.1",
+      "@typescript-eslint/parser": "^8.50.1",
+      "dotenv": "^17.2.3",
+      "eslint": "^8.57.1",
+      "eslint-config-mourner": "^3.0.0",
+      "eslint-plugin-import": "^2.25.2",
+      "husky": "^9.1.5",
+      "jest": "^30.2.0",
+      "jest-environment-jsdom": "^30.2.0",
+      "regenerator-runtime": "^0.14.1",
+      "rollup": "^4.54.0",
+      "rollup-plugin-clear": "^2.0.7",
+      "rollup-plugin-copy": "^3.5.0",
+      "rollup-plugin-dts": "^6.3.0",
+      "ts-jest": "^29.4.6",
+      "tslib": "^2.8.1",
+      "typescript": "^5.9.3"
+    },
+    "keywords": [
+      "bkoi-gl",
+      "barikoi",
+      "bangladesh",
+      "location",
+      "geocoding",
+      "reverse-geocoding",
+      "autocomplete",
+      "api",
+      "maps",
+      "maplibre",
+      "webgl",
+      "address",
+      "location-data",
+      "geospatial",
+      "address-lookup",
+      "places",
+      "geocoding-api",
+      "location-api",
+      "mapping",
+      "gis",
+      "drawing",
+      "polygon"
+    ]
+  }

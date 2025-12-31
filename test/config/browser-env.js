@@ -128,10 +128,8 @@ global.ImageData = class ImageData {
 };
 
 // URL and Blob mocks
-global.URL = global.URL || {
-  createObjectURL: jest.fn(() => 'mock://url'),
-  revokeObjectURL: jest.fn(),
-};
+global.URL.createObjectURL = jest.fn(() => 'mock://url');
+global.URL.revokeObjectURL = jest.fn();
 
 global.Blob = class Blob {
   constructor(parts, options) {

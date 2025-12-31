@@ -3,3 +3,4 @@ examples/**/node_modules/
 *.tgz
 .env
 dist/
+coverage/
