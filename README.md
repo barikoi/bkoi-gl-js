@@ -115,7 +115,8 @@ Add the following links to the `<head>` section of your HTML file:
 "use client";
 
 import { useEffect, useRef } from "react";
-import { BkoiGlMap, Map } from "bkoi-gl";
+import { Map } from "bkoi-gl";
+import type { BkoiGlMap } from "bkoi-gl";
 import "bkoi-gl/style.css";
 
 const BasicMap = () => {
