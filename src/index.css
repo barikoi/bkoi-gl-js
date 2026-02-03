@@ -17,6 +17,8 @@
 
 /* Import Maplibre CSS */
 @import url('https://unpkg.com/maplibre-gl@5.13.0/dist/maplibre-gl.css');
+/* Import maplibre-gl-draw CSS */
+@import url('https://unpkg.com/maplibre-gl-draw@1.6.9/dist/maplibre-gl-draw.css');
 
 /* Barikoi Logo Control */
 a.maplibregl-ctrl-logo {
@@ -110,6 +112,13 @@ a.maplibregl-ctrl-logo {
   cursor: -moz-grab;
   cursor: -webkit-grab;
 }
+
+/* Crosshair cursor when in draw polygon mode - using correct maplibre class names */
+.maplibregl-map.mode-draw_polygon .maplibregl-canvas-container.maplibregl-interactive,
+.maplibregl-map.mode-draw_line_string .maplibregl-canvas-container.maplibregl-interactive,
+.maplibregl-map.mode-draw_point .maplibregl-canvas-container.maplibregl-interactive {
+  cursor: crosshair !important;
+}
 .mapbox-gl-draw_boxselect {
   pointer-events: none;
   position: absolute;
@@ -120,6 +129,13 @@ a.maplibregl-ctrl-logo {
   background: rgba(0, 0, 0, 0.1);
   border: 2px dotted #fff;
   opacity: 0.5;
+}
+
+/* Crosshair cursor when in draw polygon mode */
+.mapboxgl-map.mode-draw_polygon .mapboxgl-canvas-container.mapboxgl-interactive,
+.mapboxgl-map.mode-draw_line_string .mapboxgl-canvas-container.mapboxgl-interactive,
+.mapboxgl-map.mode-draw_point .mapboxgl-canvas-container.mapboxgl-interactive {
+  cursor: crosshair !important;
 }
 
 

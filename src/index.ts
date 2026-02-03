@@ -197,6 +197,9 @@ export class BkoiGlMap extends Map {
    * merges in any custom options provided, and adds the drawing controls to the map.
    * By default, only polygon and trash controls are enabled for simplicity.
    *
+   * Also sets up event listeners to reset cursor after drawing events to prevent
+   * cursor sticking issues.
+   *
    * @param {Partial<MapboxDraw.MapboxDrawOptions>} drawOptions - Custom options to merge with defaults
    *
    * @returns {void}
@@ -213,6 +216,44 @@ export class BkoiGlMap extends Map {
 
     this.draw = new MapboxDraw(defaultOptions);
     this.addControl(this.draw as unknown as IControl);
+
+    // Only reset when not in drawing mode to allow CSS cursor to work
+    this.on('draw.create', () => {
+      const currentMode = this.draw?.getMode();
+      if (currentMode === 'simple_select') {
+        this.getCanvas().style.cursor = '';
+      }
+    });
+
+    this.on('draw.update', () => {
+      const currentMode = this.draw?.getMode();
+      if (currentMode === 'simple_select') {
+        this.getCanvas().style.cursor = '';
+      }
+    });
+
+    this.on('draw.delete', () => {
+      const currentMode = this.draw?.getMode();
+      if (currentMode === 'simple_select') {
+        this.getCanvas().style.cursor = '';
+      }
+    });
+
+    this.on('draw.selectionchange', () => {
+      const currentMode = this.draw?.getMode();
+      if (currentMode === 'simple_select') {
+        this.getCanvas().style.cursor = '';
+      }
+    });
+
+    this.on('draw.modechange', () => {
+      // Reset cursor when changing to simple_select mode to prevent sticking
+      // Allow CSS to control cursor in drawing modes
+      const currentMode = this.draw?.getMode();
+      if (currentMode === 'simple_select') {
+        this.getCanvas().style.cursor = '';
+      }
+    });
   }
 
   /**
