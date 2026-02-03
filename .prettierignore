@@ -1,0 +1,11 @@
+node_modules/
+nginx/
+public/
+scripts/update-version.js
+coverage/
+__tests__/
+*.config.js
+tsconfig.json
+.eslintrc.json
+index.d.ts
+CHANGELOG.md

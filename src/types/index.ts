@@ -7,8 +7,8 @@
  * including drawing tools, style management, and authentication.
  */
 
-import type { MapOptions } from 'maplibre-gl';
-import type MapboxDraw from 'maplibre-gl-draw';
+import type { MapOptions } from 'maplibre-gl'
+import type MapboxDraw from 'maplibre-gl-draw'
 
 /**
  * @interface BkoiMapOptions
@@ -27,7 +27,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @type {string}
    * @optional
    */
-  accessToken?: string;
+  accessToken?: string
 
   /**
    * Mapbox access token for compatibility with Mapbox-based features.
@@ -36,7 +36,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @type {string}
    * @optional
    */
-  mapboxAccessToken?: string;
+  mapboxAccessToken?: string
 
   /**
    * Map style URL or Barikoi style identifier.
@@ -45,7 +45,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @type {string}
    * @optional
    */
-  style?: string;
+  style?: string
 
   /**
    * Enable polygon drawing tools using Mapbox GL Draw.
@@ -55,7 +55,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @optional
    * @default false
    */
-  polygon?: boolean;
+  polygon?: boolean
 
   /**
    * Configuration options for Mapbox GL Draw when polygon drawing is enabled.
@@ -64,7 +64,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @type {Partial<MapboxDraw.MapboxDrawOptions>}
    * @optional
    */
-  drawOptions?: Partial<MapboxDraw.MapboxDrawOptions>;
+  drawOptions?: Partial<MapboxDraw.MapboxDrawOptions>
 
   /**
    * Array of style configurations for the interactive style drawer.
@@ -73,7 +73,7 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
    * @type {StyleConfig[]}
    * @optional
    */
-  styles?: StyleConfig[];
+  styles?: StyleConfig[]
 }
 
 /**
@@ -90,7 +90,7 @@ export interface StyleConfig {
    *
    * @type {string}
    */
-  style: string;
+  style: string
 
   /**
    * URL to a thumbnail image representing the style.
@@ -98,7 +98,7 @@ export interface StyleConfig {
    *
    * @type {string}
    */
-  image: string;
+  image: string
 
   /**
    * Human-readable display name for the style.
@@ -106,7 +106,7 @@ export interface StyleConfig {
    *
    * @type {string}
    */
-  name: string;
+  name: string
 }
 
 /**
@@ -124,7 +124,7 @@ export interface BkoiConfig {
    * @type {string | null}
    * @default null
    */
-  ACCESS_TOKEN: string | null;
+  ACCESS_TOKEN: string | null
 
   /**
    * Default map style URL used when no style is specified.
@@ -133,5 +133,5 @@ export interface BkoiConfig {
    * @type {string}
    * @default 'https://map.barikoi.com/styles/barikoi-light/style.json'
    */
-  DEFAULT_STYLE: string;
+  DEFAULT_STYLE: string
 }

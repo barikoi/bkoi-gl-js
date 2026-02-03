@@ -25,13 +25,13 @@
 export function isBarikoiStyle(style: string | null | undefined): boolean {
   // Handle null, undefined, or non-string inputs
   if (!style || typeof style !== 'string') {
-    return false;
+    return false
   }
 
   // Check if the URL contains Barikoi domain patterns
   // Supports both 'barikoi.com' and 'map.barikoi' for flexibility
   if (!style.includes('barikoi.com') && !style.includes('map.barikoi')) {
-    return false;
+    return false
   }
 
   // Validate the complete Barikoi style URL pattern
@@ -39,7 +39,7 @@ export function isBarikoiStyle(style: string | null | undefined): boolean {
   // - Must start with https://map.barikoi.com/styles/
   // - Must have a style name (one or more non-slash characters)
   // - Must end with /style.json
-  const barikoiStylePattern = /^https:\/\/map\.barikoi\.com\/styles\/[^/]+\/style\.json$/;
+  const barikoiStylePattern = /^https:\/\/map\.barikoi\.com\/styles\/[^/]+\/style\.json$/
 
-  return barikoiStylePattern.test(style);
+  return barikoiStylePattern.test(style)
 }

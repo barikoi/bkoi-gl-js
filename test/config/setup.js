@@ -1,19 +1,23 @@
-require('dotenv').config();
+require('dotenv').config()
 
 // Set mock access token for tests using the test API key from .env
-process.env.BARIKOI_ACCESS_TOKEN = 'test-access-token';
+process.env.BARIKOI_ACCESS_TOKEN = 'test-access-token'
 
 // Mock browser APIs that may be needed by tests
 global.TextDecoder = class TextDecoder {
-  decode() { return ''; }
-};
+  decode() {
+    return ''
+  }
+}
 global.TextEncoder = class TextEncoder {
-  encode() { return new Uint8Array(); }
-};
+  encode() {
+    return new Uint8Array()
+  }
+}
 
 // Mock WebGL and other browser APIs
-global.WebGLRenderingContext = class WebGLRenderingContext {};
-global.WebGL2RenderingContext = class WebGL2RenderingContext {};
+global.WebGLRenderingContext = class WebGLRenderingContext {}
+global.WebGL2RenderingContext = class WebGL2RenderingContext {}
 
 // Mock Performance API
 global.performance = {
@@ -22,40 +26,40 @@ global.performance = {
   measure: jest.fn(),
   getEntriesByName: jest.fn(() => []),
   clearMarks: jest.fn(),
-  clearMeasures: jest.fn()
-};
+  clearMeasures: jest.fn(),
+}
 
 // Mock URL.createObjectURL which may be used by some libraries
 global.URL = global.URL || {
   createObjectURL: jest.fn(() => 'mock-url'),
   revokeObjectURL: jest.fn(),
-};
+}
 
 // Global test utilities for testing real bundled library
 global.bkoiTestUtils = {
   // Helper for creating test containers
   createTestContainer: (id = 'test-container') => {
-    const container = document.createElement('div');
-    container.id = id;
-    container.style.width = '400px';
-    container.style.height = '300px';
-    document.body.appendChild(container);
-    return container;
+    const container = document.createElement('div')
+    container.id = id
+    container.style.width = '400px'
+    container.style.height = '300px'
+    document.body.appendChild(container)
+    return container
   },
 
   // Helper for cleaning up test containers
   cleanupTestContainers: () => {
-    const containers = document.querySelectorAll('[id^="test-container"], [id^="map-"]');
-    containers.forEach(container => container.remove());
+    const containers = document.querySelectorAll('[id^="test-container"], [id^="map-"]')
+    containers.forEach(container => container.remove())
   },
 
   // Load real bundled library
   loadRealLibrary: () => {
     try {
-      return require('../../dist/index.cjs');
+      return require('../../dist/index.cjs')
     } catch {
-      console.warn('Could not load CJS build, trying ESM...');
-      return require('../../dist/index.js');
+      console.warn('Could not load CJS build, trying ESM...')
+      return require('../../dist/index.js')
     }
   },
 
@@ -73,35 +77,53 @@ global.bkoiTestUtils = {
       off: jest.fn(),
       fire: jest.fn(),
       loaded: jest.fn(() => true),
-      isStyleLoaded: jest.fn(() => true)
-    };
+      isStyleLoaded: jest.fn(() => true),
+    }
   },
 
   createMockMarker: (options = {}) => {
     const marker = {
       ...options,
-      setLngLat: jest.fn(function(lngLat) { this.lngLat = lngLat; return this; }),
+      setLngLat: jest.fn(function (lngLat) {
+        this.lngLat = lngLat
+        return this
+      }),
       getLngLat: jest.fn(() => marker.lngLat),
       addTo: jest.fn(() => marker),
       remove: jest.fn(() => marker),
-      setPopup: jest.fn(function(popup) { this.popup = popup; return this; }),
+      setPopup: jest.fn(function (popup) {
+        this.popup = popup
+        return this
+      }),
       getPopup: jest.fn(() => marker.popup),
-      togglePopup: jest.fn(() => marker)
-    };
-    return marker;
+      togglePopup: jest.fn(() => marker),
+    }
+    return marker
   },
 
   createMockPopup: (options = {}) => {
     const popup = {
       ...options,
-      setLngLat: jest.fn(function(lngLat) { this.lngLat = lngLat; return this; }),
-      setHTML: jest.fn(function(html) { this.html = html; return this; }),
-      setText: jest.fn(function(text) { this.text = text; return this; }),
+      setLngLat: jest.fn(function (lngLat) {
+        this.lngLat = lngLat
+        return this
+      }),
+      setHTML: jest.fn(function (html) {
+        this.html = html
+        return this
+      }),
+      setText: jest.fn(function (text) {
+        this.text = text
+        return this
+      }),
       addTo: jest.fn(() => popup),
-      remove: jest.fn(() => { popup.removed = true; return popup; }),
-      isOpen: jest.fn(() => !popup.removed)
-    };
-    return popup;
+      remove: jest.fn(() => {
+        popup.removed = true
+        return popup
+      }),
+      isOpen: jest.fn(() => !popup.removed),
+    }
+    return popup
   },
 
   createMockNavigationControl: (options = {}) => {
@@ -111,9 +133,9 @@ global.bkoiTestUtils = {
       onAdd: jest.fn(() => control._container),
       onRemove: jest.fn(),
       _onZoom: jest.fn(),
-      _onRotate: jest.fn()
-    };
-    return control;
+      _onRotate: jest.fn(),
+    }
+    return control
   },
 
   createMockScaleControl: (options = {}) => {
@@ -122,9 +144,9 @@ global.bkoiTestUtils = {
       _container: document.createElement('div'),
       onAdd: jest.fn(() => control._container),
       onRemove: jest.fn(),
-      setUnit: jest.fn()
-    };
-    return control;
+      setUnit: jest.fn(),
+    }
+    return control
   },
 
   createMockAttributionControl: (options = {}) => {
@@ -134,9 +156,9 @@ global.bkoiTestUtils = {
       onAdd: jest.fn(() => control._container),
       onRemove: jest.fn(),
       addAttribution: jest.fn(),
-      removeAttribution: jest.fn()
-    };
-    return control;
+      removeAttribution: jest.fn(),
+    }
+    return control
   },
 
   createMockGeolocateControl: (options = {}) => {
@@ -149,9 +171,9 @@ global.bkoiTestUtils = {
       _onSuccess: jest.fn(),
       _onError: jest.fn(),
       _finish: jest.fn(),
-      _setupUI: jest.fn()
-    };
-    return control;
+      _setupUI: jest.fn(),
+    }
+    return control
   },
 
   createMockFullscreenControl: (options = {}) => {
@@ -161,8 +183,8 @@ global.bkoiTestUtils = {
       onAdd: jest.fn(() => control._container),
       onRemove: jest.fn(),
       _onClickFullscreen: jest.fn(),
-      _setupUI: jest.fn()
-    };
-    return control;
-  }
-};
+      _setupUI: jest.fn(),
+    }
+    return control
+  },
+}

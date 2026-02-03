@@ -27,19 +27,14 @@ import maplibre, {
   Point,
   MercatorCoordinate,
   Evented,
-  IControl
-} from 'maplibre-gl';
-import MapboxDraw from 'maplibre-gl-draw';
-import { bkoiConfig } from './utils/config';
-import { isBarikoiStyle } from './utils/validator';
-import type { BkoiMapOptions, StyleConfig } from './types';
+  IControl,
+} from 'maplibre-gl'
+import MapboxDraw from 'maplibre-gl-draw'
+import { bkoiConfig } from './utils/config'
+import { isBarikoiStyle } from './utils/validator'
+import type { BkoiMapOptions, StyleConfig } from './types'
 
-const {
-  setRTLTextPlugin,
-  getRTLTextPluginStatus,
-  prewarm,
-  clearPrewarmedResources,
-} = maplibre;
+const { setRTLTextPlugin, getRTLTextPluginStatus, prewarm, clearPrewarmedResources } = maplibre
 
 /**
  * @class BkoiGlMap
@@ -59,7 +54,7 @@ export class BkoiGlMap extends Map {
    * @description Reference to the MapboxDraw instance when drawing tools are enabled.
    * This property is undefined when polygon drawing is not activated.
    */
-  private draw?: MapboxDraw;
+  private draw?: MapboxDraw
 
   /**
    * @constructor
@@ -82,9 +77,7 @@ export class BkoiGlMap extends Map {
       !bkoiConfig.ACCESS_TOKEN &&
       (!mapOptions.style || isBarikoiStyle(mapOptions.style))
     ) {
-      console.error(
-        'Please provide a valid accessToken to use Barikoi assets.'
-      );
+      console.error('Please provide a valid accessToken to use Barikoi assets.')
     }
 
     // Build the style URL with access token
@@ -92,7 +85,7 @@ export class BkoiGlMap extends Map {
       ? isBarikoiStyle(mapOptions.style)
         ? `${mapOptions.style}?key=${mapOptions.accessToken || bkoiConfig.ACCESS_TOKEN}`
         : mapOptions.style
-      : `${bkoiConfig.DEFAULT_STYLE}?key=${mapOptions.accessToken || bkoiConfig.ACCESS_TOKEN}`;
+      : `${bkoiConfig.DEFAULT_STYLE}?key=${mapOptions.accessToken || bkoiConfig.ACCESS_TOKEN}`
 
     // Initialize parent Map class
     super({
@@ -100,23 +93,23 @@ export class BkoiGlMap extends Map {
       accessToken: mapOptions.mapboxAccessToken || undefined,
       attributionControl: false,
       style: styleUrl,
-    } as MapOptions);
+    } as MapOptions)
 
     // Setup attribution control
-    this.setupAttributionControl();
+    this.setupAttributionControl()
 
     // Initialize features on map load
     this.once('load', () => {
-      this.addBarikoiAttribution();
+      this.addBarikoiAttribution()
 
       if (mapOptions.polygon) {
-        this.initializeDraw(mapOptions.drawOptions || {});
+        this.initializeDraw(mapOptions.drawOptions || {})
       }
 
       if (mapOptions.styles) {
-        this.initializeStyleDrawer(mapOptions.styles);
+        this.initializeStyleDrawer(mapOptions.styles)
       }
-    });
+    })
   }
 
   /**
@@ -134,29 +127,25 @@ export class BkoiGlMap extends Map {
     const attributionControl = new AttributionControl({
       compact: true,
       customAttribution: '',
-    });
-    this.addControl(attributionControl, 'bottom-right');
+    })
+    this.addControl(attributionControl, 'bottom-right')
 
     // Make attribution links clickable after control is added
     this.once('load', () => {
       setTimeout(() => {
-        const container = this.getContainer();
-        const attributionContainer = container.querySelector(
-          '.maplibregl-ctrl-attrib'
-        );
+        const container = this.getContainer()
+        const attributionContainer = container.querySelector('.maplibregl-ctrl-attrib')
 
         if (attributionContainer) {
-          const inner = attributionContainer.querySelector(
-            '.maplibregl-ctrl-attrib-inner'
-          );
+          const inner = attributionContainer.querySelector('.maplibregl-ctrl-attrib-inner')
 
           if (inner) {
             inner.innerHTML =
-              '© <a href="https://www.barikoi.com" target="_blank">Barikoi</a> © <a href="https://openmaptiles.org" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>';
+              '© <a href="https://www.barikoi.com" target="_blank">Barikoi</a> © <a href="https://openmaptiles.org" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
           }
         }
-      }, 0);
-    });
+      }, 0)
+    })
   }
 
   /**
@@ -173,19 +162,19 @@ export class BkoiGlMap extends Map {
   private addBarikoiAttribution(): void {
     const logoControl: IControl = {
       onAdd: (): HTMLElement => {
-        const container = document.createElement('a');
-        container.className = 'maplibregl-ctrl-logo';
-        container.setAttribute('href', 'https://www.barikoi.com');
-        container.setAttribute('target', '_blank');
-        container.setAttribute('alt', 'Barikoi');
-        return container;
+        const container = document.createElement('a')
+        container.className = 'maplibregl-ctrl-logo'
+        container.setAttribute('href', 'https://www.barikoi.com')
+        container.setAttribute('target', '_blank')
+        container.setAttribute('alt', 'Barikoi')
+        return container
       },
       onRemove: (): void => {
         // Cleanup if needed
       },
-    };
+    }
 
-    this.addControl(logoControl, 'bottom-left');
+    this.addControl(logoControl, 'bottom-left')
   }
 
   /**
@@ -212,48 +201,48 @@ export class BkoiGlMap extends Map {
         trash: true,
       },
       ...drawOptions,
-    } as MapboxDraw.MapboxDrawOptions;
+    } as MapboxDraw.MapboxDrawOptions
 
-    this.draw = new MapboxDraw(defaultOptions);
-    this.addControl(this.draw as unknown as IControl);
+    this.draw = new MapboxDraw(defaultOptions)
+    this.addControl(this.draw as unknown as IControl)
 
     // Only reset when not in drawing mode to allow CSS cursor to work
     this.on('draw.create', () => {
-      const currentMode = this.draw?.getMode();
+      const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
-        this.getCanvas().style.cursor = '';
+        this.getCanvas().style.cursor = ''
       }
-    });
+    })
 
     this.on('draw.update', () => {
-      const currentMode = this.draw?.getMode();
+      const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
-        this.getCanvas().style.cursor = '';
+        this.getCanvas().style.cursor = ''
       }
-    });
+    })
 
     this.on('draw.delete', () => {
-      const currentMode = this.draw?.getMode();
+      const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
-        this.getCanvas().style.cursor = '';
+        this.getCanvas().style.cursor = ''
       }
-    });
+    })
 
     this.on('draw.selectionchange', () => {
-      const currentMode = this.draw?.getMode();
+      const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
-        this.getCanvas().style.cursor = '';
+        this.getCanvas().style.cursor = ''
       }
-    });
+    })
 
     this.on('draw.modechange', () => {
       // Reset cursor when changing to simple_select mode to prevent sticking
       // Allow CSS to control cursor in drawing modes
-      const currentMode = this.draw?.getMode();
+      const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
-        this.getCanvas().style.cursor = '';
+        this.getCanvas().style.cursor = ''
       }
-    });
+    })
   }
 
   /**
@@ -271,33 +260,33 @@ export class BkoiGlMap extends Map {
    * @returns {void}
    */
   private initializeStyleDrawer(styles: StyleConfig[]): void {
-    const mapContainer = this.getContainer();
+    const mapContainer = this.getContainer()
 
     // Create drawer container
-    const drawer = document.createElement('div');
-    drawer.className = 'style-drawer';
-    drawer.style.maxHeight = '0';
+    const drawer = document.createElement('div')
+    drawer.className = 'style-drawer'
+    drawer.style.maxHeight = '0'
 
     // Create toggle button
-    const toggleButton = document.createElement('button');
-    toggleButton.className = 'style-drawer-toggle-button';
-    toggleButton.innerHTML = '☰';
+    const toggleButton = document.createElement('button')
+    toggleButton.className = 'style-drawer-toggle-button'
+    toggleButton.innerHTML = '☰'
 
     // Toggle drawer visibility
     toggleButton.addEventListener('click', () => {
-      const isOpen = drawer.style.maxHeight !== '0px';
-      drawer.style.maxHeight = isOpen ? '0' : '400px';
-      toggleButton.innerHTML = isOpen ? '☰' : '▲';
-    });
+      const isOpen = drawer.style.maxHeight !== '0px'
+      drawer.style.maxHeight = isOpen ? '0' : '400px'
+      toggleButton.innerHTML = isOpen ? '☰' : '▲'
+    })
 
     // Add style items
     styles.forEach(({ style, image, name }) => {
-      const styleItem = this.createStyleItem(style, image, name);
-      drawer.appendChild(styleItem);
-    });
+      const styleItem = this.createStyleItem(style, image, name)
+      drawer.appendChild(styleItem)
+    })
 
-    mapContainer.appendChild(toggleButton);
-    mapContainer.appendChild(drawer);
+    mapContainer.appendChild(toggleButton)
+    mapContainer.appendChild(drawer)
   }
 
   /**
@@ -316,26 +305,26 @@ export class BkoiGlMap extends Map {
    * @returns {HTMLDivElement} The created style item DOM element
    */
   private createStyleItem(style: string, image: string, name: string): HTMLDivElement {
-    const styleItem = document.createElement('div');
-    styleItem.className = 'style-item';
-    styleItem.style.position = 'relative';
-    styleItem.style.cursor = 'pointer';
-    styleItem.style.marginBottom = '10px';
+    const styleItem = document.createElement('div')
+    styleItem.className = 'style-item'
+    styleItem.style.position = 'relative'
+    styleItem.style.cursor = 'pointer'
+    styleItem.style.marginBottom = '10px'
 
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'relative';
-    wrapper.style.overflow = 'hidden';
+    const wrapper = document.createElement('div')
+    wrapper.style.position = 'relative'
+    wrapper.style.overflow = 'hidden'
 
-    const thumbnail = document.createElement('img');
-    thumbnail.src = image;
-    thumbnail.alt = name;
-    thumbnail.style.width = '100%';
-    thumbnail.style.height = '100%';
-    thumbnail.style.objectFit = 'cover';
-    thumbnail.style.transition = 'transform 0.3s';
+    const thumbnail = document.createElement('img')
+    thumbnail.src = image
+    thumbnail.alt = name
+    thumbnail.style.width = '100%'
+    thumbnail.style.height = '100%'
+    thumbnail.style.objectFit = 'cover'
+    thumbnail.style.transition = 'transform 0.3s'
 
-    const nameOverlay = document.createElement('div');
-    nameOverlay.innerText = name;
+    const nameOverlay = document.createElement('div')
+    nameOverlay.innerText = name
     Object.assign(nameOverlay.style, {
       position: 'absolute',
       top: '50%',
@@ -348,29 +337,29 @@ export class BkoiGlMap extends Map {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       borderRadius: '4px',
       display: 'none',
-    });
+    })
 
     // Hover effects
     styleItem.addEventListener('mouseenter', () => {
-      thumbnail.style.transform = 'scale(1.05)';
-      nameOverlay.style.display = 'block';
-    });
+      thumbnail.style.transform = 'scale(1.05)'
+      nameOverlay.style.display = 'block'
+    })
 
     styleItem.addEventListener('mouseleave', () => {
-      thumbnail.style.transform = 'scale(1)';
-      nameOverlay.style.display = 'none';
-    });
+      thumbnail.style.transform = 'scale(1)'
+      nameOverlay.style.display = 'none'
+    })
 
     // Style change on click
     styleItem.addEventListener('click', () => {
-      this.setStyle(style);
-    });
+      this.setStyle(style)
+    })
 
-    wrapper.appendChild(thumbnail);
-    wrapper.appendChild(nameOverlay);
-    styleItem.appendChild(wrapper);
+    wrapper.appendChild(thumbnail)
+    wrapper.appendChild(nameOverlay)
+    styleItem.appendChild(wrapper)
 
-    return styleItem;
+    return styleItem
   }
 
   /**
@@ -384,7 +373,7 @@ export class BkoiGlMap extends Map {
    * @returns {MapboxDraw | undefined} The MapboxDraw instance if drawing tools are enabled, undefined otherwise
    */
   public getDraw(): MapboxDraw | undefined {
-    return this.draw;
+    return this.draw
   }
 }
 
@@ -392,20 +381,20 @@ export class BkoiGlMap extends Map {
 /**
  * @description Global configuration object for bkoi-gl-js library settings.
  */
-export { bkoiConfig } from './utils/config';
+export { bkoiConfig } from './utils/config'
 
 /**
  * @description Utility function to validate if a style URL is a Barikoi style.
  * @param {string | null | undefined} style - The style URL to validate
  * @returns {boolean} True if the style is a valid Barikoi style URL
  */
-export { isBarikoiStyle } from './utils/validator';
+export { isBarikoiStyle } from './utils/validator'
 
 /**
  * @description Re-exports all TypeScript type definitions from the types module.
  * Includes BkoiMapOptions, StyleConfig, and BkoiConfig interfaces.
  */
-export type * from './types';
+export type * from './types'
 
 // Export all maplibre features individually for tree-shaking
 /**
@@ -431,7 +420,7 @@ export {
   Evented,
   prewarm,
   clearPrewarmedResources,
-};
+}
 
 // Export BkoiGlMap as Map (main export)
 /**
@@ -439,7 +428,7 @@ export {
  *
  * This is the primary way to create maps with Barikoi integration.
  */
-export { BkoiGlMap as Map };
+export { BkoiGlMap as Map }
 
 // Default export with all Maplibre features + Barikoi extensions
 /**
@@ -498,10 +487,10 @@ const exported = {
    * @type {string | null}
    */
   get accessToken(): string | null {
-    return bkoiConfig.ACCESS_TOKEN;
+    return bkoiConfig.ACCESS_TOKEN
   },
   set accessToken(token: string | null) {
-    bkoiConfig.ACCESS_TOKEN = token;
+    bkoiConfig.ACCESS_TOKEN = token
   },
 
   /**
@@ -510,6 +499,6 @@ const exported = {
    * @type {string}
    */
   workerUrl: '',
-};
+}
 
-export default exported;
+export default exported

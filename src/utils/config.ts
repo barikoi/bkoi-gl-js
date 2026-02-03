@@ -28,7 +28,7 @@ export interface BkoiConfig {
    * @type {string | null}
    * @default null
    */
-  ACCESS_TOKEN: string | null;
+  ACCESS_TOKEN: string | null
 
   /**
    * Default map style URL used when no style is specified.
@@ -40,7 +40,7 @@ export interface BkoiConfig {
    * @type {string}
    * @default 'https://map.barikoi.com/styles/barikoi-light/style.json'
    */
-  DEFAULT_STYLE: string;
+  DEFAULT_STYLE: string
 }
 
 /**
@@ -60,5 +60,5 @@ export const bkoiConfig: BkoiConfig = {
   /**
    * Barikoi Light style - good balance of readability and features
    */
-  DEFAULT_STYLE: 'https://map.barikoi.com/styles/barikoi-light/style.json'
-};
+  DEFAULT_STYLE: 'https://map.barikoi.com/styles/barikoi-light/style.json',
+}
