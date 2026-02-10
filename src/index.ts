@@ -32,7 +32,8 @@ import maplibre, {
 import MapboxDraw from 'maplibre-gl-draw'
 import { bkoiConfig } from './utils/config'
 import { isBarikoiStyle } from './utils/validator'
-import type { BkoiMapOptions, StyleConfig } from './types'
+import type { BkoiMapOptions, StyleConfig, MinimapOptions } from './types'
+import { Minimap } from './controls/Minimap'
 
 const { setRTLTextPlugin, getRTLTextPluginStatus, prewarm, clearPrewarmedResources } = maplibre
 
@@ -90,7 +91,6 @@ export class BkoiGlMap extends Map {
     // Initialize parent Map class
     super({
       ...mapOptions,
-      accessToken: mapOptions.mapboxAccessToken || undefined,
       attributionControl: false,
       style: styleUrl,
     } as MapOptions)
@@ -108,6 +108,10 @@ export class BkoiGlMap extends Map {
 
       if (mapOptions.styles) {
         this.initializeStyleDrawer(mapOptions.styles)
+      }
+
+      if (mapOptions.minimap) {
+        this.initializeMinimap(mapOptions.minimap)
       }
     })
   }
@@ -375,6 +379,27 @@ export class BkoiGlMap extends Map {
   public getDraw(): MapboxDraw | undefined {
     return this.draw
   }
+
+  /**
+   * @private
+   * @method initializeMinimap
+   * @description Initializes the minimap control.
+   *
+   * Creates a Minimap control instance with the provided options and adds it
+   * to the map at the specified position. The minimap provides a small overview
+   * map that syncs with the parent map's position.
+   *
+   * @param {MinimapOptions} options - Configuration options for the minimap
+   * @returns {void}
+   */
+  private initializeMinimap(options: MinimapOptions): void {
+    // Dynamic import to avoid circular dependency
+    import('./controls/Minimap').then(({ Minimap: MinimapControl }) => {
+      const minimap = new MinimapControl(options)
+      const position = options.position ?? 'top-right'
+      this.addControl(minimap, position)
+    })
+  }
 }
 
 // Re-export utilities
@@ -382,6 +407,7 @@ export class BkoiGlMap extends Map {
  * @description Global configuration object for bkoi-gl-js library settings.
  */
 export { bkoiConfig } from './utils/config'
+export { DEFAULT_CENTER } from './utils/constants'
 
 /**
  * @description Utility function to validate if a style URL is a Barikoi style.
@@ -395,6 +421,12 @@ export { isBarikoiStyle } from './utils/validator'
  * Includes BkoiMapOptions, StyleConfig, and BkoiConfig interfaces.
  */
 export type * from './types'
+
+/**
+ * @description Re-exports the Minimap control class.
+ * Users can import and use Minimap directly or enable it via map options.
+ */
+export { Minimap } from './controls/Minimap'
 
 // Export all maplibre features individually for tree-shaking
 /**
@@ -477,6 +509,7 @@ const exported = {
   Evented,
   prewarm,
   clearPrewarmedResources,
+  Minimap,
 
   /**
    * @description Global Barikoi API access token getter/setter.

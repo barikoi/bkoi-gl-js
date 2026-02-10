@@ -154,3 +154,16 @@ a.maplibregl-ctrl-logo {
 .style-item:hover {
   background-color: #f9f9f9;
 }
+
+/* Minimap Control */
+.maplibregl-ctrl-minimap {
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+}
+
+.maplibregl-ctrl-minimap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
