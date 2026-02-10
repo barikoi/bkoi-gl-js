@@ -13,7 +13,29 @@
 
 Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>, this package provides tools to integrate maps and location services effortlessly.
 
-For comprehensive examples and React/Next.js integrations, check out [react-bkoi-gl](https://www.npmjs.com/package/react-bkoi-gl) npm library.
+For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npmjs.com/package/react-bkoi-gl) npm library.
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+  - [Map Options](#map-options)
+  - [Draw Options](#draw-options)
+  - [Map Events](#map-events)
+    - [Map Lifecycle Events](#map-lifecycle-events)
+    - [Camera Movement Events](#camera-movement-events)
+    - [Mouse & Pointer Events](#mouse--pointer-events)
+    - [Touch Events](#touch-events)
+    - [Data & Style Events](#data--style-events)
+    - [Source & Layer Events](#source--layer-events)
+    - [Drawing Events](#drawing-events)
+  - [Event Listener Management](#event-listener-management)
+- [Examples](#examples)
+- [Documentation](#documentation)
+- [Support Resources](#support-resources)
+- [License](#license)
 
 ## Features
 
@@ -42,29 +64,7 @@ Once registered, you'll be able to access the full suite of Barikoi API services
 
 Choose the installation method that best fits your project:
 
-#### Option 1: Package Manager (Recommended for React, Next.js, or bundler-based projects)
-
-Install the package using npm:
-
-```bash
-npm install bkoi-gl
-```
-
-Or using yarn:
-
-```bash
-yarn add bkoi-gl
-```
-
-Then import the library in your JavaScript/TypeScript files:
-
-```javascript
-import { Map, Marker, FullscreenControl } from "bkoi-gl";
-import "bkoi-gl/style.css";
-```
-**Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
-
-#### Option 2: CDN (For vanilla JavaScript or quick prototyping)
+#### Option 1: CDN (For vanilla JavaScript or quick prototyping)
 
 Add the following links to the `<head>` section of your HTML file:
 
@@ -88,6 +88,28 @@ Add the following links to the `<head>` section of your HTML file:
 <script src="https://cdn.jsdelivr.net/npm/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
 ```
 
+#### Option 2: Package Manager (Recommended for React, Next.js, or bundler-based projects)
+
+Install the package using npm:
+
+```bash
+npm install bkoi-gl
+```
+
+Or using yarn:
+
+```bash
+yarn add bkoi-gl
+```
+
+Then import the library in your JavaScript/TypeScript files:
+
+```javascript
+import { Map, Marker, FullscreenControl } from "bkoi-gl";
+import "bkoi-gl/style.css";
+```
+**Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
+
 ## Quick Start
 
 ### Vanilla JavaScript
@@ -105,6 +127,13 @@ Add the following links to the `<head>` section of your HTML file:
     accessToken: "YOUR_BARIKOI_API_KEY_HERE",
     center: [90.3938010872331, 23.821600277500405], // Dhaka coordinates
     zoom: 10,
+    polygon: true, // Enable draw polygon option
+    drawOptions: {
+      controls: {
+        polygon: true,
+        trash: true
+      }
+    }    
   });
 </script>
 ```
@@ -116,12 +145,11 @@ Add the following links to the `<head>` section of your HTML file:
 
 import { useEffect, useRef } from "react";
 import { Map } from "bkoi-gl";
-import type { BkoiGlMap } from "bkoi-gl";
 import "bkoi-gl/style.css";
 
 const BasicMap = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<BkoiGlMap | null>(null);
+  const map = useRef<null>(null);
 
   useEffect(() => {
     if (map.current) return;
@@ -129,9 +157,16 @@ const BasicMap = () => {
 
     map.current = new Map({
       container: mapContainer.current,
+      accessToken: "YOUR_BARIKOI_API_KEY_HERE",
       center: [90.39017821904588, 23.719800220780733], // Dhaka coordinates
       zoom: 10,
-      accessToken: "YOUR_BARIKOI_API_KEY_HERE",
+      polygon: true, // Enable draw polygon option
+      drawOptions: {
+        controls: {
+          polygon: true,
+          trash: true
+        }
+      }      
     });
 
     // Cleanup on unmount
@@ -157,9 +192,341 @@ const BasicMap = () => {
 export default BasicMap;
 ```
 
+## Configuration
+
+### Map Options
+
+The `Map` constructor accepts an options object extending MapLibre GL JS MapOptions with Barikoi-specific additions.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `container` | string \| HTMLElement | *required* | The HTML element or ID to render the map in |
+| `accessToken` | string | *required* | Your Barikoi API key for authentication |
+| `style` | string | Barikoi Light | Map style URL or style identifier |
+| `center` | [number, number] | `[90.3938, 23.8216]` | Initial center position [longitude, latitude] |
+| `zoom` | number | `10` | Initial zoom level (0-22) |
+| `bearing` | number | `0` | Initial bearing (rotation) in degrees, clockwise from north |
+| `pitch` | number | `0` | Initial pitch (tilt) in degrees (0-85) |
+| `minZoom` | number | `0` | Minimum zoom level |
+| `maxZoom` | number | `22` | Maximum zoom level |
+| `minPitch` | number | `0` | Minimum pitch level |
+| `maxPitch` | number | `85` | Maximum pitch level |
+| `bounds` | [number, number, number, number] | *none* | Initial map bounds as [swLng, swLat, neLng, neLat] |
+| `fitBoundsOptions` | object | *none* | Options for fitBounds animation |
+| `interactive` | boolean | `true` | Enable/disable map interactions (drag, zoom, rotate) |
+| `pitchWithRotate` | boolean | `true` | Enable pitch with rotate gesture |
+| `clickTolerance` | number | `3` | Max pixels between mouse down/up for click |
+| `scrollZoom` | boolean \| object | `true` | Enable/disable scroll zoom |
+| `boxZoom` | boolean | `true` | Enable/disable box zoom |
+| `dragRotate` | boolean | `true` | Enable/disable drag to rotate |
+| `dragPan` | boolean | `true` | Enable/disable drag to pan |
+| `keyboard` | boolean | `true` | Enable/disable keyboard controls |
+| `doubleClickZoom` | boolean | `true` | Enable/disable double-click zoom |
+| `touchZoomRotate` | boolean \| object | `true` | Enable/disable touch zoom/rotate |
+| `touchPitch` | boolean \| object | `true` | Enable/disable touch pitch |
+| `antialias` | boolean | *auto* | Enable antialiasing |
+| `refreshExpiredTiles` | boolean | `true` | Refresh expired tiles |
+| `maxBounds` | [number, number, number, number] | *none* | Constrain map to bounds [swLng, swLat, neLng, neLat] |
+| `projection` | string | `'mercator'` | Map projection ('mercator' or 'globe') |
+| `renderWorldCopies` | boolean | `true` | Render multiple copies of the world |
+| `locale` | object | *none* | Localization strings for UI |
+| `polygon` | boolean | `false` | Enable drawing tools for polygons/lines/points |
+| `drawOptions` | object | `{}` | Configuration for drawing tools |
+
+---
+
+### Draw Options
+
+When `polygon: true` is set, the drawing tools are enabled. The `drawOptions` configures the available drawing controls.
+
+```javascript
+drawOptions: {
+  // Controls which drawing modes are available
+  controls: {
+    polygon: boolean,      // Enable polygon drawing tool
+    trash: boolean,        // Enable delete/clear all button
+    line_string: boolean,  // Enable line drawing tool (optional)
+    point: boolean         // Enable point marker tool (optional)
+  },
+
+  // Control display behavior
+  displayControlsDefault: boolean,  // Show all controls by default (default: false)
+
+  // Drawing modes configuration
+  modes: object,     // Override default drawing modes
+
+  // Style configuration
+  styles: array,     // Custom styles for drawn features
+
+  // Event handlers
+  defaultMode: string,  // Default drawing mode (default: 'simple_select')
+
+  // User interaction limits
+  userProperties: boolean  // Enable user properties on features
+}
+```
+
+---
+
+### Map Events
+
+Events are categorized by their purpose for easier navigation.
+
+#### Map Lifecycle Events
+
+Fired during the map's initialization and rendering cycle.
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `load` | Fired when the map has finished loading all resources | - |
+| `render` | Fired after the map completes a render cycle | - |
+| `idle` | Fired when the map enters an idle state (no ongoing transitions) | - |
+| `error` | Fired when an error occurs | `error` - Error object |
+
+**Example:**
+```javascript
+map.on('load', () => {
+  console.log('Map is ready for interaction');
+});
+
+map.on('error', (e) => {
+  console.error('Map error:', e.error);
+});
+```
+
+---
+
+#### Camera Movement Events
+
+Fired when the map's camera position changes (pan, zoom, rotate, pitch).
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `movestart` | Fired when camera movement begins | - |
+| `move` | Fired repeatedly during camera movement | - |
+| `moveend` | Fired when camera movement ends | - |
+| `zoomstart` | Fired when zoom level begins changing | - |
+| `zoom` | Fired repeatedly during zoom | - |
+| `zoomend` | Fired when zoom level change ends | - |
+| `rotate` | Fired during rotation (bearing change) | - |
+| `rotatestart` | Fired when rotation begins | - |
+| `rotateend` | Fired when rotation ends | - |
+| `pitch` | Fired during pitch (tilt) change | - |
+
+**Example:**
+```javascript
+map.on('moveend', () => {
+  const center = map.getCenter();
+  const zoom = map.getZoom();
+  console.log(`Map moved to [${center.lng}, ${center.lat}] at zoom ${zoom}`);
+});
+
+map.on('zoom', () => {
+  console.log('Current zoom level:', map.getZoom());
+});
+```
+
+---
+
+#### Mouse & Pointer Events
+
+Fired when users interact with the map using mouse or touch input.
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `click` | Fired when the map is clicked | `lngLat`, `point` |
+| `dblclick` | Fired when the map is double-clicked | `lngLat`, `point` |
+| `mousedown` | Fired when mouse button is pressed | `lngLat`, `point` |
+| `mouseup` | Fired when mouse button is released | `lngLat`, `point` |
+| `mousemove` | Fired when mouse moves over the map | `lngLat`, `point` |
+| `mouseover` | Fired when mouse enters the map | `lngLat`, `point` |
+| `mouseout` | Fired when mouse leaves the map | `lngLat`, `point` |
+| `wheel` | Fired when mouse wheel is used | - |
+
+**Example:**
+```javascript
+map.on('click', (e) => {
+  console.log(`Clicked at [${e.lngLat.lng}, ${e.lngLat.lat}]`);
+  // Place a marker or show popup at e.lngLat
+});
+
+map.on('mousemove', (e) => {
+  console.log('Mouse position:', e.lngLat);
+});
+```
+
+---
+
+#### Touch Events
+
+Fired on touch-enabled devices.
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `touchstart` | Fired when touch begins | `lngLat`, `point`, `touches` |
+| `touchmove` | Fired during touch movement | `lngLat`, `point`, `touches` |
+| `touchend` | Fired when touch ends | `lngLat`, `point`, `touches` |
+| `touchcancel` | Fired when touch is interrupted | `lngLat`, `point`, `touches` |
+
+---
+
+#### Data & Style Events
+
+Fired when map data or styles change.
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `data` | Fired when any data is loaded | `dataType`, `source` |
+| `sourcedata` | Fired when source data is loaded/changed | `sourceId`, `isSourceLoaded` |
+| `styledata` | Fired when the map's style is changed | - |
+
+**Example:**
+```javascript
+map.on('styledata', () => {
+  console.log('Map style has changed');
+});
+
+map.on('sourcedata', (e) => {
+  if (e.isSourceLoaded) {
+    console.log('Source data loaded:', e.sourceId);
+  }
+});
+```
+
+---
+
+#### Source & Layer Events
+
+Fired when sources or layers are added, removed, or modified.
+
+| Event | Description |
+|-------|-------------|
+| `sourceloading` | Fired when a source begins loading |
+| `sourceadd` | Fired when a source is added |
+| `sourceremove` | Fired when a source is removed |
+| `layeradd` | Fired when a layer is added |
+| `layerremove` | Fired when a layer is removed |
+
+---
+
+#### Other Events
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `resize` | Fired when the map is resized | - |
+| `webglcontextlost` | Fired when WebGL context is lost | - |
+| `webglcontextrestored` | Fired when WebGL context is restored | - |
+
+---
+
+#### Drawing Events
+
+Available when drawing tools are enabled via `polygon: true`.
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `draw.create` | Fired when a feature is created | `features` - Array of created features |
+| `draw.update` | Fired when a feature is updated | `features` - Array of updated features |
+| `draw.delete` | Fired when a feature is deleted | `features` - Array of deleted features |
+| `draw.selectionchange` | Fired when selection changes | `features`, `points` |
+| `draw.modechange` | Fired when draw mode changes | `mode` - Current mode name |
+| `draw.actionable` | Fired when available actions change | `actionable` - Action state object |
+
+**Example:**
+```javascript
+// Assuming map is initialized with drawing enabled (polygon: true)
+
+// Handle feature creation
+map.on('draw.create', (e) => {
+  const feature = e.features[0];
+  const geometryType = feature.geometry.type;
+
+  switch (geometryType) {
+    case 'Polygon':
+      console.log('Polygon created:', feature.geometry.coordinates);
+      break;
+    case 'LineString':
+      console.log('Line created:', feature.geometry.coordinates);
+      break;
+    case 'Point':
+      console.log('Point created:', feature.geometry.coordinates);
+      break;
+  }
+});
+
+// Handle feature updates
+map.on('draw.update', (e) => {
+  console.log('Feature updated:', e.features);
+});
+
+// Handle feature deletion
+map.on('draw.delete', (e) => {
+  console.log('Feature deleted:', e.features);
+});
+```
+
+---
+
+### Event Listener Management
+
+#### Adding Event Listeners
+
+Use `map.on()` to attach event listeners:
+
+```javascript
+// Anonymous function
+map.on('load', () => {
+  console.log('Map loaded');
+});
+
+// Named function (easier to remove later)
+function handleLoad() {
+  console.log('Map loaded');
+}
+map.on('load', handleLoad);
+
+// Once - listener fires only once
+map.once('load', () => {
+  console.log('This will only fire once');
+});
+```
+
+#### Removing Event Listeners
+
+Use `map.off()` to remove event listeners:
+
+```javascript
+// Remove specific listener
+map.off('load', handleLoad);
+
+// Remove all listeners for an event
+map.off('load');
+
+// Remove all listeners
+map.off();
+```
+
+#### Getting Event Data
+
+Event handlers receive an event object with contextual data:
+
+```javascript
+map.on('click', (e) => {
+  // Geographic coordinates
+  console.log('Lng:', e.lngLat.lng);
+  console.log('Lat:', e.lngLat.lat);
+
+  // Pixel coordinates
+  console.log('X:', e.point.x);
+  console.log('Y:', e.point.y);
+
+  // Original event
+  console.log('Original event:', e.originalEvent);
+});
+```
+
 ## Examples
 
-<!-- - [Interactive Examples](https://docs.barikoi.com/examples) - Code examples and live demos -->
 Explore our interactive code examples with live demos and source code, covering basic maps to advanced features like markers, popups, layers, styling and animations.
 
 **[Interactive Examples](https://docs.barikoi.com/examples)**
@@ -179,4 +546,4 @@ Explore our interactive code examples with live demos and source code, covering 
 
 ## License
 
-This library is licensed under the MIT License. See the [LICENSE](https://www.npmjs.com/package/LICENSE) file for details.
+This library is licensed under the MIT License. See the [LICENSE](https://github.com/barikoi/bkoi-gl-js/blob/main/LICENSE) file for details.
