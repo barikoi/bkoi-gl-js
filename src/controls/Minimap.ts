@@ -6,6 +6,7 @@
  * Features:
  * - Bidirectional movement sync between parent and minimap
  * - Optional parent rectangle overlay showing viewport boundaries
+ * - Automatic style inheritance from parent map (if no style provided)
  * - Custom styles, zoom levels, and positioning
  * - Toggle button to minimize/maximize the minimap
  * - Configurable interactions control
@@ -62,9 +63,19 @@ interface MinimapInternalOptions extends MinimapOptions {
  * can display a rectangle showing the parent map's current viewport, and
  * can be toggled (minimized/maximized) via a button.
  *
+ * If no style is provided, the minimap will automatically use the parent map's style.
+ *
  * @implements {IControl}
  * @example
- * ```typescript
+ * // Using parent map's style (automatic)
+ * const minimap = new Minimap({
+ *   zoomAdjust: -4,
+ *   position: 'bottom-right',
+ * })
+ * map.addControl(minimap)
+ *
+ * @example
+ * // Using custom style
  * const minimap = new Minimap({
  *   style: 'https://map.barikoi.com/styles/barikoi-dark/style.json',
  *   zoomAdjust: -4,
@@ -86,7 +97,6 @@ interface MinimapInternalOptions extends MinimapOptions {
  *   }
  * })
  * map.addControl(minimap)
- * ```
  */
 export class Minimap implements IControl {
   /** Minimap configuration options */
@@ -206,6 +216,11 @@ export class Minimap implements IControl {
     this.#options.center ??= parentMap.getCenter().toArray() as [number, number]
     this.#options.bearing = parentMap.getBearing()
     this.#options.pitch = this.#options.pitchAdjust ? parentMap.getPitch() : 0
+
+    // If no style was provided, use the parent map's style
+    if (!this.#differentStyle) {
+      this.#options.style = parentMap.getStyle()
+    }
 
     // Create the minimap instance
     this.map = new BkoiGlMap(this.#options as unknown as BkoiMapOptions)
@@ -487,7 +502,7 @@ export class Minimap implements IControl {
    * @method setStyle
    * @description Sets the style of the minimap.
    *
-   * Only updates the minimap if it has a different style than the parent.
+   * Only updates the minimap if it has a custom style (different from parent).
    * After style change, updates the parent rectangle if present.
    *
    * @param {string | StyleSpecification | null} style - The new style
@@ -498,7 +513,7 @@ export class Minimap implements IControl {
     style: null | string | StyleSpecification,
     options?: StyleSwapOptions & StyleOptions
   ): void {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setStyle(style, options)
     }
     this.#setParentBounds()
@@ -508,7 +523,7 @@ export class Minimap implements IControl {
    * @method addLayer
    * @description Adds a layer to the minimap.
    *
-   * Only adds the layer if minimap has a different style than parent.
+   * Only adds the layer if minimap has a custom style (different from parent).
    * Updates the parent rectangle after adding.
    *
    * @param {LayerSpecification | CustomLayerInterface} layer - The layer to add
@@ -519,7 +534,7 @@ export class Minimap implements IControl {
     layer: (LayerSpecification & { source?: string | SourceSpecification }) | CustomLayerInterface,
     beforeId?: string
   ): MapLibreMap {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.addLayer(layer, beforeId)
     }
     this.#setParentBounds()
@@ -530,7 +545,7 @@ export class Minimap implements IControl {
    * @method moveLayer
    * @description Moves a layer in the minimap's layer stack.
    *
-   * Only moves the layer if minimap has a different style than parent.
+   * Only moves the layer if minimap has a custom style (different from parent).
    * Updates the parent rectangle after moving.
    *
    * @param {string} id - The layer ID
@@ -538,7 +553,7 @@ export class Minimap implements IControl {
    * @returns {MapLibreMap} The minimap instance
    */
   moveLayer(id: string, beforeId?: string): MapLibreMap {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.moveLayer(id, beforeId)
     }
     this.#setParentBounds()
@@ -549,14 +564,14 @@ export class Minimap implements IControl {
    * @method removeLayer
    * @description Removes a layer from the minimap.
    *
-   * Only removes the layer if minimap has a different style than parent.
+   * Only removes the layer if minimap has a custom style (different from parent).
    * Updates the parent rectangle after removing.
    *
    * @param {string} id - The layer ID to remove
    * @returns {this} The minimap instance
    */
   removeLayer(id: string): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.removeLayer(id)
     }
     this.#setParentBounds()
@@ -567,7 +582,7 @@ export class Minimap implements IControl {
    * @method setLayerZoomRange
    * @description Sets the zoom range for a layer.
    *
-   * Only sets the range if minimap has a different style than parent.
+   * Only sets the range if minimap has a custom style (different from parent).
    * Updates the parent rectangle after setting.
    *
    * @param {string} layerId - The layer ID
@@ -576,7 +591,7 @@ export class Minimap implements IControl {
    * @returns {this} The minimap instance
    */
   setLayerZoomRange(layerId: string, minzoom: number, maxzoom: number): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setLayerZoomRange(layerId, minzoom, maxzoom)
     }
     this.#setParentBounds()
@@ -587,7 +602,7 @@ export class Minimap implements IControl {
    * @method setFilter
    * @description Sets the filter for a layer.
    *
-   * Only sets the filter if minimap has a different style than parent.
+   * Only sets the filter if minimap has a custom style (different from parent).
    * Updates the parent rectangle after setting.
    *
    * @param {string} layerId - The layer ID
@@ -600,7 +615,7 @@ export class Minimap implements IControl {
     filter?: FilterSpecification | null,
     options?: StyleSetterOptions
   ): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setFilter(layerId, filter, options)
     }
     this.#setParentBounds()
@@ -611,7 +626,7 @@ export class Minimap implements IControl {
    * @method setPaintProperty
    * @description Sets a paint property for a layer.
    *
-   * Only sets the property if minimap has a different style than parent.
+   * Only sets the property if minimap has a custom style (different from parent).
    * Updates the parent rectangle after setting.
    *
    * @param {string} layerId - The layer ID
@@ -626,7 +641,7 @@ export class Minimap implements IControl {
     value: unknown,
     options?: StyleSetterOptions
   ): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setPaintProperty(layerId, name, value as string, options)
     }
     this.#setParentBounds()
@@ -637,7 +652,7 @@ export class Minimap implements IControl {
    * @method setLayoutProperty
    * @description Sets a layout property for a layer.
    *
-   * Only sets the property if minimap has a different style than parent.
+   * Only sets the property if minimap has a custom style (different from parent).
    * Updates the parent rectangle after setting.
    *
    * @param {string} layerId - The layer ID
@@ -652,7 +667,7 @@ export class Minimap implements IControl {
     value: unknown,
     options?: StyleSetterOptions
   ): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setLayoutProperty(layerId, name, value as string, options)
     }
     this.#setParentBounds()
@@ -663,7 +678,7 @@ export class Minimap implements IControl {
    * @method setGlyphs
    * @description Sets the glyph URL for the map.
    *
-   * Only sets the glyphs if minimap has a different style than parent.
+   * Only sets the glyphs if minimap has a custom style (different from parent).
    * Updates the parent rectangle after setting.
    *
    * @param {string | null} glyphsUrl - The glyphs URL
@@ -671,7 +686,7 @@ export class Minimap implements IControl {
    * @returns {this} The minimap instance
    */
   setGlyphs(glyphsUrl: string | null, options?: StyleSetterOptions): this {
-    if (!this.#differentStyle) {
+    if (this.#differentStyle) {
       this.map.setGlyphs(glyphsUrl, options)
     }
     this.#setParentBounds()
