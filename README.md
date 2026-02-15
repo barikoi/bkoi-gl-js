@@ -32,6 +32,27 @@ For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npm
     - [Source & Layer Events](#source--layer-events)
     - [Drawing Events](#drawing-events)
   - [Event Listener Management](#event-listener-management)
+- [Markers & Popups](#markers--popups)
+  - [Adding Markers](#adding-markers)
+  - [Adding Popups](#adding-popups)
+  - [Marker with Popup](#marker-with-popup)
+- [Map Controls](#map-controls)
+  - [Navigation Control](#navigation-control)
+  - [Geolocate Control](#geolocate-control)
+  - [Scale Control](#scale-control)
+  - [Fullscreen Control](#fullscreen-control)
+- [Camera Methods](#camera-methods)
+  - [Fly To](#fly-to)
+  - [Ease To](#ease-to)
+  - [Jump To](#jump-to)
+  - [Fit Bounds](#fit-bounds)
+- [Custom Layers & Sources](#custom-layers--sources)
+  - [Adding a GeoJSON Source](#adding-a-geojson-source)
+  - [Adding Layers](#adding-layers)
+  - [Layer Visibility](#layer-visibility)
+- [Utility Methods](#utility-methods)
+  - [Map State](#map-state)
+  - [Interaction Handlers](#interaction-handlers)
 - [Examples](#examples)
 - [Documentation](#documentation)
 - [Support Resources](#support-resources)
@@ -671,6 +692,436 @@ map.on('click', (e) => {
   console.log('Original event:', e.originalEvent);
 });
 ```
+
+---
+
+## Markers & Popups
+
+### Adding Markers
+
+Markers are visual indicators placed at specific locations on the map.
+
+```javascript
+// Basic marker
+const marker = new bkoigl.Marker()
+  .setLngLat([90.39, 23.82])
+  .addTo(map);
+
+// Marker with custom color
+const marker = new bkoigl.Marker({ color: '#ff0000' })
+  .setLngLat([90.39, 23.82])
+  .addTo(map);
+
+// Marker with custom element
+const el = document.createElement('div');
+el.className = 'custom-marker';
+el.style.backgroundImage = 'url(marker.png)';
+el.style.width = '30px';
+el.style.height = '30px';
+
+const marker = new bkoigl.Marker(el)
+  .setLngLat([90.39, 23.82])
+  .addTo(map);
+
+// Remove a marker
+marker.remove();
+```
+
+### Adding Popups
+
+Popups display information when clicked or hovered.
+
+```javascript
+// Basic popup
+const popup = new bkoigl.Popup()
+  .setLngLat([90.39, 23.82])
+  .setHTML('<h3>Dhaka</h3><p>Capital of Bangladesh</p>')
+  .addTo(map);
+
+// Popup with options
+const popup = new bkoigl.Popup({
+  closeButton: true,
+  closeOnClick: false,
+  offset: 25,
+  anchor: 'bottom'
+})
+  .setLngLat([90.39, 23.82])
+  .setText('Hello World!')
+  .addTo(map);
+```
+
+### Marker with Popup
+
+Attach a popup to a marker that opens when clicked.
+
+```javascript
+const popup = new bkoigl.Popup({ offset: 25 })
+  .setHTML('<h3>Location</h3><p>This is a marker</p>');
+
+const marker = new bkoigl.Marker()
+  .setLngLat([90.39, 23.82])
+  .setPopup(popup)
+  .addTo(map);
+
+// Toggle popup programmatically
+marker.togglePopup();
+```
+
+---
+
+## Map Controls
+
+### Navigation Control
+
+Adds zoom in/out buttons and a compass for rotation.
+
+```javascript
+// Add navigation control
+map.addControl(new bkoigl.NavigationControl(), 'top-right');
+
+// With options
+map.addControl(new bkoigl.NavigationControl({
+  visualizePitch: true,  // Show pitch visualization
+  showZoom: true,
+  showCompass: true
+}), 'top-right');
+```
+
+### Geolocate Control
+
+Allows users to find and track their current location.
+
+```javascript
+map.addControl(new bkoigl.GeolocateControl({
+  positionOptions: {
+    enableHighAccuracy: true
+  },
+  trackUserLocation: true,  // Track user movement
+  showAccuracyCircle: true,
+  showUserHeading: true
+}), 'top-right');
+```
+
+### Scale Control
+
+Displays a scale bar showing distances.
+
+```javascript
+map.addControl(new bkoigl.ScaleControl({
+  maxWidth: 100,
+  unit: 'metric'  // 'metric', 'imperial', or 'nautical'
+}), 'bottom-left');
+```
+
+### Fullscreen Control
+
+Allows users to toggle fullscreen mode.
+
+```javascript
+map.addControl(new bkoigl.FullscreenControl(), 'top-right');
+```
+
+### Removing Controls
+
+```javascript
+const control = new bkoigl.NavigationControl();
+map.addControl(control, 'top-right');
+
+// Remove the control
+map.removeControl(control);
+```
+
+---
+
+## Camera Methods
+
+### Fly To
+
+Smooth animated transition to a location with a "flying" effect.
+
+```javascript
+map.flyTo({
+  center: [90.39, 23.82],
+  zoom: 14,
+  bearing: 0,
+  pitch: 0,
+  speed: 1.2,      // Animation speed
+  curve: 1.42      // Flying curve
+});
+```
+
+### Ease To
+
+Smooth animated transition with customizable duration.
+
+```javascript
+map.easeTo({
+  center: [90.39, 23.82],
+  zoom: 14,
+  bearing: 45,
+  pitch: 30,
+  duration: 2000   // Duration in ms
+});
+```
+
+### Jump To
+
+Instant transition without animation.
+
+```javascript
+map.jumpTo({
+  center: [90.39, 23.82],
+  zoom: 14,
+  bearing: 0,
+  pitch: 0
+});
+```
+
+### Pan To
+
+Pan the map to a location.
+
+```javascript
+map.panTo([90.39, 23.82], { duration: 1000 });
+```
+
+### Zoom Methods
+
+```javascript
+map.setZoom(14);
+map.zoomTo(15, { duration: 500 });
+map.zoomIn({ duration: 500 });
+map.zoomOut({ duration: 500 });
+```
+
+### Rotation Methods
+
+```javascript
+map.setBearing(45);
+map.rotateTo(90, { duration: 500 });
+map.resetNorth({ duration: 500 });
+```
+
+### Pitch Methods
+
+```javascript
+map.setPitch(45);
+```
+
+### Fit Bounds
+
+Fit the map to show a specific area.
+
+```javascript
+const bounds = [[90.3, 23.7], [90.5, 23.9]]; // [SW, NE]
+map.fitBounds(bounds, {
+  padding: 50,      // Padding in pixels
+  duration: 2000
+});
+```
+
+### Get Camera State
+
+```javascript
+const center = map.getCenter();  // { lng, lat }
+const zoom = map.getZoom();      // number
+const bearing = map.getBearing(); // number
+const pitch = map.getPitch();    // number
+const bounds = map.getBounds();  // { getWest, getSouth, getEast, getNorth }
+```
+
+---
+
+## Custom Layers & Sources
+
+### Adding a GeoJSON Source
+
+```javascript
+map.addSource('my-source', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [90.39, 23.82]
+        },
+        properties: {
+          title: 'Dhaka'
+        }
+      }
+    ]
+  }
+});
+```
+
+### Adding Layers
+
+#### Circle Layer (Points)
+
+```javascript
+map.addLayer({
+  id: 'my-circle-layer',
+  type: 'circle',
+  source: 'my-source',
+  paint: {
+    'circle-radius': 10,
+    'circle-color': '#ff0000',
+    'circle-opacity': 0.8,
+    'circle-stroke-width': 2,
+    'circle-stroke-color': '#ffffff'
+  }
+});
+```
+
+#### Line Layer
+
+```javascript
+map.addLayer({
+  id: 'my-line-layer',
+  type: 'line',
+  source: 'my-source',
+  layout: {
+    'line-cap': 'round',
+    'line-join': 'round'
+  },
+  paint: {
+    'line-color': '#0088ff',
+    'line-width': 3,
+    'line-opacity': 0.8
+  }
+});
+```
+
+#### Fill Layer (Polygons)
+
+```javascript
+map.addLayer({
+  id: 'my-fill-layer',
+  type: 'fill',
+  source: 'my-source',
+  paint: {
+    'fill-color': '#28a745',
+    'fill-opacity': 0.5
+  }
+});
+
+// Add outline for the polygon
+map.addLayer({
+  id: 'my-fill-outline',
+  type: 'line',
+  source: 'my-source',
+  paint: {
+    'line-color': '#ffffff',
+    'line-width': 2
+  }
+});
+```
+
+### Layer Visibility
+
+```javascript
+// Hide a layer
+map.setLayoutProperty('my-layer', 'visibility', 'none');
+
+// Show a layer
+map.setLayoutProperty('my-layer', 'visibility', 'visible');
+```
+
+### Removing Sources & Layers
+
+```javascript
+// Remove a layer
+map.removeLayer('my-layer');
+
+// Remove a source (remove layers first)
+map.removeSource('my-source');
+```
+
+### Querying Layers
+
+```javascript
+// Check if layer exists
+if (map.getLayer('my-layer')) {
+  map.removeLayer('my-layer');
+}
+
+// Check if source exists
+if (map.getSource('my-source')) {
+  map.removeSource('my-source');
+}
+```
+
+---
+
+## Utility Methods
+
+### Map State
+
+```javascript
+// Get bounds
+const bounds = map.getBounds();
+console.log(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
+
+// Set max bounds
+map.setMaxBounds([[90.0, 23.5], [91.0, 24.5]]);
+
+// Get projection
+const projection = map.getProjection();
+
+// World copies
+map.setRenderWorldCopies(true);
+```
+
+### Resize
+
+Trigger a map resize when the container size changes.
+
+```javascript
+map.resize();
+```
+
+### Interaction Handlers
+
+Enable or disable specific interactions:
+
+```javascript
+// Scroll zoom
+map.scrollZoom.enable();
+map.scrollZoom.disable();
+
+// Drag pan
+map.dragPan.enable();
+map.dragPan.disable();
+
+// Drag rotate
+map.dragRotate.enable();
+map.dragRotate.disable();
+
+// Keyboard
+map.keyboard.enable();
+map.keyboard.disable();
+
+// Double click zoom
+map.doubleClickZoom.enable();
+map.doubleClickZoom.disable();
+
+// Touch zoom rotate
+map.touchZoomRotate.enable();
+map.touchZoomRotate.disable();
+
+// Touch pitch
+map.touchPitch.enable();
+map.touchPitch.disable();
+
+// Box zoom
+map.boxZoom.enable();
+map.boxZoom.disable();
+```
+
+---
 
 ## Examples
 
