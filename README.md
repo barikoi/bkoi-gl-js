@@ -239,32 +239,179 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 
 When `polygon: true` is set, the drawing tools are enabled. The `drawOptions` configures the available drawing controls.
 
+#### Available Drawing Modes
+
+| Mode | Description |
+|------|-------------|
+| `simple_select` | Default mode. Click to select features (default) |
+| `direct_select` | Select and edit vertices of a feature |
+| `draw_polygon` | Draw a polygon by clicking points |
+| `draw_line_string` | Draw a line by clicking points |
+| `draw_point` | Place a point marker by clicking |
+
+#### Basic Configuration
+
 ```javascript
 drawOptions: {
-  // Controls which drawing modes are available
+  // Controls which drawing tools are available
+  displayControlsDefault: true,  // Show all controls by default
   controls: {
-    polygon: boolean,      // Enable polygon drawing tool
-    trash: boolean,        // Enable delete/clear all button
-    line_string: boolean,  // Enable line drawing tool (optional)
-    point: boolean         // Enable point marker tool (optional)
+    polygon: true,        // Enable polygon drawing tool
+    line_string: true,    // Enable line drawing tool
+    point: true,          // Enable point marker tool
+    trash: true           // Enable delete button
   },
 
-  // Control display behavior
-  displayControlsDefault: boolean,  // Show all controls by default (default: false)
+  // Set the initial mode
+  defaultMode: 'simple_select',  // Options: 'simple_select', 'direct_select', 'draw_polygon', 'draw_line_string', 'draw_point'
 
-  // Drawing modes configuration
-  modes: object,     // Override default drawing modes
-
-  // Style configuration
-  styles: array,     // Custom styles for drawn features
-
-  // Event handlers
-  defaultMode: string,  // Default drawing mode (default: 'simple_select')
-
-  // User interaction limits
-  userProperties: boolean  // Enable user properties on features
+  // Enable custom properties on features
+  userProperties: true
 }
 ```
+
+#### Custom Styles Configuration
+
+You can customize the appearance of drawn features using the `styles` array:
+
+```javascript
+drawOptions: {
+  displayControlsDefault: true,
+  controls: {
+    polygon: true,
+    line_string: true,
+    point: true,
+    trash: true
+  },
+  defaultMode: 'simple_select',
+  userProperties: true,
+
+  // Custom styles for drawn features
+  styles: [
+    // POLYGON STYLES
+    // Polygon fill (when being drawn or selected)
+    {
+      id: 'gl-draw-polygon-fill',
+      type: 'fill',
+      filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+      paint: {
+        'fill-color': '#D20C0C',
+        'fill-opacity': 0.3
+      }
+    },
+    // Polygon outline (when being drawn or selected)
+    {
+      id: 'gl-draw-polygon-stroke-active',
+      type: 'line',
+      filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#D20C0C',
+        'line-width': 2
+      }
+    },
+    // Polygon outline (static/completed)
+    {
+      id: 'gl-draw-polygon-stroke-static',
+      type: 'line',
+      filter: ['all', ['==', '$type', 'Polygon'], ['==', 'mode', 'static']],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#D20C0C',
+        'line-width': 2
+      }
+    },
+
+    // LINE STRING STYLES
+    // Line (when being drawn or selected)
+    {
+      id: 'gl-draw-line-active',
+      type: 'line',
+      filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#D20C0C',
+        'line-width': 3
+      }
+    },
+    // Line (static/completed)
+    {
+      id: 'gl-draw-line-static',
+      type: 'line',
+      filter: ['all', ['==', '$type', 'LineString'], ['==', 'mode', 'static']],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': '#D20C0C',
+        'line-width': 2
+      }
+    },
+
+    // POINT STYLES
+    // Point marker (when being placed or selected)
+    {
+      id: 'gl-draw-point-active',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
+      paint: {
+        'circle-radius': 8,
+        'circle-color': '#D20C0C',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff'
+      }
+    },
+    // Point marker (static/completed)
+    {
+      id: 'gl-draw-point-static',
+      type: 'circle',
+      filter: ['all', ['==', '$type', 'Point'], ['==', 'mode', 'static']],
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#D20C0C',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff'
+      }
+    },
+
+    // VERTEX & MIDPOINT STYLES (for editing)
+    // Vertex points (corners when editing polygon/line)
+    {
+      id: 'gl-draw-vertex',
+      type: 'circle',
+      filter: ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point']],
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#ffffff',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#D20C0C'
+      }
+    },
+    // Midpoint points (for adding new vertices)
+    {
+      id: 'gl-draw-midpoint',
+      type: 'circle',
+      filter: ['all', ['==', 'meta', 'midpoint'], ['==', '$type', 'Point']],
+      paint: {
+        'circle-radius': 4,
+        'circle-color': '#D20C0C',
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#ffffff'
+      }
+    }
+  ]
+}
+```
+
+#### Style Filter Reference
+
+| Filter | Description |
+|--------|-------------|
+| `['==', '$type', 'Polygon']` | Matches polygon features |
+| `['==', '$type', 'LineString']` | Matches line features |
+| `['==', '$type', 'Point']` | Matches point features |
+| `['!=', 'mode', 'static']` | Feature is being drawn or selected |
+| `['==', 'mode', 'static']` | Feature is completed/static |
+| `['==', 'meta', 'vertex']` | Vertex points for editing |
+| `['==', 'meta', 'midpoint']` | Midpoint markers for adding vertices |
 
 ---
 
