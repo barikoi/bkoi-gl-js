@@ -45,6 +45,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
   - [Geolocate Control](#geolocate-control)
   - [Scale Control](#scale-control)
   - [Fullscreen Control](#fullscreen-control)
+  - [Minimap Control](#minimap-control)
 - [Camera Methods](#camera-methods)
   - [Fly To](#fly-to)
   - [Ease To](#ease-to)
@@ -72,6 +73,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - **Location Services** - Support for Barikoi geolocation services
 - **Lightweight** - Optimized for production use
 - **Drawing Tools** - Built-in polygon, line, and point drawing
+- **Minimap Control** - Synchronized overview map with customizable styling
 - **Multiple Build Formats** - ESM, CJS, IIFE, and UMD
 - **TypeScript Support** - Full TypeScript definitions included
 
@@ -266,6 +268,7 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | `locale` | object | *none* | Localization strings for UI |
 | `polygon` | boolean | `false` | Enable drawing tools for polygons/lines/points |
 | `drawOptions` | object | `{}` | Configuration for drawing tools |
+| `minimap` | object | *none* | Configuration for minimap control |
 
 ---
 
@@ -843,6 +846,382 @@ Allows users to toggle fullscreen mode.
 
 ```javascript
 map.addControl(new bkoigl.FullscreenControl(), 'top-right');
+```
+
+### Minimap Control
+
+Adds a small overview map that syncs with the main map, providing geographic context by showing the surrounding area at a different zoom level.
+
+#### Basic Usage
+
+```javascript
+// Using map options
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  minimap: {
+    zoomAdjust: -4,
+    position: 'bottom-right'
+  }
+})
+
+// Or using addControl
+const minimap = new bkoigl.Minimap({
+  zoomAdjust: -4,
+  position: 'bottom-right'
+})
+map.addControl(minimap, 'bottom-right')
+```
+
+#### Minimap Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `style` | string \| StyleSpecification | *parent style* | Map style for the minimap. If not provided, inherits from parent map |
+| `zoomAdjust` | number | `-4` | Zoom level difference between parent and minimap. Positive = zoomed out more |
+| `lockZoom` | number | *none* | Lock minimap to a specific zoom level (overrides zoomAdjust) |
+| `pitchAdjust` | boolean | `false` | Whether to sync pitch (tilt) with parent map |
+| `position` | string | `'top-right'` | Position of minimap control (`'top-left'`, `'top-right'`, `'bottom-left'`, `'bottom-right'`) |
+| `center` | [number, number] | *parent center* | Initial center coordinates [lng, lat] |
+| `accessToken` | string | *parent token* | Barikoi API access token for the minimap |
+| `containerStyle` | object | `{ width: '400px', height: '300px' }` | Custom CSS properties for the minimap container |
+| `borderRadius` | string | `'3px'` | Border radius of the minimap container |
+| `toggleable` | boolean | `true` | Whether the minimap can be minimized/maximized |
+| `toggleButton` | object | *default button* | Custom toggle button configuration (see ToggleButton Options) |
+| `initialMinimized` | boolean | `false` | Whether to start in minimized state |
+| `collapsedWidth` | string | `'29px'` | Width when minimized |
+| `collapsedHeight` | string | `'29px'` | Height when minimized |
+| `hideText` | string | `'Hide minimap'` | Tooltip text when expanded |
+| `showText` | string | `'Show minimap'` | Tooltip text when minimized |
+| `onToggle` | function | *none* | Callback when minimap is toggled: `(isMinimized: boolean) => void` |
+| `interactions` | object | *all disabled* | Map interactions configuration (see Interactions Options) |
+| `parentRect` | object | *none* | Parent rectangle overlay configuration (see ParentRect Options) |
+
+#### Custom Toggle Button
+
+Customize the minimap toggle button appearance:
+
+```javascript
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  minimap: {
+    zoomAdjust: -4,
+    position: 'bottom-right',
+    toggleable: true,
+    toggleButton: {
+      // Custom SVG icon
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.6 18L8 8.4V17H6V5h12v2H9.4l9.6 9.6l-1.4 1.4Z"/></svg>',
+      // Custom CSS class
+      className: 'my-toggle-button',
+      // Custom inline styles
+      style: {
+        background: 'linear-gradient(to right, #667eea 0%, #764ba2 100%)',
+        borderRadius: '4px'
+      },
+      // Button background color
+      iconBackgroundColor: '#333',
+      // Hover color
+      hoverColor: '#FF5722',
+      // Enable rotation based on position
+      enableRotation: true,
+      // Custom rotation angle (degrees)
+      rotationAngle: -180
+    }
+  }
+})
+```
+
+| ToggleButton Option | Type | Default | Description |
+|---------------------|------|---------|-------------|
+| `icon` | string | *default arrow* | Custom SVG icon for the button |
+| `className` | string | *none* | Custom CSS class name(s) |
+| `style` | object | *none* | Custom inline styles |
+| `iconBackgroundColor` | string | `'black'` | Background color of the button |
+| `hoverColor` | string | `'#e5e7e3'` | Background color on hover |
+| `enableRotation` | boolean | `true` | Enable rotation based on position |
+| `rotationAngle` | number | *position-based* | Custom rotation angle in degrees |
+
+#### Parent Rectangle Overlay
+
+Display a rectangle on the minimap showing the parent map's current viewport:
+
+```javascript
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  minimap: {
+    zoomAdjust: -4,
+    position: 'bottom-right',
+    parentRect: {
+      // Outline styling
+      linePaint: {
+        'line-color': '#FFFFFF',
+        'line-width': 2,
+        'line-opacity': 0.9
+      },
+      // Fill styling
+      fillPaint: {
+        'fill-color': '#0088FF',
+        'fill-opacity': 0.2
+      }
+    }
+  }
+})
+```
+
+| ParentRect Option | Type | Description |
+|-------------------|------|-------------|
+| `lineLayout` | object | Layout properties for the rectangle outline |
+| `linePaint` | object | Paint properties for the rectangle outline (color, width, opacity) |
+| `fillPaint` | object | Paint properties for the rectangle fill (color, opacity) |
+
+#### Minimap Interactions
+
+Control which map interactions are enabled on the minimap. By default, all interactions are disabled for a cleaner overview experience:
+
+```javascript
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  minimap: {
+    zoomAdjust: -4,
+    position: 'bottom-right',
+    interactions: {
+      dragPan: true,        // Enable panning
+      scrollZoom: false,    // Disable scroll zoom
+      boxZoom: false,
+      dragRotate: false,
+      keyboard: false,
+      doubleClickZoom: false,
+      touchZoomRotate: false
+    }
+  }
+})
+```
+
+| Interaction | Default | Description |
+|-------------|---------|-------------|
+| `dragPan` | `false` | Enable/disable drag to pan |
+| `scrollZoom` | `false` | Enable/disable scroll wheel zoom |
+| `boxZoom` | `false` | Enable/disable box zoom |
+| `dragRotate` | `false` | Enable/disable drag to rotate |
+| `keyboard` | `false` | Enable/disable keyboard controls |
+| `doubleClickZoom` | `false` | Enable/disable double-click zoom |
+| `touchZoomRotate` | `false` | Enable/disable touch zoom/rotate |
+
+#### Minimap Methods
+
+When you create a Minimap instance via `addControl`, you can access these methods:
+
+```javascript
+const minimap = new bkoigl.Minimap({
+  zoomAdjust: -4,
+  position: 'bottom-right'
+})
+map.addControl(minimap, 'bottom-right')
+
+// Toggle minimap programmatically
+minimap.toggle()
+
+// Check if minimized
+const isMinimized = minimap.isMinimized()
+
+// Set custom style (only works if minimap has its own style)
+minimap.setStyle('https://map.barikoi.com/styles/barikoi-dark/style.json')
+
+// Add layers to minimap (only works if minimap has its own style)
+minimap.addLayer({
+  id: 'my-layer',
+  type: 'circle',
+  source: 'my-source',
+  paint: {
+    'circle-radius': 10,
+    'circle-color': '#FF0000'
+  }
+})
+
+// Remove layer
+minimap.removeLayer('my-layer')
+
+// Set paint/layout properties
+minimap.setPaintProperty('my-layer', 'circle-color', '#00FF00')
+minimap.setLayoutProperty('my-layer', 'visibility', 'none')
+
+// Set filter
+minimap.setFilter('my-layer', ['==', 'type', 'restaurant'])
+
+// Set layer zoom range
+minimap.setLayerZoomRange('my-layer', 10, 18)
+
+// Move layer in stack
+minimap.moveLayer('my-layer', 'another-layer')
+```
+
+#### Custom Style Example
+
+Use a different style for the minimap than the parent map:
+
+```javascript
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  style: 'https://map.barikoi.com/styles/barikoi-light/style.json',
+  minimap: {
+    style: 'https://map.barikoi.com/styles/barikoi-dark/style.json',
+    zoomAdjust: -5,
+    position: 'bottom-right',
+    containerStyle: {
+      width: '300px',
+      height: '200px',
+      border: '2px solid #333'
+    },
+    parentRect: {
+      linePaint: {
+        'line-color': '#FFD700',
+        'line-width': 2
+      },
+      fillPaint: {
+        'fill-color': '#FFD700',
+        'fill-opacity': 0.15
+      }
+    }
+  }
+})
+```
+
+#### Vanilla JavaScript Example
+
+A complete HTML example with all minimap features:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css" />
+    <script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
+    <style>
+      body { margin: 0; padding: 0; }
+      #map { width: 100%; height: 100vh; }
+      #toggle-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        padding: 10px 20px;
+        background: #fff;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      #toggle-btn:hover {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <button id="toggle-btn">Toggle Minimap</button>
+
+    <script>
+      // Store minimap reference for programmatic control
+      let minimapControl = null
+
+      // Initialize map with minimap
+      const map = new bkoigl.Map({
+        container: 'map',
+        accessToken: 'YOUR_BARIKOI_API_KEY',
+        center: [90.39, 23.82],
+        zoom: 12,
+        minimap: {
+          // Use dark style for minimap
+          style: 'YOUR_MAP_STYLE',
+          zoomAdjust: -5,
+          position: 'bottom-right',
+          // Container styling
+          containerStyle: {
+            width: '300px',
+            height: '200px'
+          },
+          // Toggle functionality
+          toggleable: true,
+          initialMinimized: false,
+          hideText: 'Hide overview',
+          showText: 'Show overview',
+          onToggle: function(isMinimized) {
+            console.log('Minimap minimized:', isMinimized)
+            updateButtonText()
+          },
+          // Custom toggle button
+          toggleButton: {
+            iconBackgroundColor: '#333',
+            hoverColor: '#FF5722',
+            enableRotation: true
+          },
+          // Parent rectangle overlay
+          parentRect: {
+            linePaint: {
+              'line-color': '#FFD700',
+              'line-width': 2,
+              'line-opacity': 0.9
+            },
+            fillPaint: {
+              'fill-color': '#FFD700',
+              'fill-opacity': 0.15
+            }
+          },
+          // Enable drag pan on minimap
+          interactions: {
+            dragPan: true,
+            scrollZoom: false,
+            boxZoom: false,
+            dragRotate: false,
+            keyboard: false,
+            doubleClickZoom: false,
+            touchZoomRotate: false
+          }
+        }
+      })
+
+      // Alternative: Add minimap using addControl
+      // minimapControl = new bkoigl.Minimap({
+      //   zoomAdjust: -4,
+      //   position: 'bottom-right',
+      //   parentRect: {
+      //     linePaint: { 'line-color': '#FFF', 'line-width': 2 },
+      //     fillPaint: { 'fill-color': '#0088FF', 'fill-opacity': 0.2 }
+      //   }
+      // })
+      // map.addControl(minimapControl, 'bottom-right')
+
+      // Toggle button handler
+      document.getElementById('toggle-btn').addEventListener('click', function() {
+        if (minimapControl) {
+          minimapControl.toggle()
+        }
+      })
+
+      function updateButtonText() {
+        const btn = document.getElementById('toggle-btn')
+        if (minimapControl && minimapControl.isMinimized()) {
+          btn.textContent = 'Show Minimap'
+        } else {
+          btn.textContent = 'Hide Minimap'
+        }
+      }
+    </script>
+  </body>
+</html>
 ```
 
 ### Removing Controls
