@@ -7,13 +7,17 @@
 [![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Description
+---
 
-**Barikoi GL JS** is a JavaScript library built on top of [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
+## Overview
 
-Powered by <a href="https://barikoi.com/">Barikoi - Maps for Businesses</a>, this package provides tools to integrate maps and location services effortlessly.
+Barikoi GL JS is a JavaScript library built on top of [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
 
-For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npmjs.com/package/react-bkoi-gl) npm library.
+Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package provides tools to integrate maps and location services effortlessly.
+
+> **Note:** For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npmjs.com/package/react-bkoi-gl) npm library.
+
+---
 
 ## Table of Contents
 
@@ -58,16 +62,20 @@ For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npm
 - [Support Resources](#support-resources)
 - [License](#license)
 
+---
+
 ## Features
 
-- High-performance map rendering using WebGL.
-- Easy integration with React and Next.js.
-- Customizable map controls and interactions.
-- Support for Barikoi geolocation services.
-- Lightweight and optimized for production.
-- Drawing tools for polygons.
-- Multiple build formats (ESM, CJS, IIFE).
-- Full TypeScript support.
+- **High Performance** - WebGL-based map rendering
+- **Framework Support** - Easy integration with React and Next.js
+- **Customizable Controls** - Flexible map controls and interactions
+- **Location Services** - Support for Barikoi geolocation services
+- **Lightweight** - Optimized for production use
+- **Drawing Tools** - Built-in polygon, line, and point drawing
+- **Multiple Build Formats** - ESM, CJS, IIFE, and UMD
+- **TypeScript Support** - Full TypeScript definitions included
+
+---
 
 ## Getting Started
 
@@ -75,41 +83,37 @@ For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npm
 
 To access Barikoi's API services, you need to:
 
-1. Register on [Barikoi Developer Dashboard](https://developer.barikoi.com/register).
-2. Verify with your phone number.
-3. Claim your API key.
+1. Register on [Barikoi Developer Dashboard](https://developer.barikoi.com/register)
+2. Verify with your phone number
+3. Claim your API key
 
 Once registered, you'll be able to access the full suite of Barikoi API services. If you exceed the free usage limits, you'll need to subscribe to a paid plan.
 
-### Installation
+---
+
+## Installation
 
 Choose the installation method that best fits your project:
 
-#### Option 1: CDN (For vanilla JavaScript or quick prototyping)
+### Option 1: CDN (For vanilla JavaScript or quick prototyping)
 
 Add the following links to the `<head>` section of your HTML file:
 
 **Using unpkg:**
 
 ```html
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
-/>
+<link rel="stylesheet" href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css" />
 <script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
 ```
 
 **Using jsDelivr:**
 
 ```html
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bkoi-gl@latest/dist/style/bkoi-gl.css"
-/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bkoi-gl@latest/dist/style/bkoi-gl.css" />
 <script src="https://cdn.jsdelivr.net/npm/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
 ```
 
-#### Option 2: Package Manager (Recommended for React, Next.js, or bundler-based projects)
+### Option 2: Package Manager (Recommended for React, Next.js, or bundler-based projects)
 
 Install the package using npm:
 
@@ -129,39 +133,46 @@ Then import the library in your JavaScript/TypeScript files:
 import { Map, Marker, FullscreenControl } from "bkoi-gl";
 import "bkoi-gl/style.css";
 ```
-**Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
+
+> **Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
+
+---
 
 ## Quick Start
 
 ### Vanilla JavaScript
 
 ```html
-<div id="map" style="width: 100%; height: 400px;"></div>
-<script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css"
-/>
-<script>
-  const map = new bkoigl.Map({
-    container: "map",
-    accessToken: "YOUR_BARIKOI_API_KEY_HERE",
-    center: [90.3938010872331, 23.821600277500405], // Dhaka coordinates
-    zoom: 10,
-    polygon: true, // Enable draw polygon option
-    drawOptions: {
-      controls: {
-        polygon: true,
-        trash: true
-      }
-    }    
-  });
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css" />
+    <script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+    <script>
+      const map = new bkoigl.Map({
+        container: "map",
+        accessToken: "YOUR_BARIKOI_API_KEY_HERE",
+        center: [90.3938010872331, 23.821600277500405], // Dhaka coordinates
+        zoom: 10,
+        polygon: true, // Enable draw polygon option
+        drawOptions: {
+          controls: {
+            polygon: true,
+            trash: true
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
 ```
 
 ### React/Next.js
 
-```typescript
+```typescript title=components/BasicMap.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -187,7 +198,7 @@ const BasicMap = () => {
           polygon: true,
           trash: true
         }
-      }      
+      }
     });
 
     // Cleanup on unmount
@@ -212,6 +223,8 @@ const BasicMap = () => {
 
 export default BasicMap;
 ```
+
+---
 
 ## Configuration
 
@@ -291,7 +304,8 @@ drawOptions: {
 }
 ```
 
-#### Custom Styles Configuration
+<details>
+<summary>Custom Styles Configuration (Advanced)</summary>
 
 You can customize the appearance of drawn features using the `styles` array:
 
@@ -422,7 +436,10 @@ drawOptions: {
 }
 ```
 
-#### Style Filter Reference
+</details>
+
+<details>
+<summary>Style Filter Reference</summary>
 
 | Filter | Description |
 |--------|-------------|
@@ -433,6 +450,8 @@ drawOptions: {
 | `['==', 'mode', 'static']` | Feature is completed/static |
 | `['==', 'meta', 'vertex']` | Vertex points for editing |
 | `['==', 'meta', 'midpoint']` | Midpoint markers for adding vertices |
+
+</details>
 
 ---
 
@@ -452,6 +471,7 @@ Fired during the map's initialization and rendering cycle.
 | `error` | Fired when an error occurs | `error` - Error object |
 
 **Example:**
+
 ```javascript
 map.on('load', () => {
   console.log('Map is ready for interaction');
@@ -482,6 +502,7 @@ Fired when the map's camera position changes (pan, zoom, rotate, pitch).
 | `pitch` | Fired during pitch (tilt) change | - |
 
 **Example:**
+
 ```javascript
 map.on('moveend', () => {
   const center = map.getCenter();
@@ -512,6 +533,7 @@ Fired when users interact with the map using mouse or touch input.
 | `wheel` | Fired when mouse wheel is used | - |
 
 **Example:**
+
 ```javascript
 map.on('click', (e) => {
   console.log(`Clicked at [${e.lngLat.lng}, ${e.lngLat.lat}]`);
@@ -549,6 +571,7 @@ Fired when map data or styles change.
 | `styledata` | Fired when the map's style is changed | - |
 
 **Example:**
+
 ```javascript
 map.on('styledata', () => {
   console.log('Map style has changed');
@@ -601,6 +624,7 @@ Available when drawing tools are enabled via `polygon: true`.
 | `draw.actionable` | Fired when available actions change | `actionable` - Action state object |
 
 **Example:**
+
 ```javascript
 // Assuming map is initialized with drawing enabled (polygon: true)
 
@@ -1129,18 +1153,23 @@ Explore our interactive code examples with live demos and source code, covering 
 
 **[Interactive Examples](https://docs.barikoi.com/examples)**
 
+---
+
 ## Documentation
 
 - [Map API Reference](https://docs.barikoi.com/docs/API%20Reference/bkoi-map) - Complete Barikoi GL JS API documentation
-
 - [Business API Reference](https://docs.barikoi.com/api) - Barikoi location and business APIs
+
+---
 
 ## Support Resources
 
 - [Barikoi Documentation](https://docs.barikoi.com/docs/maps-api)
-- [MapLibre GL JS Docs](https://maplibre.org/maplibre-gl-js-docs/)
+- [MapLibre GL JS Docs](https://maplibre.org/maplibre-gl-js/docs/)
 - [GitHub Issues](https://github.com/barikoi/bkoi-gl-js/issues)
 - [Barikoi Support](mailto:support@barikoi.com)
+
+---
 
 ## License
 
