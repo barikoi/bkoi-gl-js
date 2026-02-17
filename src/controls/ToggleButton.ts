@@ -75,6 +75,7 @@ export default function appendToggleButtonToParentEl(
   el.setAttribute('id', el_id)
   el.setAttribute('type', 'button')
   el.setAttribute('aria-label', props.hideText || 'Hide minimap')
+  el.setAttribute('title', props.hideText || 'Hide minimap')
 
   // Add custom class name if provided
   if (props.buttonConfig?.className) {
@@ -255,12 +256,11 @@ ${positionStyles}
   // Click handler
   const clickHandler = () => {
     props.fn()
-    // Update aria-label based on minimized state
+    // Update aria-label and title based on minimized state
     const isMinimized = parentNode.classList.contains('minimized')
-    el.setAttribute(
-      'aria-label',
-      isMinimized ? props.showText || 'Show minimap' : props.hideText || 'Hide minimap'
-    )
+    const text = isMinimized ? props.showText || 'Show minimap' : props.hideText || 'Hide minimap'
+    el.setAttribute('aria-label', text)
+    el.setAttribute('title', text)
   }
 
   el.addEventListener('click', clickHandler)
