@@ -1,16 +1,6 @@
 # Changelog
 
-## [3.3.0] - February 17, 2026
-
-### Added
-
-- Minimap toggle button tooltip now displays "Hide minimap" / "Show minimap" on hover
-  by [@sarikamahboob](https://github.com/sarikamahboob) in [`fc8ca18`](https://github.com/barikoi/bkoi-gl-js/commit/fc8ca18)
-
-### Fixed
-
-- Toggle button tooltip accessibility - added `title` attribute for visual hover tooltip
-  by [@sarikamahboob](https://github.com/sarikamahboob) in [`fc8ca18`](https://github.com/barikoi/bkoi-gl-js/commit/fc8ca18)
+All notable changes to this project will be documented in this file.
 
 ---
 
@@ -52,7 +42,7 @@
 
 ---
 
-## [3.1.0] - December 31, 2025
+## [3.1.0] - December 18, 2025
 
 ### Added
 
@@ -85,7 +75,7 @@
 
 ---
 
-## [3.0.0] - December 24, 2025
+## [3.0.0] - December 18, 2025
 
 ### Breaking Changes
 
@@ -141,7 +131,7 @@
 
 ---
 
-## [2.1.0] - January 22, 2025
+## [2.0.4] - January 22, 2025
 
 ### Added
 
@@ -155,12 +145,7 @@
 
 ---
 
-## [2.0.0] - January 16, 2025
-
-### Added
-
-- **Polygon Drawing** - Added polygon layer for drawing functionality
-  by [@faiazhossain](https://github.com/faiazhossain) in [`fea00f8`](https://github.com/barikoi/bkoi-gl-js/commit/fea00f8)
+## [2.0.3] - January 21, 2025
 
 ### Fixed
 
@@ -168,6 +153,44 @@
   by [@faiazhossain](https://github.com/faiazhossain) in [`65c071d`](https://github.com/barikoi/bkoi-gl-js/commit/65c071d)
 - Extra icon for each component
   by [@faiazhossain](https://github.com/faiazhossain) in [`63eed40`](https://github.com/barikoi/bkoi-gl-js/commit/63eed40)
+
+---
+
+## [2.0.2] - January 20, 2025
+
+### Added
+
+- **Polygon Drawing** - Added polygon layer for drawing functionality
+  by [@faiazhossain](https://github.com/faiazhossain) in [`fea00f8`](https://github.com/barikoi/bkoi-gl-js/commit/fea00f8)
+
+---
+
+## [2.0.1] - January 19, 2025
+
+### Changed
+
+- Production ready for version 2
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`6838254`](https://github.com/barikoi/bkoi-gl-js/commit/6838254)
+
+---
+
+## [2.0.0] - January 16, 2025
+
+### Added
+
+- Polygon drawing support with maplibre-gl-draw integration
+
+### Changed
+
+- Upgraded CDN v2
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`c1d729c`](https://github.com/barikoi/bkoi-gl-js/commit/c1d729c)
+- Updated package.json files directive
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`4b8ac4b`](https://github.com/barikoi/bkoi-gl-js/commit/4b8ac4b)
+
+### Fixed
+
+- Updated Barikoi logo and attribution
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`baaea49`](https://github.com/barikoi/bkoi-gl-js/commit/baaea49)
 
 ---
 
@@ -180,19 +203,8 @@
 
 ### Changed
 
-- Production ready for version 2
-  by [@nurmdrafi](https://github.com/nurmdrafi) in [`6838254`](https://github.com/barikoi/bkoi-gl-js/commit/6838254)
-- Upgraded CDN v2
-  by [@nurmdrafi](https://github.com/nurmdrafi) in [`c1d729c`](https://github.com/barikoi/bkoi-gl-js/commit/c1d729c)
-- Updated package.json files directive
-  by [@nurmdrafi](https://github.com/nurmdrafi) in [`4b8ac4b`](https://github.com/barikoi/bkoi-gl-js/commit/4b8ac4b)
 - Updated dependency package versions
   by [@nurmdrafi](https://github.com/nurmdrafi) in [`ecc5993`](https://github.com/barikoi/bkoi-gl-js/commit/ecc5993)
-
-### Fixed
-
-- Updated Barikoi logo and attribution
-  by [@nurmdrafi](https://github.com/nurmdrafi) in [`baaea49`](https://github.com/barikoi/bkoi-gl-js/commit/baaea49)
 
 ---
 
@@ -230,35 +242,15 @@
 
 - Removed package.json files prop
   by [@scarecrow-11](https://github.com/scarecrow-11) in [`1da54f4`](https://github.com/barikoi/bkoi-gl-js/commit/1da54f4)
-- Updated package.json main/module path
-  by [@scarecrow-11](https://github.com/scarecrow-11) in [`5015585`](https://github.com/barikoi/bkoi-gl-js/commit/5015585)
 
 ---
 
-## [1.0.6] - March 15, 2022
+## [1.0.9] - March 16, 2022
 
 ### Fixed
 
-- Fixed Barikoi Attribution Bugs
-  by [@scarecrow-11](https://github.com/scarecrow-11) in [`347587d`](https://github.com/barikoi/bkoi-gl-js/commit/347587d)
-
----
-
-## [1.0.5] - March 14, 2022
-
-### Added
-
-- Barikoi Attribution Target Link
-  by [@scarecrow-11](https://github.com/scarecrow-11) in [`5cd54f7`](https://github.com/barikoi/bkoi-gl-js/commit/5cd54f7)
-
----
-
-## [1.0.4] - March 13, 2022
-
-### Added
-
-- Barikoi Attribution
-  by [@scarecrow-11](https://github.com/scarecrow-11) in [`d99f168`](https://github.com/barikoi/bkoi-gl-js/commit/d99f168)
+- Updated package.json main/module path
+  by [@scarecrow-11](https://github.com/scarecrow-11) in [`5015585`](https://github.com/barikoi/bkoi-gl-js/commit/5015585)
 
 ---
 
@@ -322,20 +314,20 @@
 
 ## Version History
 
-| Version | Date | Highlights |
-| :------ | :--- | :--------- |
-| [3.3.0] | Feb 17, 2026 | Toggle button tooltip fix |
-| [3.2.0] | Feb 16, 2026 | Minimap control |
-| [3.1.0] | Dec 31, 2025 | Rollup migration, test cases |
-| [3.0.0] | Dec 24, 2025 | TypeScript migration |
-| [2.1.0] | Jan 22, 2025 | Styles layer |
-| [2.0.0] | Jan 16, 2025 | Polygon drawing |
-| [1.1.1] | Sep 11, 2024 | Husky, production ready v2 |
+| Version | Published Date | Highlights |
+| :------ | :------------- | :--------- |
+| [3.2.0] | Feb 16, 2026 | Minimap control, polygon rotation button |
+| [3.1.0] | Dec 18, 2025 | Rollup migration, test cases, sourcemap |
+| [3.0.0] | Dec 18, 2025 | TypeScript migration, ESLint v9+ |
+| [2.0.4] | Jan 22, 2025 | Styles layer |
+| [2.0.3] | Jan 21, 2025 | Polygon CSS fix |
+| [2.0.2] | Jan 20, 2025 | Polygon drawing |
+| [2.0.1] | Jan 19, 2025 | Production ready v2 |
+| [2.0.0] | Jan 16, 2025 | Maplibre-gl-draw integration |
+| [1.1.1] | Sep 11, 2024 | Husky, dependency updates |
 | [1.1.0] | Nov 16, 2023 | Barikoi logo, MapLibre update |
 | [1.0.10] | Mar 16, 2022 | Rollup config update |
-| [1.0.6] | Mar 15, 2022 | Attribution bug fixes |
-| [1.0.5] | Mar 14, 2022 | Attribution link |
-| [1.0.4] | Mar 13, 2022 | Barikoi attribution |
+| [1.0.9] | Mar 16, 2022 | Package.json path fix |
 | [1.0.3] | Oct 31, 2021 | License update |
 | [1.0.2] | Oct 24, 2021 | MapLibre v2, accessToken validation |
 | [1.0.1] | Jul 4, 2021 | Separated GL Draw |
