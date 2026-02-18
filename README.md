@@ -15,7 +15,9 @@ Barikoi GL JS is a JavaScript library built on top of [MapLibre GL JS](https://m
 
 Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package provides tools to integrate maps and location services effortlessly.
 
-> **Note:** For React/Next.js integrations, we recommend our [react-bkoi-gl](https://www.npmjs.com/package/react-bkoi-gl) npm library.
+<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
+💡 <b>Info:</b> For React/Next.js integrations, we recommend our <a href="https://www.npmjs.com/package/react-bkoi-gl">react-bkoi-gl</a> npm library.
+</div>
 
 ---
 
@@ -133,11 +135,13 @@ yarn add bkoi-gl
 Then import the library in your JavaScript/TypeScript files:
 
 ```javascript
-import { Map, Marker, FullscreenControl } from "bkoi-gl";
-import "bkoi-gl/style.css";
+import { Map, Marker, FullscreenControl } from 'bkoi-gl'
+import 'bkoi-gl/style.css'
 ```
 
-> **Note:** You can also use the full path `"bkoi-gl/dist/style/bkoi-gl.css"` for backward compatibility.
+<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
+💡 <b>Info:</b> You can also use the full path <code>"bkoi-gl/dist/style/bkoi-gl.css"</code> for backward compatibility.
+</div>
 
 ---
 
@@ -156,18 +160,18 @@ import "bkoi-gl/style.css";
     <div id="map" style="width: 100%; height: 400px;"></div>
     <script>
       const map = new bkoigl.Map({
-        container: "map",
-        accessToken: "YOUR_BARIKOI_API_KEY_HERE",
+        container: 'map',
+        accessToken: 'YOUR_BARIKOI_API_KEY_HERE',
         center: [90.3938010872331, 23.821600277500405], // Dhaka coordinates
         zoom: 10,
         polygon: true, // Enable draw polygon option
         drawOptions: {
           controls: {
             polygon: true,
-            trash: true
-          }
-        }
-      });
+            trash: true,
+          },
+        },
+      })
     </script>
   </body>
 </html>
@@ -235,41 +239,41 @@ export default BasicMap;
 
 The `Map` constructor accepts an options object extending MapLibre GL JS MapOptions with Barikoi-specific additions.
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `container` | string \| HTMLElement | *required* | The HTML element or ID to render the map in |
-| `accessToken` | string | *required* | Your Barikoi API key for authentication |
-| `style` | string | Barikoi Light | Map style URL or style identifier |
-| `center` | [number, number] | `[90.3938, 23.8216]` | Initial center position [longitude, latitude] |
-| `zoom` | number | `10` | Initial zoom level (0-22) |
-| `bearing` | number | `0` | Initial bearing (rotation) in degrees, clockwise from north |
-| `pitch` | number | `0` | Initial pitch (tilt) in degrees (0-85) |
-| `minZoom` | number | `0` | Minimum zoom level |
-| `maxZoom` | number | `22` | Maximum zoom level |
-| `minPitch` | number | `0` | Minimum pitch level |
-| `maxPitch` | number | `85` | Maximum pitch level |
-| `bounds` | [number, number, number, number] | *none* | Initial map bounds as [swLng, swLat, neLng, neLat] |
-| `fitBoundsOptions` | object | *none* | Options for fitBounds animation |
-| `interactive` | boolean | `true` | Enable/disable map interactions (drag, zoom, rotate) |
-| `pitchWithRotate` | boolean | `true` | Enable pitch with rotate gesture |
-| `clickTolerance` | number | `3` | Max pixels between mouse down/up for click |
-| `scrollZoom` | boolean \| object | `true` | Enable/disable scroll zoom |
-| `boxZoom` | boolean | `true` | Enable/disable box zoom |
-| `dragRotate` | boolean | `true` | Enable/disable drag to rotate |
-| `dragPan` | boolean | `true` | Enable/disable drag to pan |
-| `keyboard` | boolean | `true` | Enable/disable keyboard controls |
-| `doubleClickZoom` | boolean | `true` | Enable/disable double-click zoom |
-| `touchZoomRotate` | boolean \| object | `true` | Enable/disable touch zoom/rotate |
-| `touchPitch` | boolean \| object | `true` | Enable/disable touch pitch |
-| `antialias` | boolean | *auto* | Enable antialiasing |
-| `refreshExpiredTiles` | boolean | `true` | Refresh expired tiles |
-| `maxBounds` | [number, number, number, number] | *none* | Constrain map to bounds [swLng, swLat, neLng, neLat] |
-| `projection` | string | `'mercator'` | Map projection ('mercator' or 'globe') |
-| `renderWorldCopies` | boolean | `true` | Render multiple copies of the world |
-| `locale` | object | *none* | Localization strings for UI |
-| `polygon` | boolean | `false` | Enable drawing tools for polygons/lines/points |
-| `drawOptions` | object | `{}` | Configuration for drawing tools |
-| `minimap` | object | *none* | Configuration for minimap control |
+| Option                | Type                             | Default              | Description                                                 |
+| --------------------- | -------------------------------- | -------------------- | ----------------------------------------------------------- |
+| `container`           | string \| HTMLElement            | _required_           | The HTML element or ID to render the map in                 |
+| `accessToken`         | string                           | _required_           | Your Barikoi API key for authentication                     |
+| `style`               | string                           | Barikoi Light        | Map style URL or style identifier                           |
+| `center`              | [number, number]                 | `[90.3938, 23.8216]` | Initial center position [longitude, latitude]               |
+| `zoom`                | number                           | `10`                 | Initial zoom level (0-22)                                   |
+| `bearing`             | number                           | `0`                  | Initial bearing (rotation) in degrees, clockwise from north |
+| `pitch`               | number                           | `0`                  | Initial pitch (tilt) in degrees (0-85)                      |
+| `minZoom`             | number                           | `0`                  | Minimum zoom level                                          |
+| `maxZoom`             | number                           | `22`                 | Maximum zoom level                                          |
+| `minPitch`            | number                           | `0`                  | Minimum pitch level                                         |
+| `maxPitch`            | number                           | `85`                 | Maximum pitch level                                         |
+| `bounds`              | [number, number, number, number] | _none_               | Initial map bounds as [swLng, swLat, neLng, neLat]          |
+| `fitBoundsOptions`    | object                           | _none_               | Options for fitBounds animation                             |
+| `interactive`         | boolean                          | `true`               | Enable/disable map interactions (drag, zoom, rotate)        |
+| `pitchWithRotate`     | boolean                          | `true`               | Enable pitch with rotate gesture                            |
+| `clickTolerance`      | number                           | `3`                  | Max pixels between mouse down/up for click                  |
+| `scrollZoom`          | boolean \| object                | `true`               | Enable/disable scroll zoom                                  |
+| `boxZoom`             | boolean                          | `true`               | Enable/disable box zoom                                     |
+| `dragRotate`          | boolean                          | `true`               | Enable/disable drag to rotate                               |
+| `dragPan`             | boolean                          | `true`               | Enable/disable drag to pan                                  |
+| `keyboard`            | boolean                          | `true`               | Enable/disable keyboard controls                            |
+| `doubleClickZoom`     | boolean                          | `true`               | Enable/disable double-click zoom                            |
+| `touchZoomRotate`     | boolean \| object                | `true`               | Enable/disable touch zoom/rotate                            |
+| `touchPitch`          | boolean \| object                | `true`               | Enable/disable touch pitch                                  |
+| `antialias`           | boolean                          | _auto_               | Enable antialiasing                                         |
+| `refreshExpiredTiles` | boolean                          | `true`               | Refresh expired tiles                                       |
+| `maxBounds`           | [number, number, number, number] | _none_               | Constrain map to bounds [swLng, swLat, neLng, neLat]        |
+| `projection`          | string                           | `'mercator'`         | Map projection ('mercator' or 'globe')                      |
+| `renderWorldCopies`   | boolean                          | `true`               | Render multiple copies of the world                         |
+| `locale`              | object                           | _none_               | Localization strings for UI                                 |
+| `polygon`             | boolean                          | `false`              | Enable drawing tools for polygons/lines/points              |
+| `drawOptions`         | object                           | `{}`                 | Configuration for drawing tools                             |
+| `minimap`             | object                           | _none_               | Configuration for minimap control                           |
 
 ---
 
@@ -279,13 +283,13 @@ When `polygon: true` is set, the drawing tools are enabled. The `drawOptions` co
 
 #### Available Drawing Modes
 
-| Mode | Description |
-|------|-------------|
-| `simple_select` | Default mode. Click to select features (default) |
-| `direct_select` | Select and edit vertices of a feature |
-| `draw_polygon` | Draw a polygon by clicking points |
-| `draw_line_string` | Draw a line by clicking points |
-| `draw_point` | Place a point marker by clicking |
+| Mode               | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `simple_select`    | Default mode. Click to select features (default) |
+| `direct_select`    | Select and edit vertices of a feature            |
+| `draw_polygon`     | Draw a polygon by clicking points                |
+| `draw_line_string` | Draw a line by clicking points                   |
+| `draw_point`       | Place a point marker by clicking                 |
 
 #### Basic Configuration
 
@@ -445,15 +449,15 @@ drawOptions: {
 <details>
 <summary>Style Filter Reference</summary>
 
-| Filter | Description |
-|--------|-------------|
-| `['==', '$type', 'Polygon']` | Matches polygon features |
-| `['==', '$type', 'LineString']` | Matches line features |
-| `['==', '$type', 'Point']` | Matches point features |
-| `['!=', 'mode', 'static']` | Feature is being drawn or selected |
-| `['==', 'mode', 'static']` | Feature is completed/static |
-| `['==', 'meta', 'vertex']` | Vertex points for editing |
-| `['==', 'meta', 'midpoint']` | Midpoint markers for adding vertices |
+| Filter                          | Description                          |
+| ------------------------------- | ------------------------------------ |
+| `['==', '$type', 'Polygon']`    | Matches polygon features             |
+| `['==', '$type', 'LineString']` | Matches line features                |
+| `['==', '$type', 'Point']`      | Matches point features               |
+| `['!=', 'mode', 'static']`      | Feature is being drawn or selected   |
+| `['==', 'mode', 'static']`      | Feature is completed/static          |
+| `['==', 'meta', 'vertex']`      | Vertex points for editing            |
+| `['==', 'meta', 'midpoint']`    | Midpoint markers for adding vertices |
 
 </details>
 
@@ -467,23 +471,23 @@ Events are categorized by their purpose for easier navigation.
 
 Fired during the map's initialization and rendering cycle.
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `load` | Fired when the map has finished loading all resources | - |
-| `render` | Fired after the map completes a render cycle | - |
-| `idle` | Fired when the map enters an idle state (no ongoing transitions) | - |
-| `error` | Fired when an error occurs | `error` - Error object |
+| Event    | Description                                                      | Event Data             |
+| -------- | ---------------------------------------------------------------- | ---------------------- |
+| `load`   | Fired when the map has finished loading all resources            | -                      |
+| `render` | Fired after the map completes a render cycle                     | -                      |
+| `idle`   | Fired when the map enters an idle state (no ongoing transitions) | -                      |
+| `error`  | Fired when an error occurs                                       | `error` - Error object |
 
 **Example:**
 
 ```javascript
 map.on('load', () => {
-  console.log('Map is ready for interaction');
-});
+  console.log('Map is ready for interaction')
+})
 
-map.on('error', (e) => {
-  console.error('Map error:', e.error);
-});
+map.on('error', e => {
+  console.error('Map error:', e.error)
+})
 ```
 
 ---
@@ -492,31 +496,31 @@ map.on('error', (e) => {
 
 Fired when the map's camera position changes (pan, zoom, rotate, pitch).
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `movestart` | Fired when camera movement begins | - |
-| `move` | Fired repeatedly during camera movement | - |
-| `moveend` | Fired when camera movement ends | - |
-| `zoomstart` | Fired when zoom level begins changing | - |
-| `zoom` | Fired repeatedly during zoom | - |
-| `zoomend` | Fired when zoom level change ends | - |
-| `rotate` | Fired during rotation (bearing change) | - |
-| `rotatestart` | Fired when rotation begins | - |
-| `rotateend` | Fired when rotation ends | - |
-| `pitch` | Fired during pitch (tilt) change | - |
+| Event         | Description                             | Event Data |
+| ------------- | --------------------------------------- | ---------- |
+| `movestart`   | Fired when camera movement begins       | -          |
+| `move`        | Fired repeatedly during camera movement | -          |
+| `moveend`     | Fired when camera movement ends         | -          |
+| `zoomstart`   | Fired when zoom level begins changing   | -          |
+| `zoom`        | Fired repeatedly during zoom            | -          |
+| `zoomend`     | Fired when zoom level change ends       | -          |
+| `rotate`      | Fired during rotation (bearing change)  | -          |
+| `rotatestart` | Fired when rotation begins              | -          |
+| `rotateend`   | Fired when rotation ends                | -          |
+| `pitch`       | Fired during pitch (tilt) change        | -          |
 
 **Example:**
 
 ```javascript
 map.on('moveend', () => {
-  const center = map.getCenter();
-  const zoom = map.getZoom();
-  console.log(`Map moved to [${center.lng}, ${center.lat}] at zoom ${zoom}`);
-});
+  const center = map.getCenter()
+  const zoom = map.getZoom()
+  console.log(`Map moved to [${center.lng}, ${center.lat}] at zoom ${zoom}`)
+})
 
 map.on('zoom', () => {
-  console.log('Current zoom level:', map.getZoom());
-});
+  console.log('Current zoom level:', map.getZoom())
+})
 ```
 
 ---
@@ -525,28 +529,28 @@ map.on('zoom', () => {
 
 Fired when users interact with the map using mouse or touch input.
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `click` | Fired when the map is clicked | `lngLat`, `point` |
-| `dblclick` | Fired when the map is double-clicked | `lngLat`, `point` |
-| `mousedown` | Fired when mouse button is pressed | `lngLat`, `point` |
-| `mouseup` | Fired when mouse button is released | `lngLat`, `point` |
-| `mousemove` | Fired when mouse moves over the map | `lngLat`, `point` |
-| `mouseover` | Fired when mouse enters the map | `lngLat`, `point` |
-| `mouseout` | Fired when mouse leaves the map | `lngLat`, `point` |
-| `wheel` | Fired when mouse wheel is used | - |
+| Event       | Description                          | Event Data        |
+| ----------- | ------------------------------------ | ----------------- |
+| `click`     | Fired when the map is clicked        | `lngLat`, `point` |
+| `dblclick`  | Fired when the map is double-clicked | `lngLat`, `point` |
+| `mousedown` | Fired when mouse button is pressed   | `lngLat`, `point` |
+| `mouseup`   | Fired when mouse button is released  | `lngLat`, `point` |
+| `mousemove` | Fired when mouse moves over the map  | `lngLat`, `point` |
+| `mouseover` | Fired when mouse enters the map      | `lngLat`, `point` |
+| `mouseout`  | Fired when mouse leaves the map      | `lngLat`, `point` |
+| `wheel`     | Fired when mouse wheel is used       | -                 |
 
 **Example:**
 
 ```javascript
-map.on('click', (e) => {
-  console.log(`Clicked at [${e.lngLat.lng}, ${e.lngLat.lat}]`);
+map.on('click', e => {
+  console.log(`Clicked at [${e.lngLat.lng}, ${e.lngLat.lat}]`)
   // Place a marker or show popup at e.lngLat
-});
+})
 
-map.on('mousemove', (e) => {
-  console.log('Mouse position:', e.lngLat);
-});
+map.on('mousemove', e => {
+  console.log('Mouse position:', e.lngLat)
+})
 ```
 
 ---
@@ -555,11 +559,11 @@ map.on('mousemove', (e) => {
 
 Fired on touch-enabled devices.
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `touchstart` | Fired when touch begins | `lngLat`, `point`, `touches` |
-| `touchmove` | Fired during touch movement | `lngLat`, `point`, `touches` |
-| `touchend` | Fired when touch ends | `lngLat`, `point`, `touches` |
+| Event         | Description                     | Event Data                   |
+| ------------- | ------------------------------- | ---------------------------- |
+| `touchstart`  | Fired when touch begins         | `lngLat`, `point`, `touches` |
+| `touchmove`   | Fired during touch movement     | `lngLat`, `point`, `touches` |
+| `touchend`    | Fired when touch ends           | `lngLat`, `point`, `touches` |
 | `touchcancel` | Fired when touch is interrupted | `lngLat`, `point`, `touches` |
 
 ---
@@ -568,24 +572,24 @@ Fired on touch-enabled devices.
 
 Fired when map data or styles change.
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `data` | Fired when any data is loaded | `dataType`, `source` |
+| Event        | Description                              | Event Data                   |
+| ------------ | ---------------------------------------- | ---------------------------- |
+| `data`       | Fired when any data is loaded            | `dataType`, `source`         |
 | `sourcedata` | Fired when source data is loaded/changed | `sourceId`, `isSourceLoaded` |
-| `styledata` | Fired when the map's style is changed | - |
+| `styledata`  | Fired when the map's style is changed    | -                            |
 
 **Example:**
 
 ```javascript
 map.on('styledata', () => {
-  console.log('Map style has changed');
-});
+  console.log('Map style has changed')
+})
 
-map.on('sourcedata', (e) => {
+map.on('sourcedata', e => {
   if (e.isSourceLoaded) {
-    console.log('Source data loaded:', e.sourceId);
+    console.log('Source data loaded:', e.sourceId)
   }
-});
+})
 ```
 
 ---
@@ -594,38 +598,42 @@ map.on('sourcedata', (e) => {
 
 Fired when sources or layers are added, removed, or modified.
 
-| Event | Description |
-|-------|-------------|
+| Event           | Description                        |
+| --------------- | ---------------------------------- |
 | `sourceloading` | Fired when a source begins loading |
-| `sourceadd` | Fired when a source is added |
-| `sourceremove` | Fired when a source is removed |
-| `layeradd` | Fired when a layer is added |
-| `layerremove` | Fired when a layer is removed |
+| `sourceadd`     | Fired when a source is added       |
+| `sourceremove`  | Fired when a source is removed     |
+| `layeradd`      | Fired when a layer is added        |
+| `layerremove`   | Fired when a layer is removed      |
 
 ---
 
 #### Other Events
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `resize` | Fired when the map is resized | - |
-| `webglcontextlost` | Fired when WebGL context is lost | - |
-| `webglcontextrestored` | Fired when WebGL context is restored | - |
+| Event                  | Description                          | Event Data |
+| ---------------------- | ------------------------------------ | ---------- |
+| `resize`               | Fired when the map is resized        | -          |
+| `webglcontextlost`     | Fired when WebGL context is lost     | -          |
+| `webglcontextrestored` | Fired when WebGL context is restored | -          |
 
 ---
 
 #### Drawing Events
 
+<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
+💡 <b>Info:</b> Drawing events require <code>polygon: true</code> to be set in your Map configuration.
+</div>
+
 Available when drawing tools are enabled via `polygon: true`.
 
-| Event | Description | Event Data |
-|-------|-------------|------------|
-| `draw.create` | Fired when a feature is created | `features` - Array of created features |
-| `draw.update` | Fired when a feature is updated | `features` - Array of updated features |
-| `draw.delete` | Fired when a feature is deleted | `features` - Array of deleted features |
-| `draw.selectionchange` | Fired when selection changes | `features`, `points` |
-| `draw.modechange` | Fired when draw mode changes | `mode` - Current mode name |
-| `draw.actionable` | Fired when available actions change | `actionable` - Action state object |
+| Event                  | Description                         | Event Data                             |
+| ---------------------- | ----------------------------------- | -------------------------------------- |
+| `draw.create`          | Fired when a feature is created     | `features` - Array of created features |
+| `draw.update`          | Fired when a feature is updated     | `features` - Array of updated features |
+| `draw.delete`          | Fired when a feature is deleted     | `features` - Array of deleted features |
+| `draw.selectionchange` | Fired when selection changes        | `features`, `points`                   |
+| `draw.modechange`      | Fired when draw mode changes        | `mode` - Current mode name             |
+| `draw.actionable`      | Fired when available actions change | `actionable` - Action state object     |
 
 **Example:**
 
@@ -633,32 +641,32 @@ Available when drawing tools are enabled via `polygon: true`.
 // Assuming map is initialized with drawing enabled (polygon: true)
 
 // Handle feature creation
-map.on('draw.create', (e) => {
-  const feature = e.features[0];
-  const geometryType = feature.geometry.type;
+map.on('draw.create', e => {
+  const feature = e.features[0]
+  const geometryType = feature.geometry.type
 
   switch (geometryType) {
     case 'Polygon':
-      console.log('Polygon created:', feature.geometry.coordinates);
-      break;
+      console.log('Polygon created:', feature.geometry.coordinates)
+      break
     case 'LineString':
-      console.log('Line created:', feature.geometry.coordinates);
-      break;
+      console.log('Line created:', feature.geometry.coordinates)
+      break
     case 'Point':
-      console.log('Point created:', feature.geometry.coordinates);
-      break;
+      console.log('Point created:', feature.geometry.coordinates)
+      break
   }
-});
+})
 
 // Handle feature updates
-map.on('draw.update', (e) => {
-  console.log('Feature updated:', e.features);
-});
+map.on('draw.update', e => {
+  console.log('Feature updated:', e.features)
+})
 
 // Handle feature deletion
-map.on('draw.delete', (e) => {
-  console.log('Feature deleted:', e.features);
-});
+map.on('draw.delete', e => {
+  console.log('Feature deleted:', e.features)
+})
 ```
 
 ---
@@ -672,19 +680,19 @@ Use `map.on()` to attach event listeners:
 ```javascript
 // Anonymous function
 map.on('load', () => {
-  console.log('Map loaded');
-});
+  console.log('Map loaded')
+})
 
 // Named function (easier to remove later)
 function handleLoad() {
-  console.log('Map loaded');
+  console.log('Map loaded')
 }
-map.on('load', handleLoad);
+map.on('load', handleLoad)
 
 // Once - listener fires only once
 map.once('load', () => {
-  console.log('This will only fire once');
-});
+  console.log('This will only fire once')
+})
 ```
 
 #### Removing Event Listeners
@@ -693,13 +701,13 @@ Use `map.off()` to remove event listeners:
 
 ```javascript
 // Remove specific listener
-map.off('load', handleLoad);
+map.off('load', handleLoad)
 
 // Remove all listeners for an event
-map.off('load');
+map.off('load')
 
 // Remove all listeners
-map.off();
+map.off()
 ```
 
 #### Getting Event Data
@@ -707,18 +715,18 @@ map.off();
 Event handlers receive an event object with contextual data:
 
 ```javascript
-map.on('click', (e) => {
+map.on('click', e => {
   // Geographic coordinates
-  console.log('Lng:', e.lngLat.lng);
-  console.log('Lat:', e.lngLat.lat);
+  console.log('Lng:', e.lngLat.lng)
+  console.log('Lat:', e.lngLat.lat)
 
   // Pixel coordinates
-  console.log('X:', e.point.x);
-  console.log('Y:', e.point.y);
+  console.log('X:', e.point.x)
+  console.log('Y:', e.point.y)
 
   // Original event
-  console.log('Original event:', e.originalEvent);
-});
+  console.log('Original event:', e.originalEvent)
+})
 ```
 
 ---
@@ -731,28 +739,22 @@ Markers are visual indicators placed at specific locations on the map.
 
 ```javascript
 // Basic marker
-const marker = new bkoigl.Marker()
-  .setLngLat([90.39, 23.82])
-  .addTo(map);
+const marker = new bkoigl.Marker().setLngLat([90.39, 23.82]).addTo(map)
 
 // Marker with custom color
-const marker = new bkoigl.Marker({ color: '#ff0000' })
-  .setLngLat([90.39, 23.82])
-  .addTo(map);
+const marker = new bkoigl.Marker({ color: '#ff0000' }).setLngLat([90.39, 23.82]).addTo(map)
 
 // Marker with custom element
-const el = document.createElement('div');
-el.className = 'custom-marker';
-el.style.backgroundImage = 'url(marker.png)';
-el.style.width = '30px';
-el.style.height = '30px';
+const el = document.createElement('div')
+el.className = 'custom-marker'
+el.style.backgroundImage = 'url(marker.png)'
+el.style.width = '30px'
+el.style.height = '30px'
 
-const marker = new bkoigl.Marker(el)
-  .setLngLat([90.39, 23.82])
-  .addTo(map);
+const marker = new bkoigl.Marker(el).setLngLat([90.39, 23.82]).addTo(map)
 
 // Remove a marker
-marker.remove();
+marker.remove()
 ```
 
 ### Adding Popups
@@ -764,18 +766,18 @@ Popups display information when clicked or hovered.
 const popup = new bkoigl.Popup()
   .setLngLat([90.39, 23.82])
   .setHTML('<h3>Dhaka</h3><p>Capital of Bangladesh</p>')
-  .addTo(map);
+  .addTo(map)
 
 // Popup with options
 const popup = new bkoigl.Popup({
   closeButton: true,
   closeOnClick: false,
   offset: 25,
-  anchor: 'bottom'
+  anchor: 'bottom',
 })
   .setLngLat([90.39, 23.82])
   .setText('Hello World!')
-  .addTo(map);
+  .addTo(map)
 ```
 
 ### Marker with Popup
@@ -783,16 +785,12 @@ const popup = new bkoigl.Popup({
 Attach a popup to a marker that opens when clicked.
 
 ```javascript
-const popup = new bkoigl.Popup({ offset: 25 })
-  .setHTML('<h3>Location</h3><p>This is a marker</p>');
+const popup = new bkoigl.Popup({ offset: 25 }).setHTML('<h3>Location</h3><p>This is a marker</p>')
 
-const marker = new bkoigl.Marker()
-  .setLngLat([90.39, 23.82])
-  .setPopup(popup)
-  .addTo(map);
+const marker = new bkoigl.Marker().setLngLat([90.39, 23.82]).setPopup(popup).addTo(map)
 
 // Toggle popup programmatically
-marker.togglePopup();
+marker.togglePopup()
 ```
 
 ---
@@ -805,14 +803,17 @@ Adds zoom in/out buttons and a compass for rotation.
 
 ```javascript
 // Add navigation control
-map.addControl(new bkoigl.NavigationControl(), 'top-right');
+map.addControl(new bkoigl.NavigationControl(), 'top-right')
 
 // With options
-map.addControl(new bkoigl.NavigationControl({
-  visualizePitch: true,  // Show pitch visualization
-  showZoom: true,
-  showCompass: true
-}), 'top-right');
+map.addControl(
+  new bkoigl.NavigationControl({
+    visualizePitch: true, // Show pitch visualization
+    showZoom: true,
+    showCompass: true,
+  }),
+  'top-right'
+)
 ```
 
 ### Geolocate Control
@@ -820,14 +821,17 @@ map.addControl(new bkoigl.NavigationControl({
 Allows users to find and track their current location.
 
 ```javascript
-map.addControl(new bkoigl.GeolocateControl({
-  positionOptions: {
-    enableHighAccuracy: true
-  },
-  trackUserLocation: true,  // Track user movement
-  showAccuracyCircle: true,
-  showUserHeading: true
-}), 'top-right');
+map.addControl(
+  new bkoigl.GeolocateControl({
+    positionOptions: {
+      enableHighAccuracy: true,
+    },
+    trackUserLocation: true, // Track user movement
+    showAccuracyCircle: true,
+    showUserHeading: true,
+  }),
+  'top-right'
+)
 ```
 
 ### Scale Control
@@ -835,10 +839,13 @@ map.addControl(new bkoigl.GeolocateControl({
 Displays a scale bar showing distances.
 
 ```javascript
-map.addControl(new bkoigl.ScaleControl({
-  maxWidth: 100,
-  unit: 'metric'  // 'metric', 'imperial', or 'nautical'
-}), 'bottom-left');
+map.addControl(
+  new bkoigl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric', // 'metric', 'imperial', or 'nautical'
+  }),
+  'bottom-left'
+)
 ```
 
 ### Fullscreen Control
@@ -846,10 +853,14 @@ map.addControl(new bkoigl.ScaleControl({
 Allows users to toggle fullscreen mode.
 
 ```javascript
-map.addControl(new bkoigl.FullscreenControl(), 'top-right');
+map.addControl(new bkoigl.FullscreenControl(), 'top-right')
 ```
 
 ### Minimap Control
+
+<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
+💡 <b>Info:</b> The minimap can be configured via the <code>minimap</code> option in Map constructor or added using <code>addControl()</code>.
+</div>
 
 Adds a small overview map that syncs with the main map, providing geographic context by showing the surrounding area at a different zoom level.
 
@@ -864,50 +875,53 @@ const map = new bkoigl.Map({
   zoom: 12,
   minimap: {
     zoomAdjust: -4,
-    position: 'bottom-right'
-  }
+    position: 'bottom-right',
+  },
 })
 
 // Or using addControl
 const minimap = new bkoigl.Minimap({
   zoomAdjust: -4,
-  position: 'bottom-right'
+  position: 'bottom-right',
 })
 map.addControl(minimap, 'bottom-right')
 ```
 
 #### Minimap Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `style` | string \| StyleSpecification | *parent style* | Map style for the minimap. If not provided, inherits from parent map |
-| `zoomAdjust` | number | `-4` | Zoom level difference between parent and minimap. Positive = zoomed out more |
-| `lockZoom` | number | *none* | Lock minimap to a specific zoom level (overrides zoomAdjust) |
-| `pitchAdjust` | boolean | `false` | Whether to sync pitch (tilt) with parent map |
-| `position` | string | `'top-right'` | Position of minimap control (`'top-left'`, `'top-right'`, `'bottom-left'`, `'bottom-right'`) |
-| `center` | [number, number] | *parent center* | Initial center coordinates [lng, lat] |
-| `accessToken` | string | *parent token* | Barikoi API access token for the minimap |
-| `containerStyle` | object | `{ width: '400px', height: '300px' }` | Custom CSS properties for the minimap container |
-| `borderRadius` | string | `'3px'` | Border radius of the minimap container |
-| `toggleable` | boolean | `true` | Whether the minimap can be minimized/maximized |
-| `toggleButton` | object | *default button* | Custom toggle button configuration (see ToggleButton Options) |
-| `initialMinimized` | boolean | `false` | Whether to start in minimized state |
-| `collapsedWidth` | string | `'29px'` | Width when minimized |
-| `collapsedHeight` | string | `'29px'` | Height when minimized |
-| `hideText` | string | `'Hide minimap'` | Tooltip text when expanded |
-| `showText` | string | `'Show minimap'` | Tooltip text when minimized |
-| `onToggle` | function | *none* | Callback when minimap is toggled: `(isMinimized: boolean) => void` |
-| `interactions` | object | *all disabled* | Map interactions configuration (see Interactions Options) |
-| `parentRect` | object | *none* | Parent rectangle overlay configuration (see ParentRect Options) |
-| `responsive` | boolean | `true` | Enable responsive sizing based on window dimensions |
-| `responsiveWidth` | string | `'20vw'` | Responsive width as CSS value (e.g., '20vw', '30%', '300px') |
-| `responsiveHeight` | string | `'20vh'` | Responsive height as CSS value (e.g., '20vh', '30%', '200px') |
-| `minWidth` | string | `'200px'` | Minimum width constraint for responsive sizing |
-| `minHeight` | string | `'150px'` | Minimum height constraint for responsive sizing |
-| `maxWidth` | string | `'400px'` | Maximum width constraint for responsive sizing |
-| `maxHeight` | string | `'300px'` | Maximum height constraint for responsive sizing |
+| Option             | Type                         | Default                               | Description                                                                                  |
+| ------------------ | ---------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `style`            | string \| StyleSpecification | _parent style_                        | Map style for the minimap. If not provided, inherits from parent map                         |
+| `zoomAdjust`       | number                       | `-4`                                  | Zoom level difference between parent and minimap. Positive = zoomed out more                 |
+| `lockZoom`         | number                       | _none_                                | Lock minimap to a specific zoom level (overrides zoomAdjust)                                 |
+| `pitchAdjust`      | boolean                      | `false`                               | Whether to sync pitch (tilt) with parent map                                                 |
+| `position`         | string                       | `'top-right'`                         | Position of minimap control (`'top-left'`, `'top-right'`, `'bottom-left'`, `'bottom-right'`) |
+| `center`           | [number, number]             | _parent center_                       | Initial center coordinates [lng, lat]                                                        |
+| `accessToken`      | string                       | _parent token_                        | Barikoi API access token for the minimap                                                     |
+| `containerStyle`   | object                       | `{ width: '400px', height: '300px' }` | Custom CSS properties for the minimap container                                              |
+| `borderRadius`     | string                       | `'3px'`                               | Border radius of the minimap container                                                       |
+| `toggleable`       | boolean                      | `true`                                | Whether the minimap can be minimized/maximized                                               |
+| `toggleButton`     | object                       | _default button_                      | Custom toggle button configuration (see ToggleButton Options)                                |
+| `initialMinimized` | boolean                      | `false`                               | Whether to start in minimized state                                                          |
+| `collapsedWidth`   | string                       | `'29px'`                              | Width when minimized                                                                         |
+| `collapsedHeight`  | string                       | `'29px'`                              | Height when minimized                                                                        |
+| `hideText`         | string                       | `'Hide minimap'`                      | Tooltip text when expanded                                                                   |
+| `showText`         | string                       | `'Show minimap'`                      | Tooltip text when minimized                                                                  |
+| `onToggle`         | function                     | _none_                                | Callback when minimap is toggled: `(isMinimized: boolean) => void`                           |
+| `interactions`     | object                       | _all disabled_                        | Map interactions configuration (see Interactions Options)                                    |
+| `parentRect`       | object                       | _none_                                | Parent rectangle overlay configuration (see ParentRect Options)                              |
+| `responsive`       | boolean                      | `true`                                | Enable responsive sizing based on window dimensions                                          |
+| `responsiveWidth`  | string                       | `'20vw'`                              | Responsive width as CSS value (e.g., '20vw', '30%', '300px')                                 |
+| `responsiveHeight` | string                       | `'20vh'`                              | Responsive height as CSS value (e.g., '20vh', '30%', '200px')                                |
+| `minWidth`         | string                       | `'200px'`                             | Minimum width constraint for responsive sizing                                               |
+| `minHeight`        | string                       | `'150px'`                             | Minimum height constraint for responsive sizing                                              |
+| `maxWidth`         | string                       | `'400px'`                             | Maximum width constraint for responsive sizing                                               |
+| `maxHeight`        | string                       | `'300px'`                             | Maximum height constraint for responsive sizing                                              |
 
 #### Responsive Sizing
+
+<details>
+<summary>Responsive Sizing Configuration</summary>
 
 The minimap supports responsive sizing that automatically adjusts based on window dimensions:
 
@@ -929,18 +943,24 @@ const map = new bkoigl.Map({
     minWidth: '150px',
     minHeight: '100px',
     maxWidth: '500px',
-    maxHeight: '400px'
-  }
+    maxHeight: '400px',
+  },
 })
 ```
 
+</details>
+
 When `responsive` is enabled (default), the minimap will:
+
 - Resize dynamically when the browser window is resized
 - Use `responsiveWidth` and `responsiveHeight` as the base sizes
 - Respect `minWidth`/`minHeight` and `maxWidth`/`maxHeight` constraints
 - Automatically trigger a map resize to ensure proper rendering
 
 #### Custom Toggle Button
+
+<details>
+<summary>Custom Toggle Button Options</summary>
 
 Customize the minimap toggle button appearance:
 
@@ -962,7 +982,7 @@ const map = new bkoigl.Map({
       // Custom inline styles
       style: {
         background: 'linear-gradient(to right, #667eea 0%, #764ba2 100%)',
-        borderRadius: '4px'
+        borderRadius: '4px',
       },
       // Button background color
       iconBackgroundColor: '#333',
@@ -971,23 +991,28 @@ const map = new bkoigl.Map({
       // Enable rotation based on position
       enableRotation: true,
       // Custom rotation angle (degrees)
-      rotationAngle: -180
-    }
-  }
+      rotationAngle: -180,
+    },
+  },
 })
 ```
 
-| ToggleButton Option | Type | Default | Description |
-|---------------------|------|---------|-------------|
-| `icon` | string | *default arrow* | Custom SVG icon for the button |
-| `className` | string | *none* | Custom CSS class name(s) |
-| `style` | object | *none* | Custom inline styles |
-| `iconBackgroundColor` | string | `'black'` | Background color of the button |
-| `hoverColor` | string | `'#e5e7e3'` | Background color on hover |
-| `enableRotation` | boolean | `true` | Enable rotation based on position |
-| `rotationAngle` | number | *position-based* | Custom rotation angle in degrees |
+</details>
+
+| ToggleButton Option   | Type    | Default          | Description                       |
+| --------------------- | ------- | ---------------- | --------------------------------- |
+| `icon`                | string  | _default arrow_  | Custom SVG icon for the button    |
+| `className`           | string  | _none_           | Custom CSS class name(s)          |
+| `style`               | object  | _none_           | Custom inline styles              |
+| `iconBackgroundColor` | string  | `'black'`        | Background color of the button    |
+| `hoverColor`          | string  | `'#e5e7e3'`      | Background color on hover         |
+| `enableRotation`      | boolean | `true`           | Enable rotation based on position |
+| `rotationAngle`       | number  | _position-based_ | Custom rotation angle in degrees  |
 
 #### Parent Rectangle Overlay
+
+<details>
+<summary>Parent Rectangle Overlay Configuration</summary>
 
 Display a rectangle on the minimap showing the parent map's current viewport:
 
@@ -1005,25 +1030,30 @@ const map = new bkoigl.Map({
       linePaint: {
         'line-color': '#FFFFFF',
         'line-width': 2,
-        'line-opacity': 0.9
+        'line-opacity': 0.9,
       },
       // Fill styling
       fillPaint: {
         'fill-color': '#0088FF',
-        'fill-opacity': 0.2
-      }
-    }
-  }
+        'fill-opacity': 0.2,
+      },
+    },
+  },
 })
 ```
 
-| ParentRect Option | Type | Description |
-|-------------------|------|-------------|
-| `lineLayout` | object | Layout properties for the rectangle outline |
-| `linePaint` | object | Paint properties for the rectangle outline (color, width, opacity) |
-| `fillPaint` | object | Paint properties for the rectangle fill (color, opacity) |
+</details>
+
+| ParentRect Option | Type   | Description                                                        |
+| ----------------- | ------ | ------------------------------------------------------------------ |
+| `lineLayout`      | object | Layout properties for the rectangle outline                        |
+| `linePaint`       | object | Paint properties for the rectangle outline (color, width, opacity) |
+| `fillPaint`       | object | Paint properties for the rectangle fill (color, opacity)           |
 
 #### Minimap Interactions
+
+<details>
+<summary>Minimap Interactions Configuration</summary>
 
 Control which map interactions are enabled on the minimap. By default, all interactions are disabled for a cleaner overview experience:
 
@@ -1037,36 +1067,41 @@ const map = new bkoigl.Map({
     zoomAdjust: -4,
     position: 'bottom-right',
     interactions: {
-      dragPan: true,        // Enable panning
-      scrollZoom: false,    // Disable scroll zoom
+      dragPan: true, // Enable panning
+      scrollZoom: false, // Disable scroll zoom
       boxZoom: false,
       dragRotate: false,
       keyboard: false,
       doubleClickZoom: false,
-      touchZoomRotate: false
-    }
-  }
+      touchZoomRotate: false,
+    },
+  },
 })
 ```
 
-| Interaction | Default | Description |
-|-------------|---------|-------------|
-| `dragPan` | `false` | Enable/disable drag to pan |
-| `scrollZoom` | `false` | Enable/disable scroll wheel zoom |
-| `boxZoom` | `false` | Enable/disable box zoom |
-| `dragRotate` | `false` | Enable/disable drag to rotate |
-| `keyboard` | `false` | Enable/disable keyboard controls |
+</details>
+
+| Interaction       | Default | Description                      |
+| ----------------- | ------- | -------------------------------- |
+| `dragPan`         | `false` | Enable/disable drag to pan       |
+| `scrollZoom`      | `false` | Enable/disable scroll wheel zoom |
+| `boxZoom`         | `false` | Enable/disable box zoom          |
+| `dragRotate`      | `false` | Enable/disable drag to rotate    |
+| `keyboard`        | `false` | Enable/disable keyboard controls |
 | `doubleClickZoom` | `false` | Enable/disable double-click zoom |
 | `touchZoomRotate` | `false` | Enable/disable touch zoom/rotate |
 
 #### Minimap Methods
+
+<details>
+<summary>Available Minimap Methods</summary>
 
 When you create a Minimap instance via `addControl`, you can access these methods:
 
 ```javascript
 const minimap = new bkoigl.Minimap({
   zoomAdjust: -4,
-  position: 'bottom-right'
+  position: 'bottom-right',
 })
 map.addControl(minimap, 'bottom-right')
 
@@ -1086,8 +1121,8 @@ minimap.addLayer({
   source: 'my-source',
   paint: {
     'circle-radius': 10,
-    'circle-color': '#FF0000'
-  }
+    'circle-color': '#FF0000',
+  },
 })
 
 // Remove layer
@@ -1107,7 +1142,12 @@ minimap.setLayerZoomRange('my-layer', 10, 18)
 minimap.moveLayer('my-layer', 'another-layer')
 ```
 
+</details>
+
 #### Custom Style Example
+
+<details>
+<summary>Custom Minimap Style Example</summary>
 
 Use a different style for the minimap than the parent map:
 
@@ -1125,23 +1165,28 @@ const map = new bkoigl.Map({
     containerStyle: {
       width: '300px',
       height: '200px',
-      border: '2px solid #333'
+      border: '2px solid #333',
     },
     parentRect: {
       linePaint: {
         'line-color': '#FFD700',
-        'line-width': 2
+        'line-width': 2,
       },
       fillPaint: {
         'fill-color': '#FFD700',
-        'fill-opacity': 0.15
-      }
-    }
-  }
+        'fill-opacity': 0.15,
+      },
+    },
+  },
 })
 ```
 
+</details>
+
 #### Vanilla JavaScript Example
+
+<details>
+<summary>Complete Vanilla JavaScript Example</summary>
 
 A complete HTML example with all minimap features:
 
@@ -1152,8 +1197,14 @@ A complete HTML example with all minimap features:
     <link rel="stylesheet" href="https://unpkg.com/bkoi-gl@latest/dist/style/bkoi-gl.css" />
     <script src="https://unpkg.com/bkoi-gl@latest/dist/iife/bkoi-gl.js"></script>
     <style>
-      body { margin: 0; padding: 0; }
-      #map { width: 100%; height: 100vh; }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100vh;
+      }
       #toggle-btn {
         position: absolute;
         top: 10px;
@@ -1192,14 +1243,14 @@ A complete HTML example with all minimap features:
           // Container styling
           containerStyle: {
             width: '300px',
-            height: '200px'
+            height: '200px',
           },
           // Toggle functionality
           toggleable: true,
           initialMinimized: false,
           hideText: 'Hide overview',
           showText: 'Show overview',
-          onToggle: function(isMinimized) {
+          onToggle: function (isMinimized) {
             console.log('Minimap minimized:', isMinimized)
             updateButtonText()
           },
@@ -1207,19 +1258,19 @@ A complete HTML example with all minimap features:
           toggleButton: {
             iconBackgroundColor: '#333',
             hoverColor: '#FF5722',
-            enableRotation: true
+            enableRotation: true,
           },
           // Parent rectangle overlay
           parentRect: {
             linePaint: {
               'line-color': '#FFD700',
               'line-width': 2,
-              'line-opacity': 0.9
+              'line-opacity': 0.9,
             },
             fillPaint: {
               'fill-color': '#FFD700',
-              'fill-opacity': 0.15
-            }
+              'fill-opacity': 0.15,
+            },
           },
           // Enable drag pan on minimap
           interactions: {
@@ -1229,9 +1280,9 @@ A complete HTML example with all minimap features:
             dragRotate: false,
             keyboard: false,
             doubleClickZoom: false,
-            touchZoomRotate: false
-          }
-        }
+            touchZoomRotate: false,
+          },
+        },
       })
 
       // Alternative: Add minimap using addControl
@@ -1246,7 +1297,7 @@ A complete HTML example with all minimap features:
       // map.addControl(minimapControl, 'bottom-right')
 
       // Toggle button handler
-      document.getElementById('toggle-btn').addEventListener('click', function() {
+      document.getElementById('toggle-btn').addEventListener('click', function () {
         if (minimapControl) {
           minimapControl.toggle()
         }
@@ -1265,35 +1316,17 @@ A complete HTML example with all minimap features:
 </html>
 ```
 
+</details>
+
 ### Removing Controls
 
 ```javascript
-const control = new bkoigl.NavigationControl();
-map.addControl(control, 'top-right');
+const control = new bkoigl.NavigationControl()
+map.addControl(control, 'top-right')
 
 // Remove the control
-map.removeControl(control);
+map.removeControl(control)
 ```
-
-### Branding & Attribution
-
-The library automatically displays Barikoi branding on the map:
-
-- **Barikoi Logo** - Displayed in the bottom-left corner, linking to barikoi.com
-- **Attribution Text** - Displayed in the bottom-right corner with credits to Barikoi, OpenMapTiles, and OpenStreetMap contributors
-
-If you need to customize the branding appearance, you can override the CSS:
-
-```css
-/* Override Barikoi logo styling */
-.maplibregl-ctrl-bottom-left .maplibregl-ctrl-logo {
-  /* Your custom styles */
-  transform: scale(1);
-  opacity: 0.8;
-}
-```
-
----
 
 ## Camera Methods
 
@@ -1307,9 +1340,9 @@ map.flyTo({
   zoom: 14,
   bearing: 0,
   pitch: 0,
-  speed: 1.2,      // Animation speed
-  curve: 1.42      // Flying curve
-});
+  speed: 1.2, // Animation speed
+  curve: 1.42, // Flying curve
+})
 ```
 
 ### Ease To
@@ -1322,8 +1355,8 @@ map.easeTo({
   zoom: 14,
   bearing: 45,
   pitch: 30,
-  duration: 2000   // Duration in ms
-});
+  duration: 2000, // Duration in ms
+})
 ```
 
 ### Jump To
@@ -1335,8 +1368,8 @@ map.jumpTo({
   center: [90.39, 23.82],
   zoom: 14,
   bearing: 0,
-  pitch: 0
-});
+  pitch: 0,
+})
 ```
 
 ### Pan To
@@ -1344,30 +1377,30 @@ map.jumpTo({
 Pan the map to a location.
 
 ```javascript
-map.panTo([90.39, 23.82], { duration: 1000 });
+map.panTo([90.39, 23.82], { duration: 1000 })
 ```
 
 ### Zoom Methods
 
 ```javascript
-map.setZoom(14);
-map.zoomTo(15, { duration: 500 });
-map.zoomIn({ duration: 500 });
-map.zoomOut({ duration: 500 });
+map.setZoom(14)
+map.zoomTo(15, { duration: 500 })
+map.zoomIn({ duration: 500 })
+map.zoomOut({ duration: 500 })
 ```
 
 ### Rotation Methods
 
 ```javascript
-map.setBearing(45);
-map.rotateTo(90, { duration: 500 });
-map.resetNorth({ duration: 500 });
+map.setBearing(45)
+map.rotateTo(90, { duration: 500 })
+map.resetNorth({ duration: 500 })
 ```
 
 ### Pitch Methods
 
 ```javascript
-map.setPitch(45);
+map.setPitch(45)
 ```
 
 ### Fit Bounds
@@ -1375,21 +1408,24 @@ map.setPitch(45);
 Fit the map to show a specific area.
 
 ```javascript
-const bounds = [[90.3, 23.7], [90.5, 23.9]]; // [SW, NE]
+const bounds = [
+  [90.3, 23.7],
+  [90.5, 23.9],
+] // [SW, NE]
 map.fitBounds(bounds, {
-  padding: 50,      // Padding in pixels
-  duration: 2000
-});
+  padding: 50, // Padding in pixels
+  duration: 2000,
+})
 ```
 
 ### Get Camera State
 
 ```javascript
-const center = map.getCenter();  // { lng, lat }
-const zoom = map.getZoom();      // number
-const bearing = map.getBearing(); // number
-const pitch = map.getPitch();    // number
-const bounds = map.getBounds();  // { getWest, getSouth, getEast, getNorth }
+const center = map.getCenter() // { lng, lat }
+const zoom = map.getZoom() // number
+const bearing = map.getBearing() // number
+const pitch = map.getPitch() // number
+const bounds = map.getBounds() // { getWest, getSouth, getEast, getNorth }
 ```
 
 ---
@@ -1408,15 +1444,15 @@ map.addSource('my-source', {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [90.39, 23.82]
+          coordinates: [90.39, 23.82],
         },
         properties: {
-          title: 'Dhaka'
-        }
-      }
-    ]
-  }
-});
+          title: 'Dhaka',
+        },
+      },
+    ],
+  },
+})
 ```
 
 ### Adding Layers
@@ -1433,9 +1469,9 @@ map.addLayer({
     'circle-color': '#ff0000',
     'circle-opacity': 0.8,
     'circle-stroke-width': 2,
-    'circle-stroke-color': '#ffffff'
-  }
-});
+    'circle-stroke-color': '#ffffff',
+  },
+})
 ```
 
 #### Line Layer
@@ -1447,14 +1483,14 @@ map.addLayer({
   source: 'my-source',
   layout: {
     'line-cap': 'round',
-    'line-join': 'round'
+    'line-join': 'round',
   },
   paint: {
     'line-color': '#0088ff',
     'line-width': 3,
-    'line-opacity': 0.8
-  }
-});
+    'line-opacity': 0.8,
+  },
+})
 ```
 
 #### Fill Layer (Polygons)
@@ -1466,9 +1502,9 @@ map.addLayer({
   source: 'my-source',
   paint: {
     'fill-color': '#28a745',
-    'fill-opacity': 0.5
-  }
-});
+    'fill-opacity': 0.5,
+  },
+})
 
 // Add outline for the polygon
 map.addLayer({
@@ -1477,29 +1513,29 @@ map.addLayer({
   source: 'my-source',
   paint: {
     'line-color': '#ffffff',
-    'line-width': 2
-  }
-});
+    'line-width': 2,
+  },
+})
 ```
 
 ### Layer Visibility
 
 ```javascript
 // Hide a layer
-map.setLayoutProperty('my-layer', 'visibility', 'none');
+map.setLayoutProperty('my-layer', 'visibility', 'none')
 
 // Show a layer
-map.setLayoutProperty('my-layer', 'visibility', 'visible');
+map.setLayoutProperty('my-layer', 'visibility', 'visible')
 ```
 
 ### Removing Sources & Layers
 
 ```javascript
 // Remove a layer
-map.removeLayer('my-layer');
+map.removeLayer('my-layer')
 
 // Remove a source (remove layers first)
-map.removeSource('my-source');
+map.removeSource('my-source')
 ```
 
 ### Querying Layers
@@ -1507,12 +1543,12 @@ map.removeSource('my-source');
 ```javascript
 // Check if layer exists
 if (map.getLayer('my-layer')) {
-  map.removeLayer('my-layer');
+  map.removeLayer('my-layer')
 }
 
 // Check if source exists
 if (map.getSource('my-source')) {
-  map.removeSource('my-source');
+  map.removeSource('my-source')
 }
 ```
 
@@ -1524,17 +1560,20 @@ if (map.getSource('my-source')) {
 
 ```javascript
 // Get bounds
-const bounds = map.getBounds();
-console.log(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
+const bounds = map.getBounds()
+console.log(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth())
 
 // Set max bounds
-map.setMaxBounds([[90.0, 23.5], [91.0, 24.5]]);
+map.setMaxBounds([
+  [90.0, 23.5],
+  [91.0, 24.5],
+])
 
 // Get projection
-const projection = map.getProjection();
+const projection = map.getProjection()
 
 // World copies
-map.setRenderWorldCopies(true);
+map.setRenderWorldCopies(true)
 ```
 
 ### Resize
@@ -1542,46 +1581,29 @@ map.setRenderWorldCopies(true);
 Trigger a map resize when the container size changes.
 
 ```javascript
-map.resize();
+map.resize()
 ```
 
 ### Interaction Handlers
 
-Enable or disable specific interactions:
+Enable or disable specific map interactions:
 
 ```javascript
-// Scroll zoom
-map.scrollZoom.enable();
-map.scrollZoom.disable();
-
-// Drag pan
-map.dragPan.enable();
-map.dragPan.disable();
-
-// Drag rotate
-map.dragRotate.enable();
-map.dragRotate.disable();
-
-// Keyboard
-map.keyboard.enable();
-map.keyboard.disable();
-
-// Double click zoom
-map.doubleClickZoom.enable();
-map.doubleClickZoom.disable();
-
-// Touch zoom rotate
-map.touchZoomRotate.enable();
-map.touchZoomRotate.disable();
-
-// Touch pitch
-map.touchPitch.enable();
-map.touchPitch.disable();
-
-// Box zoom
-map.boxZoom.enable();
-map.boxZoom.disable();
+// Pattern: map.handler.enable() / map.handler.disable()
+map.scrollZoom.enable()
+map.scrollZoom.disable()
 ```
+
+| Handler           | Description          |
+| ----------------- | -------------------- |
+| `scrollZoom`      | Scroll wheel zooming |
+| `dragPan`         | Drag to pan          |
+| `dragRotate`      | Drag to rotate       |
+| `keyboard`        | Keyboard navigation  |
+| `doubleClickZoom` | Double-click zoom    |
+| `touchZoomRotate` | Touch zoom/rotate    |
+| `touchPitch`      | Touch pitch gestures |
+| `boxZoom`         | Box zoom selection   |
 
 ---
 

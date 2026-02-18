@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [3.2.0] - February 16, 2026
+## [3.3.0] - February 18, 2026
 
 ### Added
 
@@ -30,6 +30,8 @@ All notable changes to this project will be documented in this file.
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`b0bc3ab`](https://github.com/barikoi/bkoi-gl-js/commit/b0bc3ab)
 - Branding & Attribution section in README
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`51b9cfb`](https://github.com/barikoi/bkoi-gl-js/commit/51b9cfb)
+
+## [3.2.0] - February 16, 2026
 
 ### Changed
 
