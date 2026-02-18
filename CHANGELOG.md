@@ -17,12 +17,19 @@ All notable changes to this project will be documented in this file.
   - Toggle button to minimize/maximize the minimap
   - Configurable interactions control
   - Full API access for style and layer manipulation
+- **Minimap Responsive Sizing** - Dynamic sizing based on window dimensions
+  by [@sarikamahboob](https://github.com/sarikamahboob) in [`51b9cfb`](https://github.com/barikoi/bkoi-gl-js/commit/51b9cfb)
+  - Viewport-relative width/height (vw, vh units)
+  - Min/max size constraints
+  - Automatic resize on window change
 - Minimap feature documentation
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`35460b0`](https://github.com/barikoi/bkoi-gl-js/commit/35460b0)
 - Test cases for the minimap feature
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`2410dea`](https://github.com/barikoi/bkoi-gl-js/commit/2410dea)
 - Button for polygon rotation draw mode
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`b0bc3ab`](https://github.com/barikoi/bkoi-gl-js/commit/b0bc3ab)
+- Branding & Attribution section in README
+  by [@sarikamahboob](https://github.com/sarikamahboob) in [`51b9cfb`](https://github.com/barikoi/bkoi-gl-js/commit/51b9cfb)
 
 ### Changed
 
@@ -30,6 +37,8 @@ All notable changes to this project will be documented in this file.
   by [@nurmdrafi](https://github.com/nurmdrafi) in [`6fac503`](https://github.com/barikoi/bkoi-gl-js/commit/6fac503)
 - Included events, options details at README for map and draw features
   by [@nurmdrafi](https://github.com/nurmdrafi) in [`0229d2d`](https://github.com/barikoi/bkoi-gl-js/commit/0229d2d)
+- Updated minimap test cases with responsive sizing tests
+  by [@sarikamahboob](https://github.com/sarikamahboob) in [`51b9cfb`](https://github.com/barikoi/bkoi-gl-js/commit/51b9cfb)
 
 ### Fixed
 
@@ -39,6 +48,10 @@ All notable changes to this project will be documented in this file.
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`b65ed13`](https://github.com/barikoi/bkoi-gl-js/commit/b65ed13)
 - Draw polygon cursor issue
   by [@sarikamahboob](https://github.com/sarikamahboob) in [`6c1c806`](https://github.com/barikoi/bkoi-gl-js/commit/6c1c806)
+- Toggle button tooltip in minimap
+  by [@sarikamahboob](https://github.com/sarikamahboob) in [`fc8ca18`](https://github.com/barikoi/bkoi-gl-js/commit/fc8ca18)
+- Barikoi logo CSS to properly override MapLibre default logo
+  by [@sarikamahboob](https://github.com/sarikamahboob) in [`51b9cfb`](https://github.com/barikoi/bkoi-gl-js/commit/51b9cfb)
 
 ---
 
@@ -316,7 +329,7 @@ All notable changes to this project will be documented in this file.
 
 | Version | Published Date | Highlights |
 | :------ | :------------- | :--------- |
-| [3.2.0] | Feb 16, 2026 | Minimap control, polygon rotation button |
+| [3.2.0] | Feb 16, 2026 | Minimap control with responsive sizing, polygon rotation button, Barikoi logo fix |
 | [3.1.0] | Dec 18, 2025 | Rollup migration, test cases, sourcemap |
 | [3.0.0] | Dec 18, 2025 | TypeScript migration, ESLint v9+ |
 | [2.0.4] | Jan 22, 2025 | Styles layer |
