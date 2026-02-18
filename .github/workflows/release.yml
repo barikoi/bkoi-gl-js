@@ -77,7 +77,7 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
           body: |
-            ## What's Changed
+            ## What's New
             ${{ steps.release-notes.outputs.notes }}
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
