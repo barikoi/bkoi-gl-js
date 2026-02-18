@@ -2,101 +2,83 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  release:
+    name: Create Release
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
-
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Extract release notes from CHANGELOG
-        id: extract_notes
+      - name: Extract version from CHANGELOG
+        id: version
         run: |
-          # Extract the release notes for the current version
-          VERSION="${{ steps.get_version.outputs.VERSION }}"
-
-          # Find the section for this version in CHANGELOG.md
-          # Get everything between "## [${VERSION}]" and the next "## [" or "---"
-          sed -n "/## \[${VERSION}\]/,/^## \[/p" CHANGELOG.md | sed '/^## \[/d' | sed '/^---$/d' > release_notes.md
-
-          # If file is empty, use a default message
-          if [ ! -s release_notes.md ]; then
-            echo "Release version ${VERSION}" > release_notes.md
+          # Validate CHANGELOG.md exists
+          if [ ! -f "CHANGELOG.md" ]; then
+            echo "ERROR: CHANGELOG.md file not found"
+            exit 1
           fi
 
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-          cat release_notes.md >> $GITHUB_OUTPUT
+          # Extract version from CHANGELOG.md
+          CHANGELOG_LINE=$(grep '^## \[' CHANGELOG.md | head -1)
+          if [ -z "$CHANGELOG_LINE" ]; then
+            echo "ERROR: No version entry found in CHANGELOG.md"
+            exit 1
+          fi
+
+          VERSION=$(echo "$CHANGELOG_LINE" | cut -d'[' -f2 | cut -d']' -f1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+          # Validate version format
+          if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' > /dev/null; then
+            echo "ERROR: Extracted version '$VERSION' doesn't match semantic versioning format (x.y.z)"
+            exit 1
+          fi
+
+          echo "Successfully extracted version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract release notes from CHANGELOG
+        id: release-notes
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          NOTES=$(awk "/^## \\[${VERSION//./\\.}\\]/{flag=1; next} /^## \\[/{if(flag) exit} flag" CHANGELOG.md | sed '1d')
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Check if release exists
+        id: check_release
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if gh release view "v${VERSION}" --repo "${{ github.repository }}" &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Release v${VERSION} already exists, skipping..."
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create GitHub Release
+        if: steps.check_release.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          name: bkoi-gl v${{ steps.get_version.outputs.VERSION }}
-          body: ${{ steps.extract_notes.outputs.RELEASE_NOTES }}
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body: |
+            ## What's Changed
+            ${{ steps.release-notes.outputs.notes }}
           draft: false
-          prerelease: ${{ contains(steps.get_version.outputs.VERSION, '-') }}
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
           generate_release_notes: false
-          files: |
-            dist/index.js
-            dist/index.cjs
-            dist/index.d.ts
-            dist/index.d.cts
-            dist/style/bkoi-gl.css
-            dist/iife/bkoi-gl.js
-            dist/umd/bkoi-gl.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # publish-npm:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: "!contains(github.ref, '-')"
-
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #         registry-url: 'https://registry.npmjs.org'
-
-  #     - name: Install dependencies
-  #       run: npm ci
-
-  #     - name: Build
-  #       run: npm run build
-
-  #     - name: Publish to npm
-  #       run: npm publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
