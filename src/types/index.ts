@@ -537,4 +537,70 @@ export interface MinimapOptions {
    * @default 'Show minimap'
    */
   showText?: string
+
+  /**
+   * Enable responsive sizing based on window dimensions.
+   * When true, the minimap will resize dynamically when the window is resized.
+   *
+   * @type {boolean}
+   * @optional
+   * @default true
+   */
+  responsive?: boolean
+
+  /**
+   * Responsive width as a CSS value (e.g., '20vw', '30%', '300px').
+   * Only applies when responsive is true.
+   *
+   * @type {string}
+   * @optional
+   * @default '20vw'
+   */
+  responsiveWidth?: string
+
+  /**
+   * Responsive height as a CSS value (e.g., '20vh', '30%', '200px').
+   * Only applies when responsive is true.
+   *
+   * @type {string}
+   * @optional
+   * @default '20vh'
+   */
+  responsiveHeight?: string
+
+  /**
+   * Minimum width constraint for responsive sizing.
+   *
+   * @type {string}
+   * @optional
+   * @default '200px'
+   */
+  minWidth?: string
+
+  /**
+   * Minimum height constraint for responsive sizing.
+   *
+   * @type {string}
+   * @optional
+   * @default '150px'
+   */
+  minHeight?: string
+
+  /**
+   * Maximum width constraint for responsive sizing.
+   *
+   * @type {string}
+   * @optional
+   * @default '400px'
+   */
+  maxWidth?: string
+
+  /**
+   * Maximum height constraint for responsive sizing.
+   *
+   * @type {string}
+   * @optional
+   * @default '300px'
+   */
+  maxHeight?: string
 }

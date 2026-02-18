@@ -14,29 +14,23 @@
  * - Automatic cleanup on removal
  */
 
-import type {
-  IControl,
+import {
   Map as MapLibreMap,
-  GeoJSONSource,
-  CustomLayerInterface,
-  LayerSpecification,
-  SourceSpecification,
-  FilterSpecification,
-  StyleSpecification,
-  StyleOptions,
-  StyleSetterOptions,
-  StyleSwapOptions,
-  LineLayerSpecification,
-  FillLayerSpecification,
+  type IControl,
+  type GeoJSONSource,
+  type CustomLayerInterface,
+  type LayerSpecification,
+  type SourceSpecification,
+  type FilterSpecification,
+  type StyleSpecification,
+  type StyleOptions,
+  type StyleSetterOptions,
+  type StyleSwapOptions,
+  type LineLayerSpecification,
+  type FillLayerSpecification,
 } from 'maplibre-gl'
 
-import type {
-  BkoiMapOptions,
-  MinimapOptions,
-  ParentRectConfig,
-  MinimapInteractions,
-} from '../types'
-import { Map as BkoiGlMap } from '../index'
+import type { MinimapOptions, ParentRectConfig, MinimapInteractions } from '../types'
 import appendToggleButtonToParentEl from './ToggleButton'
 import { getRandomUUID } from '../utils/utils'
 
@@ -52,6 +46,7 @@ interface MinimapInternalOptions extends MinimapOptions {
   bearing?: number
   pitch?: number
   attributionControl: boolean
+  logoPosition?: string
 }
 
 /**
@@ -129,6 +124,9 @@ export class Minimap implements IControl {
   /** Whether the minimap is currently minimized */
   #isMinimized = false
 
+  /** Window resize handler reference for cleanup */
+  #resizeHandler?: () => void
+
   /** Default interactions (all disabled) */
   static readonly #defaultInteractions: MinimapInteractions = {
     dragPan: false,
@@ -171,6 +169,7 @@ export class Minimap implements IControl {
       position: 'top-right',
       pitchAdjust: false,
       attributionControl: false,
+      logoPosition: 'bottom-left',
       toggleable: true,
       initialMinimized: false,
       collapsedWidth: '29px',
@@ -178,6 +177,13 @@ export class Minimap implements IControl {
       borderRadius: '3px',
       hideText: 'Hide minimap',
       showText: 'Show minimap',
+      responsive: true,
+      responsiveWidth: '20vw',
+      responsiveHeight: '20vh',
+      minWidth: '200px',
+      minHeight: '150px',
+      maxWidth: '400px',
+      maxHeight: '300px',
       interactions,
       // User-provided options
       ...options,
@@ -222,8 +228,10 @@ export class Minimap implements IControl {
       this.#options.style = parentMap.getStyle()
     }
 
-    // Create the minimap instance
-    this.map = new BkoiGlMap(this.#options as unknown as BkoiMapOptions)
+    // Create the minimap instance using raw MapLibre Map (no logo/attribution)
+    this.map = new MapLibreMap(
+      this.#options as unknown as ConstructorParameters<typeof MapLibreMap>[0]
+    )
 
     // Fix size issue: the DOM doesn't properly update in time
     this.map.once('style.load', () => {
@@ -236,6 +244,7 @@ export class Minimap implements IControl {
       this.#addParentRect(this.#options.parentRect)
       this.#desync = this.#syncMaps()
       this.#setupToggleButton()
+      this.#setupResponsiveSizing()
     })
 
     return this.#container
@@ -250,6 +259,11 @@ export class Minimap implements IControl {
    * @returns {void}
    */
   onRemove(): void {
+    // Clean up window resize handler
+    if (this.#resizeHandler) {
+      window.removeEventListener('resize', this.#resizeHandler)
+      this.#resizeHandler = undefined
+    }
     this.#toggleButtonCleanup?.()
     this.#desync?.()
     this.#container.remove()
@@ -452,6 +466,91 @@ export class Minimap implements IControl {
   }
 
   /**
+   * @private
+   * @method #setupResponsiveSizing
+   * @description Sets up responsive sizing based on window dimensions.
+   *
+   * Updates the minimap size dynamically when the window is resized.
+   * Only applies when responsive option is true and minimap is not minimized.
+   *
+   * @returns {void}
+   */
+  #setupResponsiveSizing(): void {
+    if (!this.#options.responsive) {
+      return
+    }
+
+    // Calculate and apply responsive size
+    const updateSize = () => {
+      if (this.#isMinimized) return
+
+      const responsiveWidth = this.#options.responsiveWidth || '20vw'
+      const responsiveHeight = this.#options.responsiveHeight || '20vh'
+      const minWidth = this.#options.minWidth || '200px'
+      const minHeight = this.#options.minHeight || '150px'
+      const maxWidth = this.#options.maxWidth || '400px'
+      const maxHeight = this.#options.maxHeight || '300px'
+
+      // Parse viewport units and calculate actual sizes
+      const vw = window.innerWidth / 100
+      const vh = window.innerHeight / 100
+
+      // Calculate responsive dimensions
+      let width: number
+      let height: number
+
+      // Parse responsive width
+      if (responsiveWidth.endsWith('vw')) {
+        width = parseFloat(responsiveWidth) * vw
+      } else if (responsiveWidth.endsWith('%')) {
+        width = (parseFloat(responsiveWidth) / 100) * window.innerWidth
+      } else {
+        width = parseFloat(responsiveWidth)
+      }
+
+      // Parse responsive height
+      if (responsiveHeight.endsWith('vh')) {
+        height = parseFloat(responsiveHeight) * vh
+      } else if (responsiveHeight.endsWith('%')) {
+        height = (parseFloat(responsiveHeight) / 100) * window.innerHeight
+      } else {
+        height = parseFloat(responsiveHeight)
+      }
+
+      // Parse min/max constraints
+      const minW = parseFloat(minWidth)
+      const minH = parseFloat(minHeight)
+      const maxW = parseFloat(maxWidth)
+      const maxH = parseFloat(maxHeight)
+
+      // Apply constraints
+      width = Math.max(minW, Math.min(maxW, width))
+      height = Math.max(minH, Math.min(maxH, height))
+
+      // Apply new dimensions
+      this.#container.style.width = `${width}px`
+      this.#container.style.height = `${height}px`
+
+      // Trigger map resize
+      this.map.resize()
+      this.#setParentBounds()
+    }
+
+    // Initial size calculation
+    updateSize()
+
+    // Debounced resize handler
+    let resizeTimeout: ReturnType<typeof setTimeout>
+    this.#resizeHandler = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(updateSize, 100)
+    }
+
+    // Listen for window resize
+    window.addEventListener('resize', this.#resizeHandler)
+  }
+
+  /**
    * @method toggle
    * @description Toggles the minimap between minimized and maximized states.
    *
@@ -465,18 +564,23 @@ export class Minimap implements IControl {
 
     const collapsedWidth = this.#options.collapsedWidth || '29px'
     const collapsedHeight = this.#options.collapsedHeight || '29px'
-    const expandedWidth = this.#options.containerStyle?.width || '400px'
-    const expandedHeight = this.#options.containerStyle?.height || '300px'
 
     if (this.#isMinimized) {
       this.#container.classList.add('minimized')
-      // Override inline width/height from containerStyle so minimized dimensions apply
+      // Override inline width/height so minimized dimensions apply
       this.#container.style.width = collapsedWidth
       this.#container.style.height = collapsedHeight
     } else {
       this.#container.classList.remove('minimized')
-      this.#container.style.width = expandedWidth
-      this.#container.style.height = expandedHeight
+      // If responsive sizing is enabled, trigger a recalculation
+      if (this.#options.responsive && this.#resizeHandler) {
+        this.#resizeHandler()
+      } else {
+        const expandedWidth = this.#options.containerStyle?.width || '400px'
+        const expandedHeight = this.#options.containerStyle?.height || '300px'
+        this.#container.style.width = expandedWidth
+        this.#container.style.height = expandedHeight
+      }
     }
 
     this.#options.onToggle?.(this.#isMinimized)

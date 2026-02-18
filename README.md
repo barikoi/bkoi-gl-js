@@ -74,6 +74,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - **Lightweight** - Optimized for production use
 - **Drawing Tools** - Built-in polygon, line, and point drawing
 - **Minimap Control** - Synchronized overview map with customizable styling
+- **Branded Attribution** - Displays Barikoi logo with proper attribution
 - **Multiple Build Formats** - ESM, CJS, IIFE, and UMD
 - **TypeScript Support** - Full TypeScript definitions included
 
@@ -898,6 +899,46 @@ map.addControl(minimap, 'bottom-right')
 | `onToggle` | function | *none* | Callback when minimap is toggled: `(isMinimized: boolean) => void` |
 | `interactions` | object | *all disabled* | Map interactions configuration (see Interactions Options) |
 | `parentRect` | object | *none* | Parent rectangle overlay configuration (see ParentRect Options) |
+| `responsive` | boolean | `true` | Enable responsive sizing based on window dimensions |
+| `responsiveWidth` | string | `'20vw'` | Responsive width as CSS value (e.g., '20vw', '30%', '300px') |
+| `responsiveHeight` | string | `'20vh'` | Responsive height as CSS value (e.g., '20vh', '30%', '200px') |
+| `minWidth` | string | `'200px'` | Minimum width constraint for responsive sizing |
+| `minHeight` | string | `'150px'` | Minimum height constraint for responsive sizing |
+| `maxWidth` | string | `'400px'` | Maximum width constraint for responsive sizing |
+| `maxHeight` | string | `'300px'` | Maximum height constraint for responsive sizing |
+
+#### Responsive Sizing
+
+The minimap supports responsive sizing that automatically adjusts based on window dimensions:
+
+```javascript
+const map = new bkoigl.Map({
+  container: 'map',
+  accessToken: 'YOUR_BARIKOI_API_KEY',
+  center: [90.39, 23.82],
+  zoom: 12,
+  minimap: {
+    zoomAdjust: -4,
+    position: 'bottom-right',
+    // Enable responsive sizing (default: true)
+    responsive: true,
+    // Responsive dimensions (viewport-relative)
+    responsiveWidth: '25vw',
+    responsiveHeight: '25vh',
+    // Size constraints
+    minWidth: '150px',
+    minHeight: '100px',
+    maxWidth: '500px',
+    maxHeight: '400px'
+  }
+})
+```
+
+When `responsive` is enabled (default), the minimap will:
+- Resize dynamically when the browser window is resized
+- Use `responsiveWidth` and `responsiveHeight` as the base sizes
+- Respect `minWidth`/`minHeight` and `maxWidth`/`maxHeight` constraints
+- Automatically trigger a map resize to ensure proper rendering
 
 #### Custom Toggle Button
 
@@ -1232,6 +1273,24 @@ map.addControl(control, 'top-right');
 
 // Remove the control
 map.removeControl(control);
+```
+
+### Branding & Attribution
+
+The library automatically displays Barikoi branding on the map:
+
+- **Barikoi Logo** - Displayed in the bottom-left corner, linking to barikoi.com
+- **Attribution Text** - Displayed in the bottom-right corner with credits to Barikoi, OpenMapTiles, and OpenStreetMap contributors
+
+If you need to customize the branding appearance, you can override the CSS:
+
+```css
+/* Override Barikoi logo styling */
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl-logo {
+  /* Your custom styles */
+  transform: scale(1);
+  opacity: 0.8;
+}
 ```
 
 ---

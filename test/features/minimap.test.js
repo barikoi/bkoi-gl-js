@@ -139,6 +139,12 @@ const createMockMap = (options = {}) => {
     // Utility methods
     loaded: jest.fn(() => true),
     isStyleLoaded: jest.fn(() => true),
+    getStyle: jest.fn(() => ({
+      version: 8,
+      name: 'Test Style',
+      sources: {},
+      layers: [],
+    })),
     unproject: jest.fn(point => ({
       toArray: () => {
         if (point[0] === 0 && point[1] === 0) return [90.0, 24.0]
@@ -152,6 +158,14 @@ const createMockMap = (options = {}) => {
   mockMapInstances.push(mockMap)
   return mockMap
 }
+
+// Mock maplibre-gl's Map class before importing Minimap
+jest.mock('maplibre-gl', () => {
+  const MockMap = jest.fn(createMockMap)
+  return {
+    Map: MockMap,
+  }
+})
 
 // Mock the BkoiGlMap class before importing Minimap
 jest.mock('../../src/index', () => {
@@ -192,6 +206,12 @@ describe('Minimap Control Tests', () => {
       getBearing: jest.fn(() => 0),
       getPitch: jest.fn(() => 0),
       getCanvas: jest.fn(() => ({ width: 800, height: 600 })),
+      getStyle: jest.fn(() => ({
+        version: 8,
+        name: 'Test Style',
+        sources: {},
+        layers: [],
+      })),
       on: jest.fn(),
       off: jest.fn(),
       unproject: jest.fn(point => ({
@@ -435,8 +455,10 @@ describe('Minimap Control Tests', () => {
 
     beforeEach(() => {
       parentMap = createParentMap()
-      // Without a custom style, differentStyle is false, so methods delegate to map
-      minimap = new Minimap()
+      // With a custom style, differentStyle is true, so methods delegate to map
+      minimap = new Minimap({
+        style: 'https://example.com/custom-style.json',
+      })
       minimap.onAdd(parentMap)
     })
 
@@ -734,126 +756,16 @@ describe('Minimap Control Tests', () => {
 
   describe('Style-specific Behavior', () => {
     describe('when custom style is provided', () => {
-      test('should NOT delegate setStyle to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setStyle('https://example.com/new-style.json')
-
-        // When differentStyle is true, setStyle should NOT be called
-        expect(minimap.map.setStyle).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate addLayer to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        const layer = { id: 'test-layer', type: 'circle', source: 'test' }
-        minimap.addLayer(layer)
-
-        // When differentStyle is true, addLayer should NOT be called
-        expect(minimap.map.addLayer).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate moveLayer to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.moveLayer('layer-id', 'before-id')
-
-        expect(minimap.map.moveLayer).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate removeLayer to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.removeLayer('layer-id')
-
-        expect(minimap.map.removeLayer).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate setLayerZoomRange to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setLayerZoomRange('layer-id', 5, 15)
-
-        expect(minimap.map.setLayerZoomRange).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate setFilter to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setFilter('layer-id', ['==', 'category', 'restaurant'])
-
-        expect(minimap.map.setFilter).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate setPaintProperty to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setPaintProperty('layer-id', 'circle-color', '#ff0000')
-
-        expect(minimap.map.setPaintProperty).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate setLayoutProperty to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setLayoutProperty('layer-id', 'visibility', 'none')
-
-        expect(minimap.map.setLayoutProperty).not.toHaveBeenCalled()
-      })
-
-      test('should NOT delegate setGlyphs to map', () => {
-        const parentMap = createParentMap()
-        const minimap = new Minimap({
-          style: 'https://example.com/custom-style.json',
-        })
-        minimap.onAdd(parentMap)
-
-        minimap.setGlyphs('https://example.com/glyphs/{fontstack}/{range}.pbf')
-
-        expect(minimap.map.setGlyphs).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('when no custom style (default behavior)', () => {
       test('should delegate setStyle to map', () => {
         const parentMap = createParentMap()
-        const minimap = new Minimap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
         minimap.onAdd(parentMap)
 
         minimap.setStyle('https://example.com/new-style.json')
 
+        // When differentStyle is true, setStyle SHOULD be called
         expect(minimap.map.setStyle).toHaveBeenCalledWith(
           'https://example.com/new-style.json',
           undefined
@@ -862,13 +774,142 @@ describe('Minimap Control Tests', () => {
 
       test('should delegate addLayer to map', () => {
         const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        const layer = { id: 'test-layer', type: 'circle', source: 'test' }
+        minimap.addLayer(layer)
+
+        // When differentStyle is true, addLayer SHOULD be called
+        expect(minimap.map.addLayer).toHaveBeenCalledWith(layer, undefined)
+      })
+
+      test('should delegate moveLayer to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.moveLayer('layer-id', 'before-id')
+
+        expect(minimap.map.moveLayer).toHaveBeenCalledWith('layer-id', 'before-id')
+      })
+
+      test('should delegate removeLayer to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.removeLayer('layer-id')
+
+        expect(minimap.map.removeLayer).toHaveBeenCalledWith('layer-id')
+      })
+
+      test('should delegate setLayerZoomRange to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.setLayerZoomRange('layer-id', 5, 15)
+
+        expect(minimap.map.setLayerZoomRange).toHaveBeenCalledWith('layer-id', 5, 15)
+      })
+
+      test('should delegate setFilter to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.setFilter('layer-id', ['==', 'category', 'restaurant'])
+
+        expect(minimap.map.setFilter).toHaveBeenCalledWith(
+          'layer-id',
+          ['==', 'category', 'restaurant'],
+          undefined
+        )
+      })
+
+      test('should delegate setPaintProperty to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.setPaintProperty('layer-id', 'circle-color', '#ff0000')
+
+        expect(minimap.map.setPaintProperty).toHaveBeenCalledWith(
+          'layer-id',
+          'circle-color',
+          '#ff0000',
+          undefined
+        )
+      })
+
+      test('should delegate setLayoutProperty to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.setLayoutProperty('layer-id', 'visibility', 'none')
+
+        expect(minimap.map.setLayoutProperty).toHaveBeenCalledWith(
+          'layer-id',
+          'visibility',
+          'none',
+          undefined
+        )
+      })
+
+      test('should delegate setGlyphs to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap({
+          style: 'https://example.com/custom-style.json',
+        })
+        minimap.onAdd(parentMap)
+
+        minimap.setGlyphs('https://example.com/glyphs/{fontstack}/{range}.pbf')
+
+        expect(minimap.map.setGlyphs).toHaveBeenCalledWith(
+          'https://example.com/glyphs/{fontstack}/{range}.pbf',
+          undefined
+        )
+      })
+    })
+
+    describe('when no custom style (default behavior)', () => {
+      test('should NOT delegate setStyle to map', () => {
+        const parentMap = createParentMap()
+        const minimap = new Minimap()
+        minimap.onAdd(parentMap)
+
+        minimap.setStyle('https://example.com/new-style.json')
+
+        // When differentStyle is false, setStyle should NOT be called
+        expect(minimap.map.setStyle).not.toHaveBeenCalled()
+      })
+
+      test('should NOT delegate addLayer to map', () => {
+        const parentMap = createParentMap()
         const minimap = new Minimap()
         minimap.onAdd(parentMap)
 
         const layer = { id: 'test-layer', type: 'circle', source: 'test' }
         minimap.addLayer(layer)
 
-        expect(minimap.map.addLayer).toHaveBeenCalledWith(layer, undefined)
+        // When differentStyle is false, addLayer should NOT be called
+        expect(minimap.map.addLayer).not.toHaveBeenCalled()
       })
     })
   })
