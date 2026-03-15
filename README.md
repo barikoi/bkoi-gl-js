@@ -15,9 +15,7 @@ Barikoi GL JS is a JavaScript library built on top of [MapLibre GL JS](https://m
 
 Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package provides tools to integrate maps and location services effortlessly.
 
-<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
-💡 <b>Info:</b> For React/Next.js integrations, we recommend our <a href="https://www.npmjs.com/package/react-bkoi-gl">react-bkoi-gl</a> npm library.
-</div>
+> 💡 <b>Info:</b> For React/Next.js integrations, we recommend our <a href="https://www.npmjs.com/package/react-bkoi-gl">react-bkoi-gl</a> npm library.
 
 ---
 
@@ -139,9 +137,7 @@ import { Map, Marker, FullscreenControl } from 'bkoi-gl'
 import 'bkoi-gl/style.css'
 ```
 
-<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
-💡 <b>Info:</b> You can also use the full path <code>"bkoi-gl/dist/style/bkoi-gl.css"</code> for backward compatibility.
-</div>
+> 💡 <b>Info:</b> You can also use the full path <code>"bkoi-gl/dist/style/bkoi-gl.css"</code> for backward compatibility.
 
 ---
 
@@ -620,9 +616,7 @@ Fired when sources or layers are added, removed, or modified.
 
 #### Drawing Events
 
-<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
-💡 <b>Info:</b> Drawing events require <code>polygon: true</code> to be set in your Map configuration.
-</div>
+> 💡 <b>Info:</b> Drawing events require <code>polygon: true</code> to be set in your Map configuration.
 
 Available when drawing tools are enabled via `polygon: true`.
 
@@ -858,9 +852,7 @@ map.addControl(new bkoigl.FullscreenControl(), 'top-right')
 
 ### Minimap Control
 
-<div style="background:#DFF5EA; border-left:5px solid #6CC7A5; padding:10px; color:#2F7D63">
-💡 <b>Info:</b> The minimap can be configured via the <code>minimap</code> option in Map constructor or added using <code>addControl()</code>.
-</div>
+> 💡 <b>Info:</b> The minimap can be configured via the <code>minimap</code> option in Map constructor or added using <code>addControl()</code>.
 
 Adds a small overview map that syncs with the main map, providing geographic context by showing the surrounding area at a different zoom level.
 
