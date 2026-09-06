@@ -11,7 +11,8 @@
  * - TypeScript support with comprehensive type definitions
  */
 
-import maplibre, {
+import * as maplibre from 'maplibre-gl'
+import {
   Map,
   MapOptions,
   NavigationControl,
@@ -210,36 +211,41 @@ export class BkoiGlMap extends Map {
     this.draw = new MapboxDraw(defaultOptions)
     this.addControl(this.draw as unknown as IControl)
 
+    // maplibre-gl-draw emits custom `draw.*` events not in MapLibre's
+    // MapEventType — same `as any` escape hatch react-bkoi-gl uses.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mapAny = this as any
+
     // Only reset when not in drawing mode to allow CSS cursor to work
-    this.on('draw.create', () => {
+    mapAny.on('draw.create', () => {
       const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
-    this.on('draw.update', () => {
+    mapAny.on('draw.update', () => {
       const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
-    this.on('draw.delete', () => {
+    mapAny.on('draw.delete', () => {
       const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
-    this.on('draw.selectionchange', () => {
+    mapAny.on('draw.selectionchange', () => {
       const currentMode = this.draw?.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
-    this.on('draw.modechange', () => {
+    mapAny.on('draw.modechange', () => {
       // Reset cursor when changing to simple_select mode to prevent sticking
       // Allow CSS to control cursor in drawing modes
       const currentMode = this.draw?.getMode()

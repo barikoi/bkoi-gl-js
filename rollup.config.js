@@ -66,6 +66,15 @@ export default [
       copy({
         targets: [
           { src: "src/index.css", dest: "dist/style", rename: "bkoi-gl.css" },
+          // maplibre-gl v6 loads its worker at runtime from files sibling to
+          // the entry; the worker itself imports the shared chunk. Each format
+          // resolves these next to its own output dir.
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs", dest: "dist" },
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs", dest: "dist" },
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs", dest: "dist/umd" },
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs", dest: "dist/umd" },
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs", dest: "dist/iife" },
+          { src: "node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs", dest: "dist/iife" },
         ],
       }),
       terser(terserConfig),

@@ -746,7 +746,12 @@ export class Minimap implements IControl {
     options?: StyleSetterOptions
   ): this {
     if (this.#differentStyle) {
-      this.map.setPaintProperty(layerId, name, value as string, options)
+      this.map.setPaintProperty(
+        layerId,
+        name as Parameters<MapLibreMap['setPaintProperty']>[1],
+        value as Parameters<MapLibreMap['setPaintProperty']>[2],
+        options
+      )
     }
     this.#setParentBounds()
     return this
@@ -772,7 +777,12 @@ export class Minimap implements IControl {
     options?: StyleSetterOptions
   ): this {
     if (this.#differentStyle) {
-      this.map.setLayoutProperty(layerId, name, value as string, options)
+      this.map.setLayoutProperty(
+        layerId,
+        name as Parameters<MapLibreMap['setLayoutProperty']>[1],
+        value as Parameters<MapLibreMap['setLayoutProperty']>[2],
+        options
+      )
     }
     this.#setParentBounds()
     return this
