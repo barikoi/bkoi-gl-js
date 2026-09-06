@@ -218,28 +218,28 @@ export class BkoiGlMap extends Map {
 
     // Only reset when not in drawing mode to allow CSS cursor to work
     mapAny.on('draw.create', () => {
-      const currentMode = this.draw?.getMode()
+      const currentMode = this.draw!.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
     mapAny.on('draw.update', () => {
-      const currentMode = this.draw?.getMode()
+      const currentMode = this.draw!.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
     mapAny.on('draw.delete', () => {
-      const currentMode = this.draw?.getMode()
+      const currentMode = this.draw!.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
     })
 
     mapAny.on('draw.selectionchange', () => {
-      const currentMode = this.draw?.getMode()
+      const currentMode = this.draw!.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
@@ -248,7 +248,7 @@ export class BkoiGlMap extends Map {
     mapAny.on('draw.modechange', () => {
       // Reset cursor when changing to simple_select mode to prevent sticking
       // Allow CSS to control cursor in drawing modes
-      const currentMode = this.draw?.getMode()
+      const currentMode = this.draw!.getMode()
       if (currentMode === 'simple_select') {
         this.getCanvas().style.cursor = ''
       }
@@ -334,7 +334,8 @@ export class BkoiGlMap extends Map {
     thumbnail.style.transition = 'transform 0.3s'
 
     const nameOverlay = document.createElement('div')
-    nameOverlay.innerText = name
+    // textContent over innerText: identical for plain names, works in jsdom
+    nameOverlay.textContent = name
     Object.assign(nameOverlay.style, {
       position: 'absolute',
       top: '50%',

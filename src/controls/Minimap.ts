@@ -47,6 +47,9 @@ interface MinimapInternalOptions extends MinimapOptions {
   pitch?: number
   attributionControl: boolean
   logoPosition?: string
+  // #validateContainerStyle always produces an object — the constructor
+  // guarantees this invariant for the merged internal options.
+  containerStyle: Record<string, string>
 }
 
 /**
@@ -292,11 +295,10 @@ export class Minimap implements IControl {
     styleEl.innerHTML = this.#getContainerStyles()
     container.appendChild(styleEl)
 
-    // Apply custom container styles
-    if (this.#options.containerStyle) {
-      for (const [key, value] of Object.entries(this.#options.containerStyle)) {
-        container.style.setProperty(key, value)
-      }
+    // Apply custom container styles (containerStyle is guaranteed by
+    // #validateContainerStyle — see MinimapInternalOptions)
+    for (const [key, value] of Object.entries(this.#options.containerStyle)) {
+      container.style.setProperty(key, value)
     }
 
     // When starting minimized, override inline width/height so collapsed dimensions apply
@@ -320,8 +322,8 @@ export class Minimap implements IControl {
    * @returns {string} CSS styles as a string
    */
   #getContainerStyles(): string {
-    const width = this.#options.containerStyle?.width || '400px'
-    const height = this.#options.containerStyle?.height || '300px'
+    const width = this.#options.containerStyle.width
+    const height = this.#options.containerStyle.height
     const collapsedWidth = this.#options.collapsedWidth || '29px'
     const collapsedHeight = this.#options.collapsedHeight || '29px'
     const borderRadius = this.#options.borderRadius || '3px'
@@ -418,7 +420,8 @@ export class Minimap implements IControl {
    * @returns {void}
    */
   #configureInteractions(): void {
-    const interactions = this.#options.interactions || Minimap.#defaultInteractions
+    // interactions is always set by the constructor merge
+    const interactions = this.#options.interactions!
 
     for (const [interaction, enabled] of Object.entries(interactions)) {
       if (!enabled) {
@@ -576,8 +579,8 @@ export class Minimap implements IControl {
       if (this.#options.responsive && this.#resizeHandler) {
         this.#resizeHandler()
       } else {
-        const expandedWidth = this.#options.containerStyle?.width || '400px'
-        const expandedHeight = this.#options.containerStyle?.height || '300px'
+        const expandedWidth = this.#options.containerStyle.width
+        const expandedHeight = this.#options.containerStyle.height
         this.#container.style.width = expandedWidth
         this.#container.style.height = expandedHeight
       }
@@ -912,11 +915,9 @@ export class Minimap implements IControl {
       ],
     ]
 
-    // Update the source data
-    const source = this.map.getSource<GeoJSONSource>('parentRect')
-    if (source !== undefined) {
-      source.setData(this.#parentRect)
-    }
+    // Update the source data — the source is created together with
+    // #parentRect, so it exists whenever this method runs with a rect.
+    this.map.getSource<GeoJSONSource>('parentRect')!.setData(this.#parentRect)
   }
 
   /**
