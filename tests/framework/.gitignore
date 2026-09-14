@@ -1,0 +1,17 @@
+# Runner outputs
+results.json
+result-*.json
+*.tgz
+
+# Per-app installs / build output (angular-app also has its own .gitignore)
+node_modules/
+dist/
+build/
+.output/
+.svelte-kit/
+.nuxt/
+.angular/
+package-lock.json
+
+# Angular has no build-time env: the runner generates this key module.
+angular-app/src/env.generated.ts

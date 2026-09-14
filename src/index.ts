@@ -35,6 +35,7 @@ import { bkoiConfig } from './utils/config'
 import { isBarikoiStyle } from './utils/validator'
 import type { BkoiMapOptions, StyleConfig, MinimapOptions } from './types'
 import { Minimap } from './controls/Minimap'
+import { ensureWorkerUrl } from './worker-setup'
 
 const { setRTLTextPlugin, getRTLTextPluginStatus, prewarm, clearPrewarmedResources } = maplibre
 
@@ -73,6 +74,10 @@ export class BkoiGlMap extends Map {
    * @throws {Error} When Barikoi API access token is required but not provided
    */
   constructor(mapOptions: BkoiMapOptions) {
+    // Point the engine at our self-contained worker before `super()` builds
+    // the map — maplibre v6's default sibling URL is dead once bundled.
+    ensureWorkerUrl()
+
     // Validate access token for Barikoi styles
     if (
       !mapOptions.accessToken &&

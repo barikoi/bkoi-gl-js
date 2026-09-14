@@ -4,4 +4,6 @@ examples/**/node_modules/
 .env
 dist/
 coverage/
+test-results/
+.DS_Store
 CLAUDE.md

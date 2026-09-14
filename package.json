@@ -23,6 +23,10 @@
         },
         "./dist/style/bkoi-gl.css": {
             "default": "./dist/style/bkoi-gl.css"
+        },
+        "./worker": {
+            "types": "./dist/bkoi-map-worker.d.mts",
+            "default": "./dist/bkoi-map-worker.mjs"
         }
     },
     "style": "./dist/style/bkoi-gl.css",
@@ -51,7 +55,7 @@
     },
     "scripts": {
         "start": "node index.js",
-        "build": "npm run typecheck && rollup --config",
+        "build": "npm run typecheck && rollup --config && node scripts/build-worker.mjs",
         "prepare": "husky",
         "typecheck": "tsc --noEmit",
         "lint": "eslint .",
@@ -62,6 +66,9 @@
         "test:watch": "vitest --watch",
         "test:unit": "vitest run --project unit",
         "test:browser": "vitest run --project browser",
+        "e2e": "npm run build && playwright test",
+        "e2e:serve": "vite tests/e2e/app --port 5176 --strictPort",
+        "test:framework": "node tests/framework/run.mjs",
         "playwright:install": "playwright install chromium",
         "prepublishOnly": "npm run typecheck && npm run lint && vitest run && npm run build"
     },
@@ -94,6 +101,7 @@
         "@vitest/browser-playwright": "4.1.11",
         "@vitest/coverage-v8": "4.1.11",
         "dotenv": "17.2.3",
+        "esbuild": "0.25.12",
         "eslint": "9.39.2",
         "eslint-config-mourner": "3.0.0",
         "eslint-config-prettier": "10.1.8",

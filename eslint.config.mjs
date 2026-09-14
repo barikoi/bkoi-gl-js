@@ -17,7 +17,18 @@ const eslintconfig = [
       '**/.eslintrc.json',
       '**/node_modules/**',
       '**/dist/**',
+      '**/build/**',
+      '**/.output/**',
+      '**/.svelte-kit/**',
+      '**/.nuxt/**',
+      '**/.angular/**',
       '**/coverage/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+      'tests/framework/**/*.tgz',
+      // Generated 490KB worker bundle (see scripts/build-worker.mjs)
+      'src/worker-bundle.generated.ts',
+      '**/*.generated.ts',
       '**/*.config.js',
       '**/*.config.cjs',
       '**/rollup.config.js',
@@ -140,6 +151,14 @@ const eslintconfig = [
     },
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
+    },
+  },
+
+  // Harness scripts print progress to stdout by design.
+  {
+    files: ['tests/framework/**/*.{js,mjs,ts}', 'scripts/**/*.mjs'],
+    rules: {
       'no-console': 'off',
     },
   },

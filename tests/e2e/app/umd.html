@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bkoi-gl e2e — UMD</title>
+    <link rel="stylesheet" href="/style/bkoi-gl.css" />
+  </head>
+  <body>
+    <div id="map" style="width: 100vw; height: 100vh"></div>
+    <!-- Plain script tags, no bundler: exercises dist/umd/bkoi-gl.js exactly
+         as a non-module consumer loads it. Worker files resolve as siblings
+         of /umd/bkoi-gl.js (rollup copies them there). -->
+    <script src="/umd/bkoi-gl.js"></script>
+    <script type="module">
+      // module type so Vite replaces import.meta.env with the real key
+      window.__LOG__ = []
+      window.__pageErrors__ = []
+      window.addEventListener('error', e => window.__pageErrors__.push(String(e.message)))
+      window.addEventListener('unhandledrejection', e =>
+        window.__pageErrors__.push(String(e.reason))
+      )
+      const map = new window.bkoigl.Map({
+        container: 'map',
+        accessToken: import.meta.env?.BARIKOI_API_KEY,
+        center: [90.3938, 23.8216],
+        zoom: 12,
+      })
+      window.__MAP__ = map
+      map.on('load', () => window.__LOG__.push({ type: 'load' }))
+    </script>
+  </body>
+</html>

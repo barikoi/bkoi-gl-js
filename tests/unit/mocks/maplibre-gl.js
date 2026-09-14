@@ -259,6 +259,9 @@ export function getRTLTextPluginStatus() {
 export function prewarm() {}
 export function clearPrewarmedResources() {}
 export function setWorkerUrl() {}
+export function getWorkerUrl() {
+  return ''
+}
 export function getVersion() {
   return '6.6.0'
 }
