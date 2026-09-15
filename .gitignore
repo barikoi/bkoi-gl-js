@@ -6,4 +6,5 @@ dist/
 coverage/
 test-results/
 .DS_Store
-CLAUDE.mdtests/e2e/app/readme-examples.js
+CLAUDE.md
+tests/e2e/app/readme-examples.js
