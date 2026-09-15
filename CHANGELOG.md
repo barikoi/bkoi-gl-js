@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [4.0.0] - Unreleased
+
+### Added
+
+- Self-contained worker bundled into the library — no extra maplibre worker
+  hosting or bundler configuration needed
+  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+  - New `bkoi-gl/worker` export for strict-CSP environments that require the
+    worker as a separate file
+- Playwright end-to-end suite verifying the **built package** (dist/), not sources
+  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+  - Map init/style, controls, drawing, markers/popups, and UMD script-tag usage
+  - Every fenced README example now runs automatically against the built
+    artifact — a documented example that stops working fails CI
+- Six-framework compatibility matrix (React, Vue, Nuxt, Angular, Svelte,
+  SvelteKit) with per-app install/build/render verification
+  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+- Package-manager resolution and pack smoke tests (npm, pnpm, yarn, bun) —
+  installs the packed tarball, verifies the exports map, `./style.css` and
+  `./worker` subpaths, and CJS `require()` support
+  by [@shafibr21](https://github.com/amishafi)
+- Feature matrix in README mapping every documented feature to its automated
+  verification
+  by [@shafibr21](https://github.com/amishafi)
+
+### Changed
+
+- **Upgraded the underlying engine to MapLibre GL JS v6** (bundled — no action
+  needed for most consumers)
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`60df220`](https://github.com/barikoi/bkoi-gl-js/commit/60df220)
+  - Check event-payload fields your code relies on against the v6 event
+    contracts when upgrading
+- Replaced the Jest test suite with Vitest (unit + real-browser projects) with
+  **100% statement/branch/function/line coverage enforced**
+  by [@nurmdrafi](https://github.com/nurmdrafi) in [`e0ef8ca`](https://github.com/barikoi/bkoi-gl-js/commit/e0ef8ca)
+- Resolved all `npm audit` vulnerabilities (was 13, now 0) and removed unused
+  dependencies
+  by [@shafibr21](https://github.com/amishafi)
+
+### Breaking Changes
+
+- Requires MapLibre GL JS v6-era browsers (see the
+  [MapLibre v6 release notes](https://github.com/maplibre/maplibre-gl-js/releases))
+- Consumers who host or intercept the maplibre worker themselves must switch
+  to the bundled worker or the `bkoi-gl/worker` export
+
+---
+
 ## [3.3.0] - February 18, 2026
 
 ### Added

@@ -28,6 +28,8 @@ const eslintconfig = [
       'tests/framework/**/*.tgz',
       // Generated 490KB worker bundle (see scripts/build-worker.mjs)
       'src/worker-bundle.generated.ts',
+      // Generated README-example manifest (see scripts/extract-readme-examples.mjs)
+      'tests/e2e/app/readme-examples.js',
       '**/*.generated.ts',
       '**/*.config.js',
       '**/*.config.cjs',
