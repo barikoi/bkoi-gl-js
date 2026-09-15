@@ -141,6 +141,10 @@ export const CASES = {
           const targets = {
             'bkoi-gl': () => Promise.resolve(lib),
             'bkoi-gl/style.css': () => import('bkoi-gl/style.css'),
+            // Worker entry registers itself only inside a WorkerGlobalScope
+            // (instanceof gate), so importing it on the main thread is a
+            // side-effect-free load check.
+            'bkoi-gl/worker': () => import('bkoi-gl/worker'),
           }
           for (const line of ex.code.split('\n')) {
             const spec = line.match(/from '([^']+)'/)?.[1] || line.match(/import '([^']+)'/)?.[1]
@@ -167,10 +171,10 @@ export const CASES = {
             div.style.cssText =
               'position:absolute;left:0;top:0;width:320px;height:240px;visibility:hidden'
             document.body.appendChild(div)
-            code = code.replace(/container:\s*'map'/, `container: '${div.id}'`)
+            code = code.replace(/container:\s*(['"])map\1/, `container: '${div.id}'`)
           }
           if (
-            code.includes("getElementById('toggle-btn')") &&
+            /getElementById\((['"])toggle-btn\1\)/.test(code) &&
             !document.getElementById('toggle-btn')
           ) {
             const btn = document.createElement('button')

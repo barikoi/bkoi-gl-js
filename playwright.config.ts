@@ -17,7 +17,10 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npx vite tests/e2e/app --port 5176 --strictPort',
+    // Regenerate the README manifest first: `playwright test` invoked directly
+    // (not via `npm run e2e`) must never serve a stale or missing manifest.
+    command:
+      'node scripts/extract-readme-examples.mjs && npx vite tests/e2e/app --port 5176 --strictPort',
     url: 'http://localhost:5176',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

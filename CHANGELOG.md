@@ -1,4 +1,4 @@
-# Changelog
+,# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -10,24 +10,24 @@ All notable changes to this project will be documented in this file.
 
 - Self-contained worker bundled into the library — no extra maplibre worker
   hosting or bundler configuration needed
-  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+  by [@amishafi](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
   - New `bkoi-gl/worker` export for strict-CSP environments that require the
     worker as a separate file
 - Playwright end-to-end suite verifying the **built package** (dist/), not sources
-  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+  by [@amishafi](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
   - Map init/style, controls, drawing, markers/popups, and UMD script-tag usage
   - Every fenced README example now runs automatically against the built
     artifact — a documented example that stops working fails CI
 - Six-framework compatibility matrix (React, Vue, Nuxt, Angular, Svelte,
   SvelteKit) with per-app install/build/render verification
-  by [@shafibr21](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+  by [@amishafi](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
 - Package-manager resolution and pack smoke tests (npm, pnpm, yarn, bun) —
   installs the packed tarball, verifies the exports map, `./style.css` and
   `./worker` subpaths, and CJS `require()` support
-  by [@shafibr21](https://github.com/amishafi)
+  by [@amishafi](https://github.com/amishafi)
 - Feature matrix in README mapping every documented feature to its automated
   verification
-  by [@shafibr21](https://github.com/amishafi)
+  by [@amishafi](https://github.com/amishafi)
 
 ### Changed
 
@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file.
   by [@nurmdrafi](https://github.com/nurmdrafi) in [`e0ef8ca`](https://github.com/barikoi/bkoi-gl-js/commit/e0ef8ca)
 - Resolved all `npm audit` vulnerabilities (was 13, now 0) and removed unused
   dependencies
-  by [@shafibr21](https://github.com/amishafi)
+  by [@amishafi](https://github.com/amishafi)
 
 ### Breaking Changes
 

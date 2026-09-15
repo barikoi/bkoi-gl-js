@@ -1,6 +1,6 @@
 {
     "name": "bkoi-gl",
-    "version": "3.3.0",
+    "version": "4.0.0",
     "description": "A WebGL interactive maps library to use Barikoi maps and API",
     "type": "module",
     "main": "./dist/index.cjs",
@@ -65,13 +65,13 @@
         "test:watch": "vitest --watch",
         "test:unit": "vitest run --project unit",
         "test:browser": "vitest run --project browser",
-        "e2e": "npm run build && node scripts/extract-readme-examples.mjs && playwright test",
+        "e2e": "npm run build && playwright test",
         "e2e:serve": "vite tests/e2e/app --port 5176 --strictPort",
         "test:framework": "node tests/framework/run.mjs",
         "test:resolution": "node scripts/test-resolution.mjs",
         "test:pack": "node scripts/test-pack.mjs",
         "playwright:install": "playwright install chromium",
-        "prepublishOnly": "npm run typecheck && npm run lint && vitest run && npm run build"
+        "prepublishOnly": "npm run typecheck && npm run lint && vitest run && npm run test:pack"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [
@@ -84,6 +84,7 @@
         "maplibre-gl-draw": "1.6.9"
     },
     "devDependencies": {
+        "@arethetypeswrong/cli": "0.18.5",
         "@commitlint/cli": "19.4.1",
         "@commitlint/config-conventional": "19.4.1",
         "@eslint/eslintrc": "3.3.3",
@@ -112,6 +113,7 @@
         "lint-staged": "16.2.7",
         "playwright": "1.63.0",
         "prettier": "3.8.1",
+        "publint": "0.3.24",
         "rollup": "4.63.3",
         "rollup-plugin-clear": "2.0.7",
         "rollup-plugin-copy": "3.5.0",
