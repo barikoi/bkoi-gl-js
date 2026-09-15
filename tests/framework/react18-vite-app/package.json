@@ -1,5 +1,5 @@
 {
-  "name": "fw-react19-vite",
+  "name": "fw-react18-vite",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,9 +9,8 @@
   },
   "dependencies": {
     "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz",
-    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.2.0",

@@ -1,5 +1,5 @@
 {
-  "name": "fw-nuxt3",
+  "name": "fw-nuxt4",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,9 +8,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "bkoi-gl": "file:../bkoi-gl-3.3.0.tgz"
+    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz"
   },
   "devDependencies": {
-    "nuxt": "^3.21.11"
+    "nuxt": "^4.0.0"
   }
 }

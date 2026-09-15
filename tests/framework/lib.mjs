@@ -56,7 +56,11 @@ export function ensureTarball() {
   return tarball
 }
 
-/** Normalize stale ABSOLUTE file: refs to the tarball (folder moves break them). */
+/** Normalize stale/foreign tarball refs to the canonical relative spec.
+ * PMs rewrite package.json with their own spec form on every add (absolute
+ * paths, registry specs); bun then sees two specs for one package and fails
+ * with DependencyLoop. Canonicalize every bkoi-gl spec that isn't exactly
+ * `file:../<current tarball>`. */
 export function fixTarballDep(cwd, tarballName) {
   const pkgPath = path.join(cwd, 'package.json')
   if (!fs.existsSync(pkgPath)) return
@@ -66,12 +70,7 @@ export function fixTarballDep(cwd, tarballName) {
     const deps = pkg[section]
     if (!deps) continue
     for (const [name, spec] of Object.entries(deps)) {
-      if (
-        name === 'bkoi-gl' &&
-        typeof spec === 'string' &&
-        spec.startsWith('file:') &&
-        !spec.endsWith(tarballName)
-      ) {
+      if (name === 'bkoi-gl' && typeof spec === 'string' && spec !== `file:../${tarballName}`) {
         deps[name] = `file:../${tarballName}`
         changed = true
       }
@@ -93,11 +92,18 @@ export function installPm(cwd, pm) {
   if (pm === 'pnpm') {
     const ws = path.join(cwd, 'pnpm-workspace.yaml')
     const major = Number(execSync('pnpm --version', { encoding: 'utf8' }).split('.')[0])
+    // pnpm >=11 defaults to a minimum-release-age supply-chain policy that
+    // rejects freshly published transitive deps (maplibre-gl majors land here
+    // within days of release) and any file: tarball (no publish time). Blanket
+    // exclude for the bundled engine + fresh resolution each run keep cells
+    // deterministic; the policy targets registry supply-chain risk, not local
+    // framework-compat sandboxes.
     const body =
       major >= 11
-        ? 'allowBuilds:\n  esbuild: true\n  core-js: true\n  core-js-pure: true\n'
+        ? 'allowBuilds:\n  esbuild: true\n  core-js: true\n  core-js-pure: true\nminimumReleaseAgeExclude:\n  - maplibre-gl\n'
         : 'onlyBuiltDependencies:\n  - esbuild\n  - core-js\n  - core-js-pure\n'
     fs.writeFileSync(ws, body)
+    fs.rmSync(path.join(cwd, 'pnpm-lock.yaml'), { force: true })
   }
   const base = {
     npm: 'npm install --no-audit --no-fund',
@@ -113,7 +119,9 @@ export function installTarball(cwd, tarball, pm) {
     npm: `npm install --no-audit --no-fund "${tarball}"`,
     pnpm: `pnpm add "${tarball}"`,
     yarn: `yarn add "file:${tarball}"`,
-    bun: `bun add "${tarball}"`,
+    // Relative spec matching package.json exactly — an absolute path plus the
+    // file:../ spec makes bun resolve the same tarball twice (DependencyLoop).
+    bun: `bun add "file:../${path.basename(tarball)}"`,
   }[pm]
   try {
     sh(cmd, cwd)
@@ -168,12 +176,36 @@ export async function waitUp(url, timeoutMs = 45_000) {
  * build-time env, so the runner generates src/env.generated.ts via `prepare`.
  */
 export const APPS = {
-  'react-vite': {
-    dir: 'react-vite-app',
+  'react18-vite': {
+    dir: 'react18-vite-app',
+    label: 'React 18 + Vite 7',
+    envPrefix: 'VITE_',
+    buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
+    serve: { type: 'static', dir: 'dist' },
+  },
+  'react19-vite': {
+    dir: 'react19-vite-app',
     label: 'React 19 + Vite 7',
     envPrefix: 'VITE_',
     buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
     serve: { type: 'static', dir: 'dist' },
+  },
+  next15: {
+    dir: 'next15-app',
+    label: 'Next.js 15 (App Router, webpack)',
+    envPrefix: 'NEXT_PUBLIC_',
+    buildCells: [{ name: 'next build', cmd: 'npx next build' }],
+    serve: { type: 'next' },
+  },
+  next16: {
+    dir: 'next16-app',
+    label: 'Next.js 16 (App Router)',
+    envPrefix: 'NEXT_PUBLIC_',
+    buildCells: [
+      { name: 'next build (turbopack default)', cmd: 'npx next build' },
+      { name: 'next build --webpack', cmd: 'npx next build --webpack' },
+    ],
+    serve: { type: 'next' },
   },
   'vue-vite': {
     dir: 'vue-vite-app',
@@ -182,16 +214,37 @@ export const APPS = {
     buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
     serve: { type: 'static', dir: 'dist' },
   },
-  'svelte-vite': {
-    dir: 'svelte-vite-app',
+  'svelte4-vite': {
+    dir: 'svelte4-vite-app',
+    label: 'Svelte 4 + Vite 5',
+    envPrefix: 'VITE_',
+    buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
+    serve: { type: 'static', dir: 'dist' },
+  },
+  'svelte5-vite': {
+    dir: 'svelte5-vite-app',
     label: 'Svelte 5 + Vite 7',
     envPrefix: 'VITE_',
     buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
     serve: { type: 'static', dir: 'dist' },
   },
-  nuxt: {
-    dir: 'nuxt-app',
-    label: 'Nuxt 3 (SPA build)',
+  cra5: {
+    dir: 'cra5-app',
+    label: 'CRA 5 / react-scripts 5 (webpack 5)',
+    envPrefix: 'REACT_APP_',
+    buildCells: [{ name: 'react-scripts build', cmd: 'npx react-scripts build' }],
+    serve: { type: 'static', dir: 'build' },
+  },
+  nuxt3: {
+    dir: 'nuxt3-app',
+    label: 'Nuxt 3.21 (SPA build)',
+    envPrefix: 'NUXT_PUBLIC_',
+    buildCells: [{ name: 'nuxi generate', cmd: 'npx nuxi generate' }],
+    serve: { type: 'static', dir: '.output/public' },
+  },
+  nuxt4: {
+    dir: 'nuxt4-app',
+    label: 'Nuxt 4 (SPA build)',
     envPrefix: 'NUXT_PUBLIC_',
     buildCells: [{ name: 'nuxi generate', cmd: 'npx nuxi generate' }],
     serve: { type: 'static', dir: '.output/public' },
@@ -203,13 +256,24 @@ export const APPS = {
     buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
     serve: { type: 'static', dir: 'build' },
   },
-  angular: {
-    dir: 'angular-app',
-    label: 'Angular 21 (application builder)',
+  angular20: {
+    dir: 'angular20-app',
+    label: 'Angular 20 (application builder)',
     buildCells: [{ name: 'ng build', cmd: 'npx ng build' }],
-    serve: { type: 'static', dir: 'dist/angular-app/browser' },
+    serve: { type: 'static', dir: 'dist/angular20-app/browser' },
     // Angular has no build-time env prefix: generate the key module the app
     // imports (same idea as Angular's environments file, runner-owned).
+    prepare: (cwd, apiKey) =>
+      fs.writeFileSync(
+        path.join(cwd, 'src/env.generated.ts'),
+        `export const BARIKOI_API_KEY = ${JSON.stringify(apiKey)}\n`
+      ),
+  },
+  angular21: {
+    dir: 'angular21-app',
+    label: 'Angular 21 (application builder)',
+    buildCells: [{ name: 'ng build', cmd: 'npx ng build' }],
+    serve: { type: 'static', dir: 'dist/angular21-app/browser' },
     prepare: (cwd, apiKey) =>
       fs.writeFileSync(
         path.join(cwd, 'src/env.generated.ts'),
@@ -262,6 +326,34 @@ export function serveStatic(root, port) {
 export async function serveApp(app) {
   const port = 6180
   await killPortUsers(port)
+  // Next.js: `next build` output is a node-server build — serve it with
+  // `next start` (detached, killed by process group on stop).
+  if (app.serve.type === 'next') {
+    const cwd = path.join(here, app.dir)
+    const bin = path.join(cwd, 'node_modules', '.bin', 'next')
+    const child = spawn(bin, ['start', '-p', String(port)], {
+      cwd,
+      stdio: 'ignore',
+      detached: true,
+    })
+    const url = `http://localhost:${port}/`
+    if (!(await waitUp(url))) throw new Error('next server did not start')
+    return {
+      url,
+      stop: async () => {
+        try {
+          process.kill(-child.pid, 'SIGTERM')
+        } catch {
+          child.kill('SIGTERM')
+        }
+        await new Promise(r => {
+          child.on('exit', r)
+          setTimeout(r, 3000)
+        })
+        await killPortUsers(port)
+      },
+    }
+  }
   const server = await serveStatic(path.join(here, app.dir, app.serve.dir), port)
   return {
     url: `http://localhost:${port}/`,

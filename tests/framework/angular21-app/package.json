@@ -1,5 +1,5 @@
 {
-  "name": "angular-app",
+  "name": "angular21-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -17,7 +17,7 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
-    "bkoi-gl": "file:../bkoi-gl-3.3.0.tgz",
+    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

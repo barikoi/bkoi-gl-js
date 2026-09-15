@@ -6,12 +6,13 @@ method, never `npm link`) and verified headlessly for basic map rendering.
 
 | App | Bundler | What is validated |
 |---|---|---|
-| `react-vite-app` | React 19 + Vite 7 | zero-config worker, ESM bundle |
+| `react18-vite-app` | React 18 + Vite 7 | zero-config worker, ESM bundle |
+| `react19-vite-app` | React 19 + Vite 7 | same |
 | `vue-vite-app` | Vue 3 + Vite 7 | same |
-| `svelte-vite-app` | Svelte 5 + Vite 7 | same |
+| `svelte5-vite-app` | Svelte 5 + Vite 7 | same |
 | `nuxt-app` | Nuxt 3 (`nuxi generate`, SPA) | same, static output |
 | `sveltekit-app` | SvelteKit 2 + `adapter-static` | same, prerendered SPA shell |
-| `angular-app` | Angular 21 (application builder / esbuild) | same, no bundler-emitted worker asset |
+| `angular21-app` | Angular 21 (application builder / esbuild) | same, no bundler-emitted worker asset |
 
 Node 25 notes: Nuxt 4 and Angular 22 exclude odd Node majors (`^22 || ^24 || >=26`),
 so this matrix pins **Nuxt 3.21** and **Angular 21** (both accept `>=24`).

@@ -3,6 +3,7 @@ examples/**/node_modules/
 *.tgz
 .env
 dist/
+.next/
 coverage/
 test-results/
 .DS_Store

@@ -11,7 +11,13 @@ build/
 .svelte-kit/
 .nuxt/
 .angular/
+.next/
 package-lock.json
+bun.lock
+pnpm-lock.yaml
+pnpm-workspace.yaml
+yarn.lock
 
 # Angular has no build-time env: the runner generates this key module.
-angular-app/src/env.generated.ts
+angular20-app/src/env.generated.ts
+angular21-app/src/env.generated.ts
