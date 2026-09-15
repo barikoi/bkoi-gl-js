@@ -3,6 +3,7 @@
  * Pack smoke test — proves the BUILT artifact (not src/) installs and loads.
  *
  * 1. build + `npm pack` the tarball
+ * 1b. static gates: publint --strict + arethetypeswrong --pack on the tarball
  * 2. extract it into a temp sandbox
  * 3. symlink `bkoi-gl` -> extracted package (offline; maplibre-gl is fully
  *    bundled, so there are no runtime deps to link)
@@ -36,6 +37,22 @@ try {
   const tarballName = JSON.parse(run('npm', ['pack', '--json']))[0].filename
   tarballPath = path.join(repoRoot, tarballName)
   console.log(`[test:pack] tarball: ${tarballName}`)
+
+  // Static gates on the packed artifact (pre-publish standard tools):
+  // - publint: package.json/exports/files correctness of this repo's manifest
+  // - attw --pack: TypeScript type resolution of the TARBALL across module
+  //   modes (node10/node16/bundler) — catches dual CJS/ESM type problems the
+  //   runtime smoke below cannot see. Entrypoint "." only: ./style.css and
+  //   ./worker carry no types and node10 can't read `exports` subpaths —
+  //   not type contracts. The dual CJS/ESM typing of the main entry IS the
+  //   contract attw checks here. (Package is @arethetypeswrong/cli — the
+  //   bare `attw` npm name is a dependency-confusion placeholder.)
+  console.log('[test:pack] publint...')
+  run('npx', ['publint', '--strict'], { stdio: 'inherit' })
+  console.log('[test:pack] arethetypeswrong --pack...')
+  run('npx', ['@arethetypeswrong/cli', '--pack', tarballName, '--entrypoints', '.'], {
+    stdio: 'inherit',
+  })
 
   sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'bkoi-pack-'))
   run('tar', ['-xzf', tarballPath, '-C', sandbox])
