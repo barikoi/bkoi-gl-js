@@ -6,6 +6,24 @@ import copy from "rollup-plugin-copy";
 import terser from "@rollup/plugin-terser";
 import dts from "rollup-plugin-dts";
 
+// Turbopack (Next 16) statically analyzes `new URL(<dynamic>, import.meta.url)`
+// as an asset import and hard-fails the build ("Can't resolve ('' | <dynamic>)")
+// on maplibre v6's cross-origin worker blob-wrapper. The base argument there
+// is dead code: that path only receives absolute URLs (relative ones resolve
+// same-origin and take the direct-construction branch), so `new URL(x)` is
+// semantically identical. Strip the base on maplibre modules only.
+const stripDynamicImportMetaUrlBase = () => ({
+  name: "strip-dynamic-import-meta-url-base",
+  transform(code, id) {
+    if (!/maplibre-gl/.test(id) || !code.includes("import.meta.url")) return null;
+    const patched = code.replace(
+      /new URL\(([$\w]+)\s*,\s*import\.meta\.url\)/g,
+      "new URL($1)"
+    );
+    return patched === code ? null : { code: patched, map: null };
+  },
+});
+
 // Shared configurations
 const commonOutput = {
   exports: "named",
@@ -91,6 +109,7 @@ export default [
     external: [],
     plugins: [
       nodeResolveNode,
+      stripDynamicImportMetaUrlBase(),
       commonjs(),
       typescript(typescriptConfig),
       terser(terserConfig),

@@ -103,6 +103,16 @@ for (const sub of ['bkoi-gl/style.css', 'bkoi-gl/worker']) {
   console.log(sub, '->', file)
 }
 
+// Turbopack guard: a dynamic `new URL(x, import.meta.url)` (maplibre's
+// cross-origin worker wrapper) hard-fails Next 16 Turbopack builds when
+// inlined into this package's dist. The build strips it (see rollup.config.js
+// stripDynamicImportMetaUrlBase); fail loudly if it ever returns.
+const esm = fs.readFileSync(new URL('package/dist/index.js', import.meta.url), 'utf8')
+if (/new URL\([$\w]+\s*,\s*import\.meta\.url\)/.test(esm)) {
+  console.error('dist/index.js contains dynamic new URL(x, import.meta.url) — breaks Next 16 Turbopack')
+  process.exit(1)
+}
+
 // Shipped artifacts: 4 dist formats + css + worker + docs, version parity
 for (const file of [
   'package/dist/index.js',
