@@ -80,7 +80,7 @@
         ]
     },
     "dependencies": {
-        "maplibre-gl": "6.6.0",
+        "maplibre-gl": "6.9.1",
         "maplibre-gl-draw": "1.6.9"
     },
     "devDependencies": {
