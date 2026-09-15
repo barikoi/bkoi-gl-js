@@ -9,3 +9,4 @@ tsconfig.json
 .eslintrc.json
 index.d.ts
 CHANGELOG.md
+src/worker-bundle.generated.ts
