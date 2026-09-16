@@ -24,7 +24,6 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 ## Table of Contents
 
 - [Features](#features)
-  - [Feature Verification Matrix](#feature-verification-matrix)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
@@ -81,25 +80,6 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - **Multiple Build Formats** - ESM, CJS, IIFE, and UMD
 - **TypeScript Support** - Full TypeScript definitions included
 - **Self-Contained Worker** - Bundled worker, no extra hosting needed (`bkoi-gl/worker` export for strict-CSP environments)
-
-### Feature Verification Matrix
-
-Every documented feature is verified automatically — against the built package, not sources. A feature that stops working fails CI.
-
-| Feature | Status | Verified by |
-| --- | --- | --- |
-| Map init, Barikoi style load, branded attribution | ✅ | e2e `map/basic` |
-| Map events (lifecycle, camera, pointer, data) with payload fields | ✅ | e2e `map/basic`, `controls/*` |
-| Navigation / Scale / Fullscreen / Geolocate controls | ✅ | e2e `controls/navigation` |
-| Minimap control (toggle, responsive, parent rect) | ✅ | e2e `controls/minimap` |
-| Drawing tools (polygon, line, point) + draw events | ✅ | e2e `draw/*` |
-| Markers & popups | ✅ | e2e `marker-popup` |
-| Camera methods (flyTo, easeTo, jumpTo, fitBounds, …) | ✅ | e2e `readme/examples` |
-| Custom GeoJSON sources & layers | ✅ | e2e `readme/examples` |
-| Every fenced README example executes | ✅ | e2e `readme/examples` |
-| Build formats: ESM, CJS, IIFE, UMD | ✅ | e2e `formats`, `test:pack` |
-| Install/resolution: npm, pnpm, yarn, bun | ✅ | `test:resolution` |
-| Framework apps: React, Vue, Nuxt, Angular, Svelte, SvelteKit | ✅ | `test:framework` |
 
 ---
 

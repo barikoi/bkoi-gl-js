@@ -94,20 +94,29 @@ export class BkoiGlMap extends Map {
         : mapOptions.style
       : `${bkoiConfig.DEFAULT_STYLE}?key=${mapOptions.accessToken || bkoiConfig.ACCESS_TOKEN}`
 
-    // Initialize parent Map class
+    // Initialize parent Map class. maplibreLogo is forced off — the Barikoi
+    // logo is the only watermark (added below, bottom-left, always on).
+    // attributionControl is replaced by our own (toggleable via
+    // showAttribution, default true).
     super({
       ...mapOptions,
       attributionControl: false,
+      maplibreLogo: false,
       style: styleUrl,
     } as MapOptions)
 
-    // Setup attribution control
-    this.setupAttributionControl()
+    // Setup attribution control (hide/show is the ONLY branding toggle)
+    if (mapOptions.showAttribution !== false) {
+      this.setupAttributionControl()
+    }
+
+    // Barikoi logo — added in the constructor (NOT on load): maplibre inserts
+    // bottom-corner controls above existing ones, so the logo added first
+    // stays anchored at the very bottom-left and user controls stack above it.
+    this.addBarikoiAttribution()
 
     // Initialize features on map load
     this.once('load', () => {
-      this.addBarikoiAttribution()
-
       if (mapOptions.polygon) {
         this.initializeDraw(mapOptions.drawOptions || {})
       }
@@ -125,58 +134,113 @@ export class BkoiGlMap extends Map {
   /**
    * @private
    * @method setupAttributionControl
-   * @description Initializes the attribution control with custom Barikoi attribution.
-   *
-   * Sets up a MapLibre GL attribution control with compact styling and prepares
-   * it for custom Barikoi attribution content that gets injected after map load.
+   * @description Initializes the always-expanded attribution control and keeps
+   * exactly one Barikoi copyright rendered across maplibre's styledata-driven
+   * content rebuilds (MutationObserver re-apply, ported from react-bkoi-gl).
    * The attribution control is positioned at bottom-right.
    *
    * @returns {void}
    */
   private setupAttributionControl(): void {
-    const attributionControl = new AttributionControl({
-      compact: true,
-      customAttribution: '',
-    })
+    // Always-expanded: the Barikoi copyright must stay visible — compact mode
+    // hides it behind the ⓘ toggle. Pattern ported from react-bkoi-gl's
+    // attribution-control.ts: maplibre rebuilds the inner container's content
+    // on every styledata/sourcedata/terrain event (tile loads land seconds
+    // after load; setStyle rebuilds too), so a one-shot rewrite gets wiped.
+    // A MutationObserver re-applies OUR exact markup after every rebuild —
+    // replacing the content (not appending) keeps exactly one Barikoi
+    // copyright even when the style carries its own source attributions.
+    const attributionControl = new AttributionControl({ compact: false })
     this.addControl(attributionControl, 'bottom-right')
 
-    // Make attribution links clickable after control is added
-    this.once('load', () => {
-      setTimeout(() => {
-        const container = this.getContainer()
-        const attributionContainer = container.querySelector('.maplibregl-ctrl-attrib')
+    const container = (attributionControl as unknown as { _container?: HTMLElement })._container
+    if (!container) return
 
-        if (attributionContainer) {
-          const inner = attributionContainer.querySelector('.maplibregl-ctrl-attrib-inner')
+    const applyAttribution = () => {
+      const inner = container.querySelector('.maplibregl-ctrl-attrib-inner')
+      if (!(inner instanceof HTMLElement)) return
 
-          if (inner) {
-            inner.innerHTML =
-              '© <a href="https://www.barikoi.com" target="_blank">Barikoi</a> © <a href="https://openmaptiles.org" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
-          }
+      // Already applied (ours)? Detected by the Barikoi link — a data-marker
+      // on the element itself would survive maplibre's innerHTML wipes and
+      // wrongly block the re-apply. Still clear the hiding class: maplibre
+      // re-adds `maplibregl-attrib-empty` during style swaps without touching
+      // the inner content (attribution list momentarily empty).
+      if (inner.querySelector('a[href="https://barikoi.com"]')) {
+        if (container.classList.contains('maplibregl-attrib-empty')) {
+          container.classList.remove('maplibregl-attrib-empty')
         }
-      }, 0)
+        return
+      }
+
+      inner.textContent = ''
+
+      const createLink = (text: string, href: string) => {
+        const a = document.createElement('a')
+        a.href = href
+        a.target = '_blank'
+        a.rel = 'noopener noreferrer'
+        a.textContent = text
+        return a
+      }
+
+      inner.appendChild(document.createTextNode('© '))
+      inner.appendChild(createLink('Barikoi', 'https://barikoi.com'))
+      inner.appendChild(document.createTextNode(' © '))
+      inner.appendChild(createLink('OpenMapTiles', 'https://openmaptiles.org'))
+      inner.appendChild(document.createTextNode(' © '))
+      inner.appendChild(
+        createLink('OpenStreetMap contributors', 'https://www.openstreetmap.org/copyright')
+      )
+
+      // maplibre adds `maplibregl-attrib-empty` (CSS: display:none) when the
+      // style carries no attribution — clear it, we just filled the control.
+      // Guarded: classList.remove on a class that is already absent can emit
+      // an (attribute) mutation record in jsdom, re-triggering the observer.
+      if (container.classList.contains('maplibregl-attrib-empty')) {
+        container.classList.remove('maplibregl-attrib-empty')
+      }
+    }
+
+    const observer = new MutationObserver(applyAttribution)
+    // `attributes` matters: the empty-hiding class is toggled without any
+    // child mutation during style swaps — childList-only observation misses it.
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
     })
+
+    applyAttribution()
+    this.once('load', applyAttribution)
+    this.once('remove', () => observer.disconnect())
   }
 
   /**
    * @private
    * @method addBarikoiAttribution
-   * @description Adds the Barikoi logo control to the map.
-   *
-   * Creates and adds a custom control displaying the Barikoi logo that links
-   * to the Barikoi website. The logo is positioned at bottom-left and uses
-   * CSS styling defined in index.css.
+   * @description Adds the Barikoi logo control to the map (bottom-left anchor).
+   * Added at construction time so user-added bottom-left controls stack above
+   * it (maplibre inserts bottom-corner controls above existing ones).
    *
    * @returns {void}
    */
   private addBarikoiAttribution(): void {
     const logoControl: IControl = {
       onAdd: (): HTMLElement => {
+        // Single instance even if the control is re-added.
+        const mapContainer = this.getContainer()
+        mapContainer
+          ?.querySelector('a.maplibregl-ctrl-logo[href="https://www.barikoi.com"]')
+          ?.remove()
+
         const container = document.createElement('a')
         container.className = 'maplibregl-ctrl-logo'
         container.setAttribute('href', 'https://www.barikoi.com')
         container.setAttribute('target', '_blank')
         container.setAttribute('alt', 'Barikoi')
+        container.setAttribute('aria-label', 'Barikoi logo')
+        container.setAttribute('rel', 'noopener nofollow')
         return container
       },
       onRemove: (): void => {

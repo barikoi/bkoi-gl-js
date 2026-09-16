@@ -159,7 +159,7 @@ const eslintconfig = [
 
   // Harness scripts print progress to stdout by design.
   {
-    files: ['tests/framework/**/*.{js,mjs,ts}', 'scripts/**/*.mjs'],
+    files: ['tests/framework/**/*.{js,mjs,ts}', 'scripts/**/*.mjs', 'tests/e2e/**/*.mjs'],
     rules: {
       'no-console': 'off',
     },

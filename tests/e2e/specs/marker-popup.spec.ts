@@ -1,6 +1,5 @@
 // Markers & Popups — README "Markers & Popups" section.
-import { test, expect } from 'playwright/test'
-import { gotoCase } from './helpers.js'
+import { test, expect, gotoCase } from '../fixtures/map.js'
 
 test('marker-popup: marker renders and popup opens', async ({ page }) => {
   await gotoCase(page, 'marker-popup')

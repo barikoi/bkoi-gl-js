@@ -65,13 +65,21 @@ class Control {
   onRemove() {}
 }
 export class AttributionControl extends Control {
+  constructor(options = {}) {
+    super()
+    this.options = options
+  }
+
   onAdd() {
-    this._el = document.createElement('div')
-    this._el.className = 'maplibregl-ctrl maplibregl-ctrl-attrib'
+    this._container = document.createElement('div')
+    this._container.className = 'maplibregl-ctrl maplibregl-ctrl-attrib'
     const inner = document.createElement('div')
     inner.className = 'maplibregl-ctrl-attrib-inner'
-    this._el.appendChild(inner)
-    return this._el
+    // Mirrors maplibre: rebuilds replace the inner content (styledata/
+    // sourcedata events, setStyle); consumers re-apply theirs via observer.
+    inner.innerHTML = this.options?.customAttribution || ''
+    this._container.appendChild(inner)
+    return this._container
   }
 }
 
@@ -263,7 +271,7 @@ export function getWorkerUrl() {
   return ''
 }
 export function getVersion() {
-  return '6.6.0'
+  return '6.9.1'
 }
 
 export default {

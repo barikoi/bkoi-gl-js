@@ -6,6 +6,9 @@ dist/
 .next/
 coverage/
 test-results/
+tests/e2e/report/
+screenshots/
+tests/framework/review-report/
 .DS_Store
 CLAUDE.md
 tests/e2e/app/readme-examples.js

@@ -59,19 +59,23 @@
         "typecheck": "tsc --noEmit",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "lint:cache": "eslint . --cache",
-        "lint:fix:cache": "eslint . --fix --cache",
+        "coverage": "vitest run --coverage",
         "test": "vitest run --coverage",
         "test:watch": "vitest --watch",
         "test:unit": "vitest run --project unit",
         "test:browser": "vitest run --project browser",
-        "e2e": "npm run build && playwright test",
-        "e2e:serve": "vite tests/e2e/app --port 5176 --strictPort",
+        "e2e": "npm run build && node scripts/extract-readme-examples.mjs && playwright test",
+        "e2e:serve": "node scripts/extract-readme-examples.mjs && vite tests/e2e/app --port 5176 --strictPort",
+        "e2e:review": "node tests/e2e/review/run-review.mjs",
+        "e2e:coverage": "node tests/e2e/scripts/generate-coverage.mjs",
+        "check:readme": "node scripts/extract-readme-examples.mjs --check",
+        "screenshots": "node scripts/capture-screenshots.mjs",
         "test:framework": "node tests/framework/run.mjs",
+        "test:framework:review": "node tests/framework/review.mjs",
         "test:resolution": "node scripts/test-resolution.mjs",
         "test:pack": "node scripts/test-pack.mjs",
         "playwright:install": "playwright install chromium",
-        "prepublishOnly": "npm run typecheck && npm run lint && vitest run && npm run test:pack"
+        "prepublishOnly": "npm run typecheck && npm run lint && vitest run && npm run build && npm run test:pack"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [

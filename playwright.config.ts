@@ -10,6 +10,10 @@ export default defineConfig({
   workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list']],
+  // Timestamped per-run output dir: Playwright empties a static outputDir at
+  // every run start, wiping the artifacts a maintainer traces by hand
+  // (bkoi-gl-js postmortem 2026-09-16). Each run gets its own retained dir.
+  outputDir: `test-results/${new Date().toISOString().replace(/[:.]/g, '-')}`,
   use: {
     baseURL: 'http://localhost:5176',
     viewport: null,

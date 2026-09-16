@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz",
-    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

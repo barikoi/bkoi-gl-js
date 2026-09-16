@@ -55,6 +55,13 @@ export interface BkoiMapOptions extends Omit<MapOptions, 'style' | 'accessToken'
   polygon?: boolean
 
   /**
+   * Show the Barikoi attribution control (bottom-right). Default `true`.
+   * The Barikoi logo (bottom-left) is NOT toggleable — it always renders
+   * (same contract as react-bkoi-gl).
+   */
+  showAttribution?: boolean
+
+  /**
    * Configuration options for Mapbox GL Draw when polygon drawing is enabled.
    * Allows customization of drawing controls, modes, and behavior.
    *

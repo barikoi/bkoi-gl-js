@@ -8,9 +8,7 @@ export default defineConfig(({ mode }) => {
   const env = { ...process.env, ...loadEnv(mode, process.cwd(), '') }
   const apiKey = env.BARIKOI_API_KEY || env.BARIKOI_ACCESS_TOKEN || env.API_KEY
   if (!apiKey) {
-    throw new Error(
-      'Missing API key: set BARIKOI_API_KEY (or BARIKOI_ACCESS_TOKEN) in .env — see env.example'
-    )
+    throw new Error('Missing API key: set BARIKOI_API_KEY in .env — see .env.example')
   }
   return {
     // Serve dist/ at the site root so umd.html can script-tag /umd/bkoi-gl.js

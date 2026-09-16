@@ -1,4 +1,4 @@
-,# Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -21,6 +21,23 @@ All notable changes to this project will be documented in this file.
 - Six-framework compatibility matrix (React, Vue, Nuxt, Angular, Svelte,
   SvelteKit) with per-app install/build/render verification
   by [@amishafi](https://github.com/amishafi) in [`c485c4a`](https://github.com/barikoi/bkoi-gl-js/commit/c485c4a)
+- Headed review flow (`npm run e2e:review`) walking every e2e case in one
+  visible browser with a bottom-center HUD, per-case verdicts, retained
+  screenshots and a `review-<stamp>.json` report — a uniform (white) canvas is
+  reported as a failure, so style-loaded can never be mistaken for a rendered
+  map
+  by [@amishafi](https://github.com/amishafi)
+- e2e coverage report (`npm run e2e:coverage`) mapping README claims to cases
+  and covering specs
+  by [@amishafi](https://github.com/amishafi)
+- Showcase screenshot capture (`npm run screenshots`) from the e2e host app
+  by [@amishafi](https://github.com/amishafi)
+- Framework review walkthrough (`npm run test:framework:review`) — headed
+  human walk over the compatibility matrix
+  by [@amishafi](https://github.com/amishafi)
+- `CONTRIBUTING.md` — setup, architecture, testing workflow, pitfalls, commit
+  and release process
+  by [@amishafi](https://github.com/amishafi)
 - Package-manager resolution and pack smoke tests (npm, pnpm, yarn, bun) —
   installs the packed tarball, verifies the exports map, `./style.css` and
   `./worker` subpaths, and CJS `require()` support
@@ -41,6 +58,15 @@ All notable changes to this project will be documented in this file.
   by [@nurmdrafi](https://github.com/nurmdrafi) in [`e0ef8ca`](https://github.com/barikoi/bkoi-gl-js/commit/e0ef8ca)
 - Resolved all `npm audit` vulnerabilities (was 13, now 0) and removed unused
   dependencies
+  by [@amishafi](https://github.com/amishafi)
+- Barikoi attribution now renders exactly once and stays expanded, surviving
+  every style/source rebuild instead of duplicating copyright text
+  by [@amishafi](https://github.com/amishafi)
+- Barikoi logo matches the sibling `react-bkoi-gl` styling (88×23, bottom-left,
+  other bottom-left controls stack above it)
+  by [@amishafi](https://github.com/amishafi)
+- Replaced the stale `DEVELOPER_GUIDE.md` (and the duplicate `env.example`)
+  with `CONTRIBUTING.md`
   by [@amishafi](https://github.com/amishafi)
 
 ### Breaking Changes

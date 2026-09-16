@@ -1,7 +1,7 @@
 # bkoi-gl 4.0.x — test expansion, CHANGELOG rewrite, public badges + CI
 
 Date: 2026-09-15
-Status: Approved design — **A1 done (11/11 ✅, gates green 2026-09-16)**; §C revision pending (no GitHub secrets)
+Status: Approved design — **A1 + A2 done (e2e 19/19 ×2, 2026-09-16)**; §C revision pending (no GitHub secrets)
 Sequencing: A (tests) → B (changelog) → C (CI/badges). C consumes A's suites.
 Live tracking: `docs/superpowers/plans/2026-09-15-test-expansion-changelog-ci-badges-implementation.md`
 (includes the actual-approach ledger of deviations found during A1).
@@ -82,7 +82,23 @@ Rules:
 
 - New cases registered in `tests/e2e/app/cases.js` (`events/contract`,
   `styles/setstyle`, `errors/*`); existing cases extended in place.
-- README **Feature Verification Matrix** gains one row per new spec.
+- **Matrix relocation (maintainer amendment 2026-09-16):** the Feature
+  Verification Matrix is internal developer documentation — README.md is
+  consumer-only. The section was removed from README and lives in
+  `tests/e2e/README.md` (beside the case registry); new specs add rows there.
+- **Spec-side fixtures + review flow (amendment 2026-09-16):** specs import
+  `test`/`expect`/helpers from `tests/e2e/fixtures/map.ts` (ported from
+  react-bkoi-gl) rather than `playwright/test` directly. The fixture owns the
+  branding contract, the wait helpers, and the headed HUD (bottom-center pill +
+  draining hold bar), so `npx playwright test --headed` and
+  `npm run e2e:review` (headed by default) both show identical review chrome.
+  `tests/e2e/specs/helpers.ts` was folded into it.
+
+### A2 verification additions
+
+| Spec | Type | Asserts |
+|---|---|---|
+| `readme-examples.spec.ts` | new | Every fenced README block executes against the built `dist/` (generated from `scripts/extract-readme-examples.mjs`) |
 
 ## B. CHANGELOG.md — full rewrite (react-bkoi-gl pattern)
 
@@ -155,6 +171,12 @@ Consequence (final composition pending user choice):
 - A1: each new app verified locally via `node tests/framework/run.mjs
   --only=<app>` as it lands; full 15-app + PM-subset run before finishing A.
 - A2: `npm run e2e` fully green; new specs deterministic across 3 runs.
+- A2 (visual): `npm run e2e:review` (headed by default) walks every case with
+  the HUD and writes per-case screenshots + `review-<stamp>.json`; a uniform
+  (white) canvas is reported as a PROBLEM. Visual acceptance is judged from
+  those retained artifacts, not by clicking through cases.
+- A2 (README): `npm run check:readme` guards a stale generated manifest;
+  `npm run e2e:coverage` regenerates the README-claim matrix from the specs.
 - B: top-of-file extraction dry-run matches `package.json` version.
 - C: workflow YAML validated (actionlint if available, else `node --eval` YAML
   parse); first push to main exercises the real workflows.

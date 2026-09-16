@@ -1,7 +1,6 @@
 // README validation — every fenced README block, executed against the built
 // dist. Generated cases come from scripts/extract-readme-examples.mjs.
-import { test, expect } from 'playwright/test'
-import { gotoCase } from './helpers.js'
+import { test, expect, gotoCase } from '../fixtures/map.js'
 
 test('readme/examples: every fenced README block executes against dist', async ({ page }) => {
   test.setTimeout(180_000)

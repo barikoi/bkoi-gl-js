@@ -1,6 +1,5 @@
 // Map lifecycle, style, camera events — README map section.
-import { test, expect } from 'playwright/test'
-import { gotoCase, waitForLog, waitForCameraStable } from './helpers.js'
+import { test, expect, gotoCase, waitForLog, waitForCameraStable } from '../fixtures/map.js'
 
 const DHAKA = { lng: 90.3938, lat: 23.8216 }
 

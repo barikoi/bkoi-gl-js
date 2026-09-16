@@ -34,6 +34,41 @@ export const CASES = {
     map.on('zoomend', () => window.__log({ type: 'zoomend', zoom: map.getZoom() }))
   },
 
+  // Event payload contract — every documented event logs its payload shape
+  // so the spec can assert required key fields (see events.spec.ts).
+  'events/contract': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+      polygon: true,
+      drawOptions: { controls: { polygon: false, point: true, trash: false } },
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+    map.on('move', e => window.__log({ type: 'move', keys: Object.keys(e) }))
+    map.on('moveend', () =>
+      window.__log({ type: 'moveend', center: map.getCenter(), zoom: map.getZoom() })
+    )
+    map.on('zoomend', () => window.__log({ type: 'zoomend', zoom: map.getZoom() }))
+    map.on('click', e =>
+      window.__log({
+        type: 'click',
+        lngLat: [e.lngLat.lng, e.lngLat.lat],
+        point: [e.point.x, e.point.y],
+        keys: Object.keys(e),
+      })
+    )
+    map.on('draw.create', e =>
+      window.__log({
+        type: 'draw.create',
+        features: e.features?.length,
+        geometry: e.features?.[0]?.geometry?.type,
+      })
+    )
+  },
+
   // Navigation/scale/fullscreen/geolocate on one map. No minimap here: its
   // bidirectional sync fights the parent's zoom animation (see controls/minimap).
   'controls/navigation': root => {
@@ -88,6 +123,109 @@ export const CASES = {
     map.on('load', () => window.__log({ type: 'load' }))
     map.on('draw.create', e => window.__log({ type: 'draw.create', features: e.features?.length }))
     map.on('draw.modechange', e => window.__log({ type: 'draw.modechange', mode: e.mode }))
+  },
+
+  // Draw API-driven ops (add/changeMode/trash) — payload contract without
+  // synthetic canvas drags (see draw.spec.ts).
+  'draw/api': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+      polygon: true,
+      drawOptions: { controls: { polygon: true, point: true, trash: true } },
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+    map.on('draw.modechange', e => window.__log({ type: 'draw.modechange', mode: e.mode }))
+    map.on('draw.selectionchange', e =>
+      window.__log({ type: 'draw.selectionchange', features: e.features?.length })
+    )
+    map.on('draw.update', e =>
+      window.__log({ type: 'draw.update', action: e.action, features: e.features?.length })
+    )
+    map.on('draw.delete', e => window.__log({ type: 'draw.delete', features: e.features?.length }))
+  },
+
+  // Error paths: the map surfaces failures as 'error' events (or a
+  // descriptive constructor throw), never as uncaught exceptions.
+  'errors/bad-key': root => {
+    const map = new Map({
+      container: root,
+      accessToken: 'definitely-not-a-real-key',
+      center: DHAKA,
+      zoom: 12,
+    })
+    window.__MAP__ = map
+    map.on('error', e =>
+      window.__log({ type: 'map-error', message: e?.error?.message ?? String(e?.error ?? e) })
+    )
+  },
+
+  'errors/bad-style': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      style: 'https://map.barikoi.com/styles/definitely-missing-style/style.json',
+      center: DHAKA,
+      zoom: 12,
+    })
+    window.__MAP__ = map
+    map.on('error', e =>
+      window.__log({ type: 'map-error', message: e?.error?.message ?? String(e?.error ?? e) })
+    )
+  },
+
+  'errors/bad-container': () => {
+    try {
+      new Map({
+        container: 'no-such-container-exists',
+        accessToken: apiKey,
+        center: DHAKA,
+        zoom: 12,
+      })
+      window.__log({ type: 'constructor-error', thrown: false })
+    } catch (err) {
+      window.__log({
+        type: 'constructor-error',
+        thrown: true,
+        name: err?.name,
+        message: err?.message,
+      })
+    }
+  },
+
+  // setStyle chain — Barikoi → Barikoi → custom URL. The helper appends the
+  // key to Barikoi style URLs exactly like the constructor does. Assertions
+  // live in styles.spec.ts (style.load fires + attribution survives).
+  'styles/setstyle': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+    window.__SETSTYLE__ = (name, url) => {
+      const withKey = url.includes('barikoi.com/styles/') ? `${url}?key=${apiKey}` : url
+      map.once('style.load', () => window.__log({ type: 'style.load', style: name }))
+      map.setStyle(withKey)
+    }
+  },
+
+  // Attribution hide/show — the ONLY branding toggle. Logo always renders.
+  'controls/attribution-off': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+      showAttribution: false,
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
   },
 
   // Markers & Popups — README "Markers & Popups" section.

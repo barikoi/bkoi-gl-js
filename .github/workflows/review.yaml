@@ -6,7 +6,7 @@ name: Code Review
 
 on:
   push:
-    branches: ["maplibre-v6.9.1"]
+    branches: ["dev"]
 
 concurrency:
   group: code-review-${{ github.ref }}

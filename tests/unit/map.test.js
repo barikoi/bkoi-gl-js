@@ -78,28 +78,90 @@ describe('BkoiGlMap style URL construction', () => {
 })
 
 describe('BkoiGlMap attribution', () => {
-  test('attribution control is added and Barikoi attribution injected on load', async () => {
+  test('attribution renders exactly one Barikoi copyright set and survives rebuilds', async () => {
     const map = await createMap()
     const positions = map._controls.map(c => c.position)
     expect(positions).toContain('bottom-right')
     expect(positions).toContain('bottom-left') // Barikoi logo control
-    await sleep(10) // attribution injection runs in a setTimeout after load
-    const attrib = map.getContainer().querySelector('.maplibregl-ctrl-attrib-inner')
-    expect(attrib.innerHTML).toContain('Barikoi')
+
+    const inner = () => map.getContainer().querySelector('.maplibregl-ctrl-attrib-inner')
+
+    // Exact set: one Barikoi + OMT + OSM link — no duplicates
+    const links = () => [...inner().querySelectorAll('a')].map(a => a.getAttribute('href'))
+    expect(links()).toContain('https://barikoi.com')
+    expect(links().filter(h => h === 'https://barikoi.com')).toHaveLength(1)
+    expect(inner().textContent).toContain('OpenStreetMap contributors')
+
+    // maplibre wipes/rebuilds the inner content on styledata (setStyle/tile
+    // loads) — the MutationObserver must re-apply ours. Simulate a rebuild:
+    // drop in foreign content exactly like maplibre would (source attributions)
+    // and let the observer fire.
+    inner().innerHTML = '© <a href="https://some-source.example">SomeSource</a>'
+    await new Promise(r => setTimeout(r, 50)) // MutationObserver microtask+macrotask
+    expect(links()).toContain('https://barikoi.com')
+    expect(links().filter(h => h === 'https://barikoi.com')).toHaveLength(1)
+    expect(links()).not.toContain('https://some-source.example')
+
+    // Style-swap regression: maplibre re-adds the hiding class WITHOUT
+    // touching the inner content (momentarily empty attribution list) —
+    // childList-only observation would miss it and the copyright stays
+    // display:none. The observer must clear the class on the class-only toggle.
+    const attrib = map.getContainer().querySelector('.maplibregl-ctrl-attrib')
+    attrib.classList.add('maplibregl-attrib-empty')
+    await new Promise(r => setTimeout(r, 50))
+    expect(attrib.classList.contains('maplibregl-attrib-empty')).toBe(false)
+
+    // The empty-hiding class is cleared once our markup is present
+    expect(attrib.classList.contains('maplibregl-attrib-empty')).toBe(false)
     map.remove()
   })
 
-  test('injection is skipped when the attribution element is gone', async () => {
-    vi.useFakeTimers()
+  test('attribution is always-expanded (compact: false) — copyright stays visible', async () => {
+    const map = await createMap()
+    const attrib = map._controls.find(c => c.position === 'bottom-right')
+    expect(attrib?.control?.options?.compact).toBe(false)
+    map.remove()
+  })
+
+  test('logo is added at construction — later bottom-left controls stack above it', async () => {
+    // Logo before load: maplibre inserts bottom-corner controls above existing
+    // ones, so the construction-time logo anchors the very bottom-left corner.
     const map = new BkoiGlMap({
       accessToken: 'k',
       style: { version: 8, sources: {}, layers: [] },
     })
     document.body.appendChild(map.getContainer())
-    map.getContainer().innerHTML = '' // strip control DOM before deferred injection
-    await vi.advanceTimersByTimeAsync(20)
+    const positions = map._controls.map(c => c.position)
+    expect(positions).toContain('bottom-left') // before any load event
+    const logo = map.getContainer().querySelector('a.maplibregl-ctrl-logo')
+    expect(logo).toBeTruthy()
+    expect(logo.getAttribute('aria-label')).toBe('Barikoi logo')
+    map.remove()
+  })
+
+  test('maplibre watermark is force-disabled; Barikoi logo is the only logo', async () => {
+    const map = new BkoiGlMap({
+      accessToken: 'k',
+      style: { version: 8, sources: {}, layers: [] },
+    })
+    expect(map.options.maplibreLogo).toBe(false)
+    expect(map.options.attributionControl).toBe(false)
+    map.remove()
+  })
+
+  test('showAttribution:false hides the attribution but never the logo', async () => {
+    const map = new BkoiGlMap({
+      accessToken: 'k',
+      style: { version: 8, sources: {}, layers: [] },
+      showAttribution: false,
+    })
+    document.body.appendChild(map.getContainer())
+    const positions = map._controls.map(c => c.position)
+    expect(positions).not.toContain('bottom-right') // attribution control skipped
+    expect(positions).toContain('bottom-left') // logo always present
     expect(map.getContainer().querySelector('.maplibregl-ctrl-attrib')).toBeNull()
-    vi.useRealTimers()
+    expect(map.getContainer().querySelector('a.maplibregl-ctrl-logo')).toBeTruthy()
+    map.remove()
   })
 
   test('injection is skipped when the inner element is gone', async () => {
