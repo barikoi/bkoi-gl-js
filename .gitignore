@@ -1,14 +1,20 @@
-node_modules/
-examples/**/node_modules/
+# Patterns here carry NO trailing `/`: a trailing slash makes a pattern
+# directory-only, so a symlinked path of the same name slips past it (a broken
+# `nuxt*/dist` symlink pointing at another developer's machine got committed
+# this way). Paths are all repo-root-relative.
+node_modules
+examples/**/node_modules
 *.tgz
 .env
-dist/
-.next/
-coverage/
-test-results/
-tests/e2e/report/
-screenshots/
-tests/framework/review-report/
+!.env.example
+dist
+.next
+coverage
+test-results
+test-results.json
+tests/e2e/report
+screenshots
+tests/framework/review-report
 .DS_Store
 CLAUDE.md
 tests/e2e/app/readme-examples.js

@@ -3,15 +3,22 @@ results.json
 result-*.json
 *.tgz
 
-# Per-app installs / build output (angular-app also has its own .gitignore)
-node_modules/
-dist/
-build/
-.output/
-.svelte-kit/
-.nuxt/
-.angular/
-.next/
+# Per-app installs / build output. Patterns carry NO leading `/` and NO
+# trailing `/`:
+#   - trailing `/` makes a pattern directory-only, so a symlink named `dist`
+#     slipped past it and got committed (one pointing at another developer's
+#     machine);
+#   - a leading `/` anchors to THIS dir, so `/.nuxt/` never matched the
+#     per-app `nuxt3-app/.nuxt`, leaving megabytes of generated state untracked
+#     but not ignored.
+node_modules
+.nuxt
+.output
+.angular
+.svelte-kit
+.next
+dist
+build
 package-lock.json
 bun.lock
 pnpm-lock.yaml
