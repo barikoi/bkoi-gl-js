@@ -1,0 +1,23 @@
+name: Code Review
+
+on:
+  push:
+    branches: ["dev", "main"]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  review:
+    uses: barikoi/code-review/.github/workflows/ollama-code-review.yml@v1
+    with:
+      runs_on: self-hosted
+    secrets:
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL }}
+    # Optional per-repo overrides:
+    # with:
+    #   model: some-other-tag
+    #   severity_threshold: high
