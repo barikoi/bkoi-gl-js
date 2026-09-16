@@ -12,6 +12,7 @@
  *
  * Usage:
  *   npm run test:framework:review                  # 10s dwell per app build
+ *                                                    (default: every app in APPS)
  *   DWELL=20000 npm run test:framework:review      # longer dwell
  *   PAUSE=1 npm run test:framework:review          # wait for Enter between apps
  *   ONLY=next16 npm run test:framework:review      # one app (or comma list)
@@ -46,11 +47,9 @@ const getArg = (k, d) => {
   const p = args.find(a => a.startsWith(`--${k}=`))
   return p ? p.slice(k.length + 3) : d
 }
-const only = (
-  getArg('only') ||
-  process.env.ONLY ||
-  'react18-vite,react19-vite,next15,next16,cra5'
-).split(',')
+// Default: the full APPS matrix (order of declaration). The earlier hard-
+// coded react-only default silently skipped 8 apps after the A1 expansion.
+const only = (getArg('only') || process.env.ONLY || Object.keys(APPS).join(',')).split(',')
 const pm = getArg('pm', process.env.PM || 'npm')
 const DWELL = Number(process.env.DWELL ?? 10_000)
 const PAUSE = process.env.PAUSE === '1'

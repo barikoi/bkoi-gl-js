@@ -90,6 +90,10 @@ and fixes, all verified live:
   `flag()` now handles both forms and validates the value.
 - **`e2e:review` was headless-by-default**, diverging from react-bkoi-gl. Now
   **headed by default**, `--headless` opts out; `--pause`/`PAUSE=1` added.
+- **(2026-09-17)** Headed default extended to the remaining harnesses:
+  `playwright.config.ts` (`launchOptions.headless` — `CI`/`HEADLESS=1` opts
+  out) and framework `verify.mjs` (`--headless`/`HEADLESS=1`). All browser
+  verification in this repo is now headed-first.
 - **Screenshot took the pill but not the bar.** Capture happened before the hold
   started, so the draining bar was never in an artifact. Hold now starts before
   capture.
@@ -104,6 +108,34 @@ and fixes, all verified live:
       demotiles e2e mode in CI.**
 
 ## Phase A1 — framework matrix to 13 apps / 14 build cells — ✅ 11/11
+
+> **Amendment 2026-09-17 (post-A2 feedback round):** Vue now spans two
+> majors like React — `vue-vite-app` renamed to `vue3-vite-app` (key
+> `vue3-vite`) and **`vue2-vite-app`** added (Vue 2.7.16 +
+> `@vitejs/plugin-vue2@2` + Vite 5, options-API app). Matrix is now
+> **14 apps / 15 build cells**. Framework verification (`verify.mjs`) is now
+> **headed by default** (`--headless` / `HEADLESS=1` opts out), matching the
+> e2e review default. Its `review.mjs` default app list was also stale
+> (hard-coded to the six React cells, silently skipping the other 8 apps) —
+> now defaults to the full `APPS` matrix.
+
+> **Feedback round 2026-09-17 (b):** maintainer review of the full 14-app run
+> found three app defects, all fixed and re-verified (5/5 rerun PASS):
+> 1. Nuxt 3/4 overflow scrolling — Nuxt owns the document HTML, so `app.vue`
+>    now resets `html, body` margins (16px overflow otherwise).
+> 2. SvelteKit broke logo/attribution — `+page.svelte` never imported
+>    `bkoi-gl/style.css`; no stylesheet was emitted at all.
+> 3. Angular 20/21 broke logo/attribution — Beasties critical-CSS inlining
+>    defers the stylesheet behind `media="print" onload=…`; map mounts before
+>    CSS applies. Fixed with `optimization.styles.inlineCritical: false`.
+> Also: `serveApp` static `stop()` could hang forever on a held keep-alive
+> socket (review-mode stall after nuxt4) — now force-drops connections with a
+> bounded wait.
+>
+> **Feedback round 2026-09-17 (c):** `vue2-vite-app` had vertical overflow —
+> its `main.js` was missing `import 'bkoi-gl/style.css'` (the build emitted no
+> CSS at all; unstyled attribution wrapped and overflowed the viewport by
+> 40px). Fixed; `run.mjs --only=vue2-vite` PASS.
 
 1. ✅ **Renames + harness keys** — `git mv` react19/svelte5/angular21 (+
    `nuxt` → `nuxt3`); `APPS` keys, `angular.json` project name (3 refs),
@@ -131,7 +163,7 @@ and fixes, all verified live:
    **added `zone.js` polyfill + dep** (the v21 app is zoneless; v20 defaults
    to zone-based CD). Verified PASS.
 8. ✅ **`run.mjs` multi-PM + results** — `--pm` comma list, `--pm-subset`
-   (pnpm/yarn/bun × react19-vite, vue-vite, next16), odd-Node warning,
+   (pnpm/yarn/bun × react19-vite, vue3-vite, next16), odd-Node warning,
    loud skip for missing PM binaries. Two environment fixes landed (ledger):
    pnpm ≥11 `minimumReleaseAgeExclude` blanket for maplibre-gl + fresh
    lockfile per run; bun `file:../<tarball>` relative spec (absolute path +
@@ -177,7 +209,7 @@ and fixes, all verified live:
 
 1. ⬜ `release.yml` → gate + release, push-to-main only, CodeQL parallel
    (gate composition depends on the (a)/(b) decision)
-2. ⬜ `matrix.yaml` — weekly + dispatch, Node 24, 13-app run + PM subset,
+2. ⬜ `matrix.yaml` — weekly + dispatch, Node 24, 14-app run + PM subset,
    results artifact
 3. ⬜ README badge block (CI, Codecov, release, stars, framework/PM/engine
    badges; drop bundlephobia)
@@ -249,7 +281,7 @@ and fixes, all verified live:
 
 ## Definition of done
 
-- [ ] `npm run test:framework` green across 13 apps (npm) + `--pm-subset` green
+- [ ] `npm run test:framework` green across 14 apps (npm) + `--pm-subset` green
 - [ ] `npm run e2e` green; new specs deterministic
       ⚠️ **PENDING RE-VERIFY** — last full run after the fixtures refactor:
       13 failed / 7 passed. The failure set was not yet triaged (session

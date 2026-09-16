@@ -17,7 +17,12 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5176',
     viewport: null,
-    launchOptions: { args: ['--start-maximized'] },
+    // Headed by default (maintainer watches WebGL renders); CI/HEADLESS=1
+    // opts out — matches e2e:review and framework verify.mjs.
+    launchOptions: {
+      args: ['--start-maximized'],
+      headless: !!(process.env.CI || process.env.HEADLESS === '1'),
+    },
     trace: 'retain-on-failure',
   },
   webServer: {

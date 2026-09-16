@@ -1,5 +1,7 @@
 /**
- * Headless verification that a built framework app actually renders a map.
+ * Browser verification that a built framework app actually renders a map.
+ * HEADED by default (maintainer can watch the render); --headless / HEADLESS=1
+ * for CI or headless sessions.
  *
  * Proves, per app: a Worker is constructed (init-script shim), its URL loads
  * (200), the map `load` event fired (window.__READY), the engine reached
@@ -7,6 +9,8 @@
  * uncaught page errors occurred.
  *
  * Usage: node verify.mjs --name <label> --url <http://host:port> [--out results.json]
+ *        [--headless]  (verification is HEADED by default; use --headless
+ *         or HEADLESS=1 for CI/remote sessions — matching e2e:review)
  * (For static build dirs pass --dir instead of --url; a static server is
  * started on --port.)
  */
@@ -25,6 +29,8 @@ let url = arg('url')
 const dir = arg('dir')
 const port = Number(arg('port', 6180))
 const outFile = arg('out')
+const headless =
+  process.argv.includes('--headless') || process.env.HEADLESS === '1'
 
 let server
 if (!url && dir) {
@@ -49,7 +55,8 @@ const result = {
   httpFailures: [],
 }
 
-const browser = await chromium.launch()
+const browser = await chromium.launch({ headless })
+console.log(`[verify] ${headless ? 'headless' : 'HEADED'} Chromium — ${name} → ${url}`)
 try {
   const context = await browser.newContext()
   await context.addInitScript(() => {

@@ -28,3 +28,13 @@ onBeforeUnmount(() => map?.remove())
 <template>
   <div ref="el" style="width: 100vw; height: 100vh" />
 </template>
+
+<!-- Nuxt owns the document HTML (no index.html to reset browser defaults
+     in) — without this, body's 8px margin overflows the 100vw/100vh map. -->
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+</style>

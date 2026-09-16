@@ -207,8 +207,15 @@ export const APPS = {
     ],
     serve: { type: 'next' },
   },
-  'vue-vite': {
-    dir: 'vue-vite-app',
+  'vue2-vite': {
+    dir: 'vue2-vite-app',
+    label: 'Vue 2.7 + Vite 5',
+    envPrefix: 'VITE_',
+    buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
+    serve: { type: 'static', dir: 'dist' },
+  },
+  'vue3-vite': {
+    dir: 'vue3-vite-app',
     label: 'Vue 3 + Vite 7',
     envPrefix: 'VITE_',
     buildCells: [{ name: 'vite build', cmd: 'npx vite build' }],
@@ -357,6 +364,17 @@ export async function serveApp(app) {
   const server = await serveStatic(path.join(here, app.dir, app.serve.dir), port)
   return {
     url: `http://localhost:${port}/`,
-    stop: async () => new Promise(r => server.close(r)),
+    stop: async () => {
+      // A long-lived headed browser (review mode reuses one page for every
+      // app) holds keep-alive sockets open — plain close() then waits forever
+      // on them and the run stalls after the cell. Force-drop connections,
+      // then bound the wait.
+      server.closeAllConnections?.()
+      await new Promise(r => {
+        server.close(r)
+        setTimeout(r, 3000)
+      })
+      await killPortUsers(port)
+    },
   }
 }

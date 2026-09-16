@@ -3,11 +3,11 @@
  * Framework compatibility runner — see tests/framework/README.md.
  *
  * Usage:
- *   node tests/framework/run.mjs [--only=react-vite,vue-vite,...] [--pm=npm|pnpm|yarn|bun]
+ *   node tests/framework/run.mjs [--only=react19-vite,vue3-vite,...] [--pm=npm|pnpm|yarn|bun]
  *   npm run test:framework
  *
  * Per app: install base deps with the chosen PM, install the packed tarball,
- * build, serve, headlessly verify map rendering.
+ * build, serve, verify map rendering (HEADED by default; --headless opts out).
  * Long installs are expected; run this script detached and poll its log.
  */
 import { execSync } from 'node:child_process'
@@ -39,7 +39,7 @@ const apiKey = loadEnvKey()
 
 // Canonical PM subset (spec A1): representative apps × non-npm PMs.
 const SUBSET_PMS = ['pnpm', 'yarn', 'bun']
-const SUBSET_APPS = ['react19-vite', 'vue-vite', 'next16']
+const SUBSET_APPS = ['react19-vite', 'vue3-vite', 'next16']
 
 // Odd Node majors are non-LTS; several framework tools (Nuxt 4+, newer
 // Angular) exclude them via engines. Warn — installs usually still work.

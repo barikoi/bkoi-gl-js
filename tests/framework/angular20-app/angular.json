@@ -51,7 +51,12 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css", "node_modules/bkoi-gl/dist/style/bkoi-gl.css"]
+            "styles": ["src/styles.css", "node_modules/bkoi-gl/dist/style/bkoi-gl.css"],
+            "optimization": {
+              "scripts": true,
+              "styles": { "minify": true, "inlineCritical": false },
+              "fonts": false
+            }
           },
           "configurations": {
             "production": {

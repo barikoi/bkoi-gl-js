@@ -7,6 +7,24 @@
 [![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<!-- Framework compatibility badges — mirror the validated matrix in
+     tests/framework/ (8 frameworks / 14 apps / 15 build cells) and the
+     integration guides under docs/frameworks/. -->
+<a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
+<a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-15%20%7C%2016-black?logo=nextdotjs" alt="Next.js 15 | 16"></a>
+<a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
+<a href="docs/frameworks/nuxt.md"><img src="https://img.shields.io/badge/Nuxt-3%20%7C%204-00DC82?logo=nuxt&logoColor=white" alt="Nuxt 3 | 4"></a>
+<a href="docs/frameworks/svelte.md"><img src="https://img.shields.io/badge/Svelte-4%20%7C%205-FF3E00?logo=svelte&logoColor=white" alt="Svelte 4 | 5"></a>
+<a href="docs/frameworks/sveltekit.md"><img src="https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white" alt="SvelteKit 2"></a>
+<a href="docs/frameworks/angular.md"><img src="https://img.shields.io/badge/Angular-20%20%7C%2021-DD0031?logo=angular&logoColor=white" alt="Angular 20 | 21"></a>
+<a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/CRA-5-09D3AC?logo=react&logoColor=white" alt="CRA 5"></a>
+<img src="https://img.shields.io/badge/Vite-5%20%7C%207-646CFF?logo=vite&logoColor=white" alt="Vite 5 | 7">
+<img src="https://img.shields.io/badge/WebGL-2-orange?logo=webgl" alt="WebGL2">
+<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/npm-%E2%9C%93-CB3837?logo=npm&logoColor=white" alt="npm supported"></a>
+<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/pnpm-%E2%9C%93-F69220?logo=pnpm&logoColor=white" alt="pnpm supported"></a>
+<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/yarn%20classic-%E2%9C%93-2C8EBB?logo=yarn&logoColor=white" alt="yarn classic supported"></a>
+<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/bun-%E2%9C%93-000?logo=bun" alt="bun supported"></a>
+
 ---
 
 ## Overview
@@ -26,6 +44,9 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+  - [Vanilla JavaScript](#vanilla-javascript)
+  - [React/Next.js](#reactnextjs)
+- [Framework Integration](#framework-integration)
 - [Configuration](#configuration)
   - [Map Options](#map-options)
   - [Draw Options](#draw-options)
@@ -70,7 +91,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 ## Features
 
 - **High Performance** - WebGL-based map rendering
-- **Framework Support** - Easy integration with React and Next.js
+- **Framework Support** - Validated integrations for React, Next.js, Vue, Nuxt, Svelte, SvelteKit, and Angular (see [Framework Integration](#framework-integration))
 - **Customizable Controls** - Flexible map controls and interactions
 - **Location Services** - Support for Barikoi geolocation services
 - **Lightweight** - Optimized for production use
@@ -229,6 +250,36 @@ const BasicMap = () => {
 
 export default BasicMap;
 ```
+
+---
+
+## Framework Integration
+
+`bkoi-gl` is framework-agnostic vanilla JavaScript: it works in every major
+framework with the same three-step contract — import `Map` from `bkoi-gl`,
+import `bkoi-gl/style.css`, and `map.remove()` on unmount. The worker is
+registered automatically (no per-framework worker configuration).
+
+Every guide below is a reflection of the framework compatibility matrix in
+[`tests/framework/`](../tests/framework/) — each integration is installed from
+the packed tarball, built, and verified (worker constructed, map `load` +
+`idle`, no page errors) before a release.
+
+| Framework | Versions validated | Guide |
+|---|---|---|
+| React (Vite) | React 18, React 19 | [docs/frameworks/react.md](docs/frameworks/react.md) |
+| Create React App | react-scripts 5 | [docs/frameworks/react.md](docs/frameworks/react.md) |
+| Next.js | 15 (webpack), 16 (Turbopack + webpack) | [docs/frameworks/nextjs.md](docs/frameworks/nextjs.md) |
+| Vue (Vite) | Vue 3, Vue 2.7 | [docs/frameworks/vue.md](docs/frameworks/vue.md) |
+| Nuxt | 3, 4 | [docs/frameworks/nuxt.md](docs/frameworks/nuxt.md) |
+| Svelte (Vite) | Svelte 5, Svelte 4 | [docs/frameworks/svelte.md](docs/frameworks/svelte.md) |
+| SvelteKit | 2 (adapter-static) | [docs/frameworks/sveltekit.md](docs/frameworks/sveltekit.md) |
+| Angular | 21 (zoneless), 20 | [docs/frameworks/angular.md](docs/frameworks/angular.md) |
+
+Framework-specific gotchas the guides cover: the required `style.css` import,
+`"use client"` / `ssr: false` for server-rendered frameworks, Angular's
+`inlineCritical: false`, and page-margin resets (Nuxt/SvelteKit own the
+document HTML).
 
 ---
 

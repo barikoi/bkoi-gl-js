@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import { Map } from 'bkoi-gl'
+  import 'bkoi-gl/style.css'
   import { PUBLIC_BARIKOI_API_KEY } from '$env/static/public'
 
   let el

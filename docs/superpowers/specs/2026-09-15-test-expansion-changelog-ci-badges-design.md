@@ -34,6 +34,12 @@ Live tracking: `docs/superpowers/plans/2026-09-15-test-expansion-changelog-ci-ba
 
 ## A1. Framework matrix — 13 apps / 14 build cells (12/13 apps verified ✅)
 
+> **Amendment 2026-09-17:** Vue split across majors (React-style) —
+> `vue-vite-app` → `vue3-vite-app`; new `vue2-vite-app` (Vue 2.7 +
+> `@vitejs/plugin-vue2@2` + Vite 5). Matrix: **14 apps / 15 build cells**.
+> Framework `verify.mjs` is headed by default (`--headless` / `HEADLESS=1`
+> opts out), matching the e2e review default.
+
 | App dir (⭐ = new) | Stack | Build cell(s) | State |
 |---|---|---|---|
 | `react18-vite-app` ⭐ | React 18.3 + Vite 7 | `vite build` | ✅ |
@@ -47,7 +53,8 @@ Live tracking: `docs/superpowers/plans/2026-09-15-test-expansion-changelog-ci-ba
 | `svelte5-vite-app` (rename of `svelte-vite-app`) | Svelte 5 + Vite 7 | `vite build` | ✅ |
 | `angular20-app` ⭐ | Angular 20 (**+ zone.js**) | `ng build` | ✅ |
 | `angular21-app` (rename of `angular-app`) | Angular 21 | `ng build` | ✅ |
-| `vue-vite-app` (existing) | Vue 3 + Vite 7 | `vite build` | ✅ npm/pnpm/bun |
+| `vue2-vite-app` ⭐ (2026-09-17 amendment) | Vue 2.7 + plugin-vue2 2 + Vite 5 | `vite build` | ✅ |
+| `vue3-vite-app` (rename of `vue-vite-app`) | Vue 3 + Vite 7 | `vite build` | ✅ npm/pnpm/bun |
 | `sveltekit-app` (existing) | SvelteKit 2 + adapter-static | `vite build` | ⬜ re-verify in full run |
 
 Rules:
@@ -63,7 +70,7 @@ Rules:
   (style load), `window.__IDLE` (tiles parsed + rendered), no page errors.
 - `run.mjs` additions: `--pm=npm,pnpm,yarn,bun` accepts a comma list and loops
   the matrix per PM (default npm-only, all apps); PM subset = pnpm, yarn, bun
-  on `react19-vite`, `vue-vite`, `next16` (webpack cell). Results printed as a
+  on `react19-vite`, `vue3-vite`, `next16` (webpack cell). Results printed as a
   table and written to `tests/framework/results.json`.
 - Node: matrix targets Node 24 (even LTS) — this unlocks Nuxt 4. `run.mjs`
   warns when the active Node major is odd and an app's engines exclude it.
@@ -118,7 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sections `### Added / Changed / Fixed / Breaking / Removed / Security /
   Testing` as applicable, **bold-led** prose entries, no `by @user`
   attribution lines, no `---` separators between releases. Facts preserved.
-- `[4.0.0]` gains a `### Testing` section describing the 13-app matrix, the
+- `[4.0.0]` gains a `### Testing` section describing the 14-app matrix, the
   new e2e specs, pack/resolution gates, and CI. Stays `- Unreleased` until
   publish day.
 - Compatibility: the release flow extracts the top `## [` heading — unchanged
@@ -143,8 +150,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Triggers: weekly `schedule` (cron Mon ~05:00 UTC) + `workflow_dispatch`.
   `timeout-minutes: 90`, concurrency group, Node 24.
-- Steps: `npm ci` → `node tests/framework/run.mjs` (all 13 apps, npm) →
-  `node tests/framework/run.mjs --only=react19-vite,vue-vite,next16
+- Steps: `npm ci` → `node tests/framework/run.mjs` (all 14 apps, npm) →
+  `node tests/framework/run.mjs --only=react19-vite,vue3-vite,next16
   --pm=pnpm,yarn,bun`. Upload `tests/framework/results.json` as artifact.
 
 ### C3. README badge block (react-bkoi-gl layout)
