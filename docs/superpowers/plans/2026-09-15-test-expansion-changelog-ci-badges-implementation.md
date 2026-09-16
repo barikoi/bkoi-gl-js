@@ -3,7 +3,9 @@
 Spec: `docs/superpowers/specs/2026-09-15-test-expansion-changelog-ci-badges-design.md`
 Sequencing: A (tests) → B (changelog) → C (CI/badges). One commit per phase task.
 
-**Progress: A1 10/11 tasks ✅ · A2 ⬜ · B ⬜ · C 🟡 (design change pending — no GitHub secrets)**
+**Progress: A1 11/11 ✅ · A2 ⬜ · B ⬜ · C 🟡 (design change pending — no GitHub secrets)**
+
+Session note: e2e/browser tooling — ask the user before running or integrating.
 
 ## Phase 0 — prerequisites — 🔄 REVISED (maintainer decision 2026-09-15)
 
@@ -14,7 +16,7 @@ Sequencing: A (tests) → B (changelog) → C (CI/badges). One commit per phase 
       repos. **Open decision: (a) e2e local-only [recommended] vs (b) keyless
       demotiles e2e mode in CI.**
 
-## Phase A1 — framework matrix to 13 apps / 14 build cells — ✅ 10/11
+## Phase A1 — framework matrix to 13 apps / 14 build cells — ✅ 11/11
 
 1. ✅ **Renames + harness keys** — `git mv` react19/svelte5/angular21 (+
    `nuxt` → `nuxt3`); `APPS` keys, `angular.json` project name (3 refs),
@@ -48,10 +50,14 @@ Sequencing: A (tests) → B (changelog) → C (CI/badges). One commit per phase 
    lockfile per run; bun `file:../<tarball>` relative spec (absolute path +
    package.json spec = DependencyLoop). Verified: pnpm + bun cells PASS
    (yarn not installed locally — loud SKIP; CI covers it).
-9. ⬜ **Docs finalization** — `tests/framework/README.md` table rows for the
-   7 new apps; `.gitignore` sweep for runner artifacts (bun.lock,
-   pnpm-lock.yaml, pnpm-workspace.yaml, env.generated.ts in renamed dirs).
-10. ⬜ **Phase gate** — full 13-app npm run green ×1 + `--pm-subset` green.
+9. ✅ **Docs finalization** — README table now lists all 13 apps/14 cells
+   (+ `--pm-subset` docs, Node note rewritten for the Node-24 target);
+   `.gitignore` sweep had already landed with task 8's runner commit
+   (`tests/framework/.gitignore`: locks, `pnpm-workspace.yaml`,
+   `env.generated.ts` per app).
+10. ✅ **Phase gate** — 2026-09-16: full 13-app npm run **PASS** (14/14 cells,
+       incl. sveltekit re-verify) + `--pm-subset` **PASS** (pnpm ×3, bun ×3;
+       yarn loud-skip locally, CI covers it).
 11. ✅ **(unplanned, needed) dist Turbopack fix** — see task 3 ledger; guard
     in `scripts/test-pack.mjs`.
 

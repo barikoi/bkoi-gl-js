@@ -1,7 +1,7 @@
 # bkoi-gl 4.0.x — test expansion, CHANGELOG rewrite, public badges + CI
 
 Date: 2026-09-15
-Status: Approved design — **A1 in progress (10/11 tasks ✅)**; §C revision pending (no GitHub secrets)
+Status: Approved design — **A1 done (11/11 ✅, gates green 2026-09-16)**; §C revision pending (no GitHub secrets)
 Sequencing: A (tests) → B (changelog) → C (CI/badges). C consumes A's suites.
 Live tracking: `docs/superpowers/plans/2026-09-15-test-expansion-changelog-ci-badges-implementation.md`
 (includes the actual-approach ledger of deviations found during A1).

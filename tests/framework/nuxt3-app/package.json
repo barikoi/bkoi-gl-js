@@ -8,7 +8,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "bkoi-gl": "file:../bkoi-gl-3.3.0.tgz"
+    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz"
   },
   "devDependencies": {
     "nuxt": "^3.21.11"

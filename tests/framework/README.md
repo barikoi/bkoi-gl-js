@@ -9,13 +9,24 @@ method, never `npm link`) and verified headlessly for basic map rendering.
 | `react18-vite-app` | React 18 + Vite 7 | zero-config worker, ESM bundle |
 | `react19-vite-app` | React 19 + Vite 7 | same |
 | `vue-vite-app` | Vue 3 + Vite 7 | same |
+| `svelte4-vite-app` | Svelte 4 + Vite 5 | same |
 | `svelte5-vite-app` | Svelte 5 + Vite 7 | same |
-| `nuxt-app` | Nuxt 3 (`nuxi generate`, SPA) | same, static output |
-| `sveltekit-app` | SvelteKit 2 + `adapter-static` | same, prerendered SPA shell |
-| `angular21-app` | Angular 21 (application builder / esbuild) | same, no bundler-emitted worker asset |
+| `next15-app` | Next.js 15 (webpack) | node-server build served via `next start` |
+| `next16-app` | Next.js 16 — **two cells**: Turbopack + `--webpack` | same ×2 |
+| `cra5-app` | react-scripts 5 (React 18) | CRA's webpack 5 path |
+| `nuxt3-app` | Nuxt 3.21 (`nuxi generate`, SPA) | static output |
+| `nuxt4-app` | Nuxt 4 (`nuxi generate`) | same |
+| `sveltekit-app` | SvelteKit 2 + `adapter-static` | prerendered SPA shell |
+| `angular20-app` | Angular 20 (zone-based) | esbuild application builder |
+| `angular21-app` | Angular 21 (zoneless) | same, no bundler-emitted worker asset |
 
-Node 25 notes: Nuxt 4 and Angular 22 exclude odd Node majors (`^22 || ^24 || >=26`),
-so this matrix pins **Nuxt 3.21** and **Angular 21** (both accept `>=24`).
+13 apps / 14 build cells. Toolchains are pinned per framework major (e.g.
+Svelte 4 pairs with `vite-plugin-svelte@3` → Vite 5; Angular 20 re-adds
+`zone.js`).
+
+Node: the matrix targets Node 24 (even LTS) — this unlocks Nuxt 4. `run.mjs`
+warns when the active Node major is odd and an app's engines exclude it, but
+the run proceeds (warning only).
 
 ## What "map renders" means here
 
@@ -45,6 +56,9 @@ node tests/framework/run.mjs --only=angular
 # package-manager matrix (apps share the same source; PM changes the layout)
 node tests/framework/run.mjs --only=angular --pm=pnpm
 node tests/framework/run.mjs --only=react-vite,vue-vite --pm=yarn
+
+# canonical PM subset (pnpm/yarn/bun × react19-vite, vue-vite, next16-webpack)
+node tests/framework/run.mjs --pm-subset
 ```
 
 Requires `BARIKOI_API_KEY` in the repo `.env` (matching `.env.example`) — real

@@ -7,7 +7,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "bkoi-gl": "file:../bkoi-gl-3.3.0.tgz"
+    "bkoi-gl": "file:../bkoi-gl-4.0.0.tgz"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.10",
