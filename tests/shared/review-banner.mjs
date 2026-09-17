@@ -67,7 +67,7 @@ export const mountHudScript = ({ label }) => `(function(){
  *  - the drain is timer-driven, NOT requestAnimationFrame. Chromium freezes rAF
  *    for occluded/backgrounded windows, so an rAF drain never resolves and the
  *    walk wedges on that case until the browser is closed by hand. */
-export const hudHoldScript = (ms) => `(function(){
+export const hudHoldScript = ms => `(function(){
   const el = document.getElementById('e2e-hud');
   const hold = el && el.querySelector('.hold');
   if (!hold) return Promise.resolve();

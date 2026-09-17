@@ -454,7 +454,11 @@ mkdirSync(new URL('../report/', import.meta.url).pathname, { recursive: true })
 const out = new URL(`../report/review-${stamp}.json`, import.meta.url).pathname
 writeFileSync(
   out,
-  JSON.stringify({ ranAt: new Date().toISOString(), headed: HEADED, dwell: DWELL, results }, null, 2)
+  JSON.stringify(
+    { ranAt: new Date().toISOString(), headed: HEADED, dwell: DWELL, results },
+    null,
+    2
+  )
 )
 
 const failed = results.filter(r => r.ok === false)

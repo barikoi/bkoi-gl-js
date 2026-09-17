@@ -261,7 +261,7 @@ import `bkoi-gl/style.css`, and `map.remove()` on unmount. The worker is
 registered automatically (no per-framework worker configuration).
 
 Every guide below is a reflection of the framework compatibility matrix in
-[`tests/framework/`](../tests/framework/) — each integration is installed from
+[`tests/framework/`](tests/framework/) — each integration is installed from
 the packed tarball, built, and verified (worker constructed, map `load` +
 `idle`, no page errors) before a release.
 
@@ -275,11 +275,6 @@ the packed tarball, built, and verified (worker constructed, map `load` +
 | Svelte (Vite) | Svelte 5, Svelte 4 | [docs/frameworks/svelte.md](docs/frameworks/svelte.md) |
 | SvelteKit | 2 (adapter-static) | [docs/frameworks/sveltekit.md](docs/frameworks/sveltekit.md) |
 | Angular | 21 (zoneless), 20 | [docs/frameworks/angular.md](docs/frameworks/angular.md) |
-
-Framework-specific gotchas the guides cover: the required `style.css` import,
-`"use client"` / `ssr: false` for server-rendered frameworks, Angular's
-`inlineCritical: false`, and page-margin resets (Nuxt/SvelteKit own the
-document HTML).
 
 ---
 

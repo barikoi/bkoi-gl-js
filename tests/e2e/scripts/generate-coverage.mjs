@@ -59,7 +59,10 @@ const matrix = [
   ['Custom Layers & Sources — draw tools', ['draw/all', 'draw/api']],
   ['Utility Methods — style swap preserves attribution', ['styles/setstyle']],
   ['Examples — every fenced README block executes', ['readme/examples']],
-  ['Error handling — invalid key / style / container', ['errors/bad-key', 'errors/bad-style', 'errors/bad-container']],
+  [
+    'Error handling — invalid key / style / container',
+    ['errors/bad-key', 'errors/bad-style', 'errors/bad-container'],
+  ],
 ]
 
 const rows = matrix
