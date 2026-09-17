@@ -16,7 +16,7 @@ import 'bkoi-gl/style.css'
 const DHAKA = [90.3938, 23.8216]
 const apiKey = import.meta.env.BARIKOI_API_KEY
 
-export const CASES = {
+const CASES = {
   // Default Barikoi style via accessToken — the README quick-start path.
   'map/basic': root => {
     const map = new Map({
@@ -108,8 +108,9 @@ export const CASES = {
     })
   },
 
-  // Draw tools enabled — toolbar renders, draw.* events fire.
-  'draw/all': root => {
+  // Draw tools — one mount for both specs: toolbar-driven drawing
+  // (draw.spec polygon e2e) and API-driven ops (add/changeMode/trash).
+  'draw/tools': root => {
     const map = new Map({
       container: root,
       accessToken: apiKey,
@@ -123,22 +124,6 @@ export const CASES = {
     map.on('load', () => window.__log({ type: 'load' }))
     map.on('draw.create', e => window.__log({ type: 'draw.create', features: e.features?.length }))
     map.on('draw.modechange', e => window.__log({ type: 'draw.modechange', mode: e.mode }))
-  },
-
-  // Draw API-driven ops (add/changeMode/trash) — payload contract without
-  // synthetic canvas drags (see draw.spec.ts).
-  'draw/api': root => {
-    const map = new Map({
-      container: root,
-      accessToken: apiKey,
-      center: DHAKA,
-      zoom: 12,
-      polygon: true,
-      drawOptions: { controls: { polygon: true, point: true, trash: true } },
-    })
-    window.__MAP__ = map
-    map.on('load', () => window.__log({ type: 'load' }))
-    map.on('draw.modechange', e => window.__log({ type: 'draw.modechange', mode: e.mode }))
     map.on('draw.selectionchange', e =>
       window.__log({ type: 'draw.selectionchange', features: e.features?.length })
     )
@@ -146,6 +131,225 @@ export const CASES = {
       window.__log({ type: 'draw.update', action: e.action, features: e.features?.length })
     )
     map.on('draw.delete', e => window.__log({ type: 'draw.delete', features: e.features?.length }))
+  },
+
+  // README "Configuration" — Map Options table applied verbatim. The spec
+  // asserts every option with a getter (center/zoom/bearing/pitch/limits/
+  // maxBounds/world copies) against the documented values.
+  'config/table-options': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 10,
+      bearing: 30,
+      pitch: 45,
+      minZoom: 5,
+      maxZoom: 18,
+      minPitch: 10,
+      maxPitch: 60,
+      maxBounds: [88.0, 20.5, 92.7, 26.6],
+      renderWorldCopies: true,
+      clickTolerance: 5,
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+  },
+
+  // README "Configuration" — documented defaults when nothing is passed.
+  // These are the engine (maplibre v6) defaults the wrapper passes through.
+  'config/defaults': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+  },
+
+  // README "Configuration" — the Custom Styles drawOptions example,
+  // verbatim from the docs (collapsed <details> block). The spec asserts
+  // the custom gl-draw-* layers land in the map style.
+  'config/draw-custom-styles': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+      polygon: true,
+      drawOptions: {
+        displayControlsDefault: true,
+        controls: { polygon: true, line_string: true, point: true, trash: true },
+        defaultMode: 'simple_select',
+        userProperties: true,
+        styles: [
+          {
+            id: 'gl-draw-polygon-fill',
+            type: 'fill',
+            filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+            paint: { 'fill-color': '#D20C0C', 'fill-opacity': 0.3 },
+          },
+          {
+            id: 'gl-draw-polygon-stroke-active',
+            type: 'line',
+            filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': '#D20C0C', 'line-width': 2 },
+          },
+          {
+            id: 'gl-draw-polygon-stroke-static',
+            type: 'line',
+            filter: ['all', ['==', '$type', 'Polygon'], ['==', 'mode', 'static']],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': '#D20C0C', 'line-width': 2 },
+          },
+          {
+            id: 'gl-draw-line-active',
+            type: 'line',
+            filter: ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': '#D20C0C', 'line-width': 3 },
+          },
+          {
+            id: 'gl-draw-line-static',
+            type: 'line',
+            filter: ['all', ['==', '$type', 'LineString'], ['==', 'mode', 'static']],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': '#D20C0C', 'line-width': 2 },
+          },
+          {
+            id: 'gl-draw-point-active',
+            type: 'circle',
+            filter: ['all', ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
+            paint: {
+              'circle-radius': 8,
+              'circle-color': '#D20C0C',
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#ffffff',
+            },
+          },
+          {
+            id: 'gl-draw-point-static',
+            type: 'circle',
+            filter: ['all', ['==', '$type', 'Point'], ['==', 'mode', 'static']],
+            paint: {
+              'circle-radius': 6,
+              'circle-color': '#D20C0C',
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#ffffff',
+            },
+          },
+          {
+            id: 'gl-draw-vertex',
+            type: 'circle',
+            filter: ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point']],
+            paint: {
+              'circle-radius': 6,
+              'circle-color': '#ffffff',
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#D20C0C',
+            },
+          },
+          {
+            id: 'gl-draw-midpoint',
+            type: 'circle',
+            filter: ['all', ['==', 'meta', 'midpoint'], ['==', '$type', 'Point']],
+            paint: {
+              'circle-radius': 4,
+              'circle-color': '#D20C0C',
+              'circle-stroke-width': 1,
+              'circle-stroke-color': '#ffffff',
+            },
+          },
+        ],
+      },
+    })
+    window.__MAP__ = map
+    map.on('load', () => window.__log({ type: 'load' }))
+  },
+
+  // README "Custom Layers & Sources" — GeoJSON source (point/line/polygon
+  // features) with the documented circle/line/fill layers, verbatim shapes.
+  'layers/sources': root => {
+    const map = new Map({
+      container: root,
+      accessToken: apiKey,
+      center: DHAKA,
+      zoom: 12,
+    })
+    window.__MAP__ = map
+    map.on('load', () => {
+      window.__log({ type: 'load' })
+      map.addSource('my-source', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              geometry: { type: 'Point', coordinates: DHAKA },
+              properties: { title: 'Dhaka' },
+            },
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [90.38, 23.81],
+                  [90.4, 23.83],
+                ],
+              },
+              properties: {},
+            },
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  [
+                    [90.38, 23.81],
+                    [90.4, 23.81],
+                    [90.4, 23.83],
+                    [90.38, 23.83],
+                    [90.38, 23.81],
+                  ],
+                ],
+              },
+              properties: {},
+            },
+          ],
+        },
+      })
+      map.addLayer({
+        id: 'my-circle-layer',
+        type: 'circle',
+        source: 'my-source',
+        filter: ['==', '$type', 'Point'],
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#ff0000',
+          'circle-opacity': 0.8,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+        },
+      })
+      map.addLayer({
+        id: 'my-line-layer',
+        type: 'line',
+        source: 'my-source',
+        filter: ['==', '$type', 'LineString'],
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': '#0088ff', 'line-width': 3, 'line-opacity': 0.8 },
+      })
+      map.addLayer({
+        id: 'my-fill-layer',
+        type: 'fill',
+        source: 'my-source',
+        filter: ['==', '$type', 'Polygon'],
+        paint: { 'fill-color': '#28a745', 'fill-opacity': 0.5 },
+      })
+      map.once('idle', () => window.__log({ type: 'layers-added' }))
+    })
   },
 
   // Error paths: the map surfaces failures as 'error' events (or a
@@ -199,7 +403,7 @@ export const CASES = {
   // setStyle chain — Barikoi → Barikoi → custom URL. The helper appends the
   // key to Barikoi style URLs exactly like the constructor does. Assertions
   // live in styles.spec.ts (style.load fires + attribution survives).
-  'styles/setstyle': root => {
+  'styles/switch': root => {
     const map = new Map({
       container: root,
       accessToken: apiKey,
@@ -229,7 +433,7 @@ export const CASES = {
   },
 
   // Markers & Popups — README "Markers & Popups" section.
-  'marker-popup': root => {
+  'markers/popup': root => {
     const map = new Map({
       container: root,
       accessToken: apiKey,
@@ -349,3 +553,5 @@ export const CASES = {
     window.__log({ type: 'readme-done' })
   },
 }
+
+export { CASES }

@@ -21,8 +21,8 @@ async function activateTool(page, tool) {
   await expect(btn).toHaveClass(/active/)
 }
 
-test('draw/all: polygon draw end-to-end', async ({ page }) => {
-  await gotoCase(page, 'draw/all')
+test('draw/tools: polygon draw end-to-end via toolbar', async ({ page }) => {
+  await gotoCase(page, 'draw/tools')
   await drawReady(page)
 
   // Toolbar renders with default tools
@@ -70,8 +70,8 @@ test('draw/all: polygon draw end-to-end', async ({ page }) => {
     .toBeGreaterThan(0)
 })
 
-test('draw/api: API-driven add / changeMode / trash with event payloads', async ({ page }) => {
-  await gotoCase(page, 'draw/api')
+test('draw/tools: API-driven add / changeMode / trash with event payloads', async ({ page }) => {
+  await gotoCase(page, 'draw/tools')
   await drawReady(page)
 
   // 1. add() — feature lands in the draw store and renders into the draw

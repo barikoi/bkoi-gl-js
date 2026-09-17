@@ -34,8 +34,8 @@ async function hopTo(page, name, url) {
     .toBe(true)
 }
 
-test('styles/setstyle: Barikoi → Barikoi → custom URL; attribution survives', async ({ page }) => {
-  await gotoCase(page, 'styles/setstyle')
+test('styles/switch: Barikoi → Barikoi → custom URL; attribution survives', async ({ page }) => {
+  await gotoCase(page, 'styles/switch')
   await expectBarikoiBranding(page)
 
   await hopTo(page, 'barikoi-dark', BARIKOI_DARK)

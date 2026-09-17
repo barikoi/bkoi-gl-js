@@ -180,6 +180,25 @@ always run it through that script after library changes or you test stale
 output. The host app serves one case per URL (`/?case=<id>`) from
 `tests/e2e/app/cases.js`; specs only navigate and assert.
 
+**Case registry conventions** (`tests/e2e/app/cases.js`):
+
+- Ids are `<domain>/<action>` kebab-case (`map/basic`, `draw/tools`,
+  `config/defaults`, `errors/bad-key`, `markers/popup`…).
+- One mount per scenario — if two specs can share a map setup, they share
+  the case (the former `draw/all` + `draw/api` duplicate mounts were merged
+  into `draw/tools`). Prefer reusing `map/basic` over adding a near-copy.
+- `gotoCase` (in `fixtures/map.ts`) mounts the shared indication UI on every
+  settled case: a top-left live camera-state + event-ticker panel (ported
+  from react-bkoi-gl's e2e app) plus the bottom-center HUD. Nothing to wire
+  per case.
+- Renaming/merging a case means updating every reference in lockstep:
+  specs (`gotoCase(page, '<id>')`), `review/run-review.mjs` demo blocks,
+  `scripts/capture-screenshots.mjs`, and the README-claim matrix in
+  `tests/e2e/scripts/generate-coverage.mjs` (`npm run e2e:coverage`
+  fails/red-flags a case with no spec).
+- `README.md` is consumer-only — no `tests/` paths, release/CI process
+  notes, or other repo internals; that context lives here.
+
 - **Fixtures**: `tests/e2e/fixtures/map.ts` is the single import point for
   specs — it exports `test`, `expect`, `gotoCase`, `waitForLog`,
   `waitForCameraStable`. It owns the branding contract (logo + attribution

@@ -222,7 +222,10 @@ for (const id of planned) {
       .evaluate(() => window.__MINIMAP__?.map?.jumpTo({ center: [91.2, 23.6] }))
       .catch(() => {})
   }
-  if (mapReady && id === 'draw/all') {
+  if (mapReady && id === 'draw/tools') {
+    // Toolbar demo: draw a polygon by hand, then an API-driven add so the
+    // review screenshot shows both paths (merged from the former draw/all
+    // + draw/api cases).
     await page.evaluate(() => window.__MAP__.doubleClickZoom.disable()).catch(() => {})
     const tool = page.locator('.mapbox-gl-draw_polygon')
     await tool.click().catch(() => {})
@@ -239,8 +242,6 @@ for (const id of planned) {
       }
       await page.mouse.dblclick(cx, cy + 100)
     }
-  }
-  if (mapReady && id === 'draw/api') {
     await page
       .evaluate(() => {
         const draw = window.__MAP__.draw
@@ -263,7 +264,7 @@ for (const id of planned) {
       })
       .catch(() => {})
   }
-  if (mapReady && id === 'styles/setstyle') {
+  if (mapReady && id === 'styles/switch') {
     await page
       .evaluate(() =>
         window.__SETSTYLE__(

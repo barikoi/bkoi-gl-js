@@ -7,9 +7,8 @@
 [![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<!-- Framework compatibility badges — mirror the validated matrix in
-     tests/framework/ (8 frameworks / 14 apps / 15 build cells) and the
-     integration guides under docs/frameworks/. -->
+<!-- Framework compatibility badges — versions validated per integration
+     guide under docs/frameworks/. -->
 <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
 <a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-15%20%7C%2016-black?logo=nextdotjs" alt="Next.js 15 | 16"></a>
 <a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
@@ -260,10 +259,9 @@ framework with the same three-step contract — import `Map` from `bkoi-gl`,
 import `bkoi-gl/style.css`, and `map.remove()` on unmount. The worker is
 registered automatically (no per-framework worker configuration).
 
-Every guide below is a reflection of the framework compatibility matrix in
-[`tests/framework/`](tests/framework/) — each integration is installed from
-the packed tarball, built, and verified (worker constructed, map `load` +
-`idle`, no page errors) before a release.
+Every guide below is validated end-to-end: each integration is installed from
+the published package in a real app, built with that framework's toolchain,
+and verified (worker constructed, map `load` + `idle`, no page errors).
 
 | Framework | Versions validated | Guide |
 |---|---|---|
@@ -289,14 +287,14 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | `container`           | string \| HTMLElement            | _required_           | The HTML element or ID to render the map in                 |
 | `accessToken`         | string                           | _required_           | Your Barikoi API key for authentication                     |
 | `style`               | string                           | Barikoi Light        | Map style URL or style identifier                           |
-| `center`              | [number, number]                 | `[90.3938, 23.8216]` | Initial center position [longitude, latitude]               |
-| `zoom`                | number                           | `10`                 | Initial zoom level (0-22)                                   |
+| `center`              | [number, number]                 | `[0, 0]`             | Initial center [longitude, latitude]. See the exported `DEFAULT_CENTER` for the recommended Dhaka center |
+| `zoom`                | number                           | `0`                 | Initial zoom level (0-22)                               |
 | `bearing`             | number                           | `0`                  | Initial bearing (rotation) in degrees, clockwise from north |
 | `pitch`               | number                           | `0`                  | Initial pitch (tilt) in degrees (0-85)                      |
-| `minZoom`             | number                           | `0`                  | Minimum zoom level                                          |
+| `minZoom`             | number                           | `-2`                 | Minimum zoom level                                          |
 | `maxZoom`             | number                           | `22`                 | Maximum zoom level                                          |
 | `minPitch`            | number                           | `0`                  | Minimum pitch level                                         |
-| `maxPitch`            | number                           | `85`                 | Maximum pitch level                                         |
+| `maxPitch`            | number                           | `60`                 | Maximum pitch level (0-85)                                  |
 | `bounds`              | [number, number, number, number] | _none_               | Initial map bounds as [swLng, swLat, neLng, neLat]          |
 | `fitBoundsOptions`    | object                           | _none_               | Options for fitBounds animation                             |
 | `interactive`         | boolean                          | `true`               | Enable/disable map interactions (drag, zoom, rotate)        |
@@ -310,15 +308,20 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | `doubleClickZoom`     | boolean                          | `true`               | Enable/disable double-click zoom                            |
 | `touchZoomRotate`     | boolean \| object                | `true`               | Enable/disable touch zoom/rotate                            |
 | `touchPitch`          | boolean \| object                | `true`               | Enable/disable touch pitch                                  |
-| `antialias`           | boolean                          | _auto_               | Enable antialiasing                                         |
+| `canvasContextAttributes` | object                       | `{ antialias: false, ... }` | WebGL context attributes (v6 home of `antialias`)     |
 | `refreshExpiredTiles` | boolean                          | `true`               | Refresh expired tiles                                       |
 | `maxBounds`           | [number, number, number, number] | _none_               | Constrain map to bounds [swLng, swLat, neLng, neLat]        |
-| `projection`          | string                           | `'mercator'`         | Map projection ('mercator' or 'globe')                      |
 | `renderWorldCopies`   | boolean                          | `true`               | Render multiple copies of the world                         |
 | `locale`              | object                           | _none_               | Localization strings for UI                                 |
 | `polygon`             | boolean                          | `false`              | Enable drawing tools for polygons/lines/points              |
 | `drawOptions`         | object                           | `{}`                 | Configuration for drawing tools                             |
 | `minimap`             | object                           | _none_               | Configuration for minimap control                           |
+
+**Projection & zoom notes (maplibre v6):**
+
+- There is **no `projection` constructor option** in v6 — it is silently ignored. Set the projection via the style (`projection: { type: 'globe' }` in the style JSON) or after style load: `map.setProjection({ type: 'globe' })`. Read it back with `map.getProjection()`.
+- `minZoom` defaults to `-2` (negative zoom is valid). The *effective* minimum also depends on the viewport size — query it with `map.getMinZoom(true)`.
+- `antialias` lives inside `canvasContextAttributes` in v6, e.g. `canvasContextAttributes: { antialias: true }`.
 
 ---
 
@@ -641,15 +644,22 @@ map.on('sourcedata', e => {
 
 #### Source & Layer Events
 
-Fired when sources or layers are added, removed, or modified.
+Fired when sources, layers, or style data change. In maplibre v6 there are no
+per-operation events like `layeradd`/`sourceremove` — all source and layer
+changes surface through the data events below (add/remove is visible in the
+`isSourceLoaded`/`source` payload fields).
 
-| Event           | Description                        |
-| --------------- | ---------------------------------- |
-| `sourceloading` | Fired when a source begins loading |
-| `sourceadd`     | Fired when a source is added       |
-| `sourceremove`  | Fired when a source is removed     |
-| `layeradd`      | Fired when a layer is added        |
-| `layerremove`   | Fired when a layer is removed      |
+| Event               | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `sourcedataloading` | Fired when a source begins loading                        |
+| `sourcedata`        | Fired when a source's data loads or changes (add/remove too) |
+| `styledataloading` | Fired when the style begins loading/changing              |
+| `styledata`         | Fired when the style loads or changes (layer add/remove too) |
+| `dataloading`       | Fired when any map data begins loading                    |
+| `data`              | Fired when any map data loads or changes                  |
+| `dataabort`         | Fired when a source request is aborted                    |
+| `sourcedataabort`   | Fired when a source data request is aborted               |
+| `styleimagemissing` | Fired when a style image is missing — add it via `map.addImage()` in the handler |
 
 ---
 
@@ -1575,7 +1585,8 @@ map.setLayoutProperty('my-layer', 'visibility', 'visible')
 // Remove a layer
 map.removeLayer('my-layer')
 
-// Remove a source (remove layers first)
+// Remove a source — remove ALL layers using it first: while any layer
+// still references the source, removeSource() is silently ignored.
 map.removeSource('my-source')
 ```
 
@@ -1610,8 +1621,10 @@ map.setMaxBounds([
   [91.0, 24.5],
 ])
 
-// Get projection
-const projection = map.getProjection()
+// Projection (maplibre v6): undefined until one is applied — set it via
+// setProjection after the style has loaded (or in the style JSON)
+map.setProjection({ type: 'globe' })
+const projection = map.getProjection() // { type: 'globe' }
 
 // World copies
 map.setRenderWorldCopies(true)
