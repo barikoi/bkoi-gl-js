@@ -101,6 +101,60 @@ const isMapSettled = () => {
   return Boolean(m && m.isStyleLoaded() && !m.isMoving() && !m.isZooming() && !m.isRotating())
 }
 
+/** Top-left camera-state + event ticker panel — the bkoi-js port of
+ *  react-bkoi-gl's e2e indication UI (cases/map.jsx MapEventsExtended
+ *  overlay + hooks.jsx ZoomReadoutControl). Dark pill, monospace,
+ *  pointer-events: none. Mounted on every settled case in gotoCase. */
+async function mountIndicators(page: Page) {
+  if (page.isClosed()) return
+  await page.evaluate(() => {
+    const map = window.__MAP__
+    if (!map) return
+    let el = document.getElementById('e2e-state-panel')
+    if (el) el.remove()
+    el = document.createElement('div')
+    el.id = 'e2e-state-panel'
+    el.setAttribute('data-testid', 'camera-readout')
+    el.style.cssText = [
+      'position:absolute',
+      'top:12px',
+      'left:12px',
+      'z-index:5',
+      'max-height:240px',
+      'overflow:hidden',
+      'background:rgba(15,23,42,0.88)',
+      'color:#e2e8f0',
+      'padding:8px 12px',
+      'border-radius:6px',
+      'font:600 13px/1.7 ui-monospace,monospace',
+      'pointer-events:none',
+      'white-space:pre',
+    ].join(';')
+    document.body.appendChild(el)
+
+    const ticker: string[] = []
+    const cameraLine = () => {
+      const c = map.getCenter()
+      return [
+        `zoom ${map.getZoom().toFixed(2)}`,
+        `${c.lng.toFixed(4)}, ${c.lat.toFixed(4)}`,
+        `bearing ${map.getBearing().toFixed(1)}  pitch ${map.getPitch().toFixed(1)}`,
+      ].join('\n')
+    }
+    const render = () => {
+      const lines = ticker.slice(-5).map(t => `▸ ${t}`)
+      el!.textContent = [cameraLine(), '', ...(lines.length ? lines : ['▸ …'])].join('\n')
+    }
+    for (const ev of ['move', 'zoom', 'rotate', 'pitch']) map.on(ev, render)
+    for (const ev of ['load', 'moveend', 'zoomend', 'rotateend', 'idle', 'styledata'])
+      map.on(ev, () => {
+        ticker.push(ev)
+        render()
+      })
+    render()
+  })
+}
+
 // Navigate to a case page and wait until its map settles. Branding contract
 // enforced here so every spec inherits it: Barikoi logo + attribution render.
 // `branding: false` opts out for cases that deliberately hide the attribution
@@ -118,6 +172,7 @@ export async function gotoCase(page: Page, id: string, { branding = true } = {})
   // adds its controls/markers synchronously — waiting on the log guarantees
   // the on-load setup is in the DOM.
   await waitForLog(page, 'load', { timeout: 45_000 })
+  await mountIndicators(page)
 
   await expect(page.locator('a.maplibregl-ctrl-logo[href*="barikoi.com"]').first()).toBeVisible()
   if (branding) {

@@ -28,14 +28,14 @@ that stops working fails CI.
 | Event payload contract (move/moveend/zoomend, click lngLat+point, draw.create features) | ✅ | e2e `events/contract` |
 | Navigation / Scale / Fullscreen / Geolocate controls | ✅ | e2e `controls/navigation` |
 | Minimap control (toggle, responsive, parent rect, bidirectional sync, collapse) | ✅ | e2e `controls/minimap` |
-| Drawing tools (polygon, line, point) + draw events | ✅ | e2e `draw/*` |
-| Draw API-driven ops (`add`, `changeMode`, `trash`) with event payloads | ✅ | e2e `draw/api` |
+| Drawing tools (polygon, line, point) + draw events | ✅ | e2e `draw/tools` (toolbar) |
+| Draw API-driven ops (`add`, `changeMode`, `trash`) with event payloads | ✅ | e2e `draw/tools` (API ops) |
 | Error paths: invalid API key, bad style URL, missing container | ✅ | e2e `errors/*` |
-| `setStyle` swaps (Barikoi → Barikoi → custom) keep attribution | ✅ | e2e `styles/setstyle` |
+| `setStyle` swaps (Barikoi → Barikoi → custom) keep attribution | ✅ | e2e `styles/switch` |
 | UMD global surface; registered worker URL fetches 200 | ✅ | e2e `formats` |
-| Markers & popups | ✅ | e2e `marker-popup` |
-| Camera methods (flyTo, easeTo, jumpTo, fitBounds, …) | ✅ | e2e `readme/examples` |
-| Custom GeoJSON sources & layers | ✅ | e2e `readme/examples` |
+| Markers & popups | ✅ | e2e `markers/popup` |
+| Camera methods (flyTo, easeTo, jumpTo, fitBounds, …) | ✅ | `camera.spec.ts` on `map/basic` |
+| Custom GeoJSON sources & layers | ✅ | e2e `layers/sources` |
 | Every fenced README example executes | ✅ | e2e `readme/examples` |
 | Build formats: ESM, CJS, IIFE, UMD | ✅ | e2e `formats`, `test:pack` |
 | Install/resolution: npm, pnpm, yarn, bun | ✅ | `test:resolution` |

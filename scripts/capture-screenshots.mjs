@@ -10,11 +10,11 @@ const base = `http://localhost:${PORT}`
 
 const SHOTS = [
   { case: 'map/basic', file: 'map-basic' },
-  { case: 'marker-popup', file: 'marker-popup' },
+  { case: 'markers/popup', file: 'marker-popup' },
   { case: 'controls/minimap', file: 'minimap' },
   { case: 'controls/navigation', file: 'controls' },
-  { case: 'draw/all', file: 'draw' },
-  { case: 'styles/setstyle', file: 'styles' },
+  { case: 'draw/tools', file: 'draw' },
+  { case: 'styles/switch', file: 'styles' },
 ]
 
 // Render settle before every screenshot — let remote tiles stream in. Not a
