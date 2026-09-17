@@ -3,7 +3,7 @@
 Spec: `docs/superpowers/specs/2026-09-15-test-expansion-changelog-ci-badges-design.md`
 Sequencing: A (tests) → B (changelog) → C (CI/badges). One commit per phase task.
 
-**Progress: A1 11/11 ✅ · A2 implemented + Feedback round AC1–AC6 landed (⚠️ full-suite re-verify PENDING) · B ⬜ · C 🟡 (design change pending — no GitHub secrets)**
+**Progress: A1 11/11 ✅ · A2 ✅ (AC1–AC6 landed; full-suite re-verified 2026-09-17: 20/20 green; one transient flake was a remote style-fetch hang, styles.spec green ×2 isolated) · B ✅ · C 🟡 (design change pending — no GitHub secrets)**
 
 Session note: e2e/browser tooling — ask the user before running or integrating.
 Work is UNCOMMITTED in the tree (maintainer holds commits). Do not `git add`
@@ -199,11 +199,14 @@ and fixes, all verified live:
        wait helpers; all specs re-pointed from `playwright/test`/`helpers.ts`
        to it. `tests/e2e/specs/helpers.ts` deleted.
 
-## Phase B — CHANGELOG full rewrite — ⬜
+## Phase B — CHANGELOG full rewrite — ✅
 
-1. ⬜ All 19 releases → react-bkoi-gl format (header block, `DD-MM-YYYY`,
-   bold-led, sections, no attribution, no `---`); `[4.0.0]` gains Testing
-   section incl. the Turbopack dist fix. Verify top version = package.json.
+1. ✅ All releases → react-bkoi-gl format (header block, `DD-MM-YYYY`,
+       bold-led, sections, no attribution, no `---`); `[4.0.0]` gained Testing
+       bullets for the Turbopack dist fix and CI. Top version `[4.0.0]` =
+       package.json. *(Spec said "19 releases" — actual count is **18**:
+       16 published (npm registry) + `1.0.0` initial (never published) +
+       `4.0.0` unreleased. Nothing missing; spec miscounted.)*
 
 ## Phase C — CI + badges — 🟡 blocked on Phase 0 decision
 
@@ -234,6 +237,42 @@ and fixes, all verified live:
 - **`--headed` CLI flag does not reach `testInfo.project.use`** (confirmed in
   the reference repo too): the fixtures detect a headed run via
   `process.argv.includes('--headed')` as the second signal.
+- **Lint hang root-caused (2026-09-17, GitHub issue #2 review follow-up)**: `eslint .`
+  was traversing `tests/framework/*-app/.next/` (Next build output missing from
+  ignores) — parsing + prettier-formatting webpack server chunks (one 32s file
+  read) made `npm run lint` run 17+ min without closing. Because lint had been
+  hanging since the 2026-09-16 Next builds, recent commits shipped without a
+  real lint gate. Maintainer decision: **`tests/framework/**` excluded from
+  eslint entirely** (consumer fixtures, not first-party); dead carve-outs
+  pruned. Lint now green in ~7.5s. Harness .mjs (run/lib/verify/review) ride
+  inside the exclusion — re-include individually if ever wanted.
+- **`scripts/test-pack.mjs` was committed broken (caught by the lint fix)**:
+  two real bugs — (1) the Turbopack-guard comment inside the smoke.mjs
+  template had raw backticks, closing the template early → `node --check`
+  syntax error ("missing ) after argument list"), i.e. `test:pack` and
+  `prepublishOnly` were dead on HEAD; (2) the guard regex used single
+  backslashes inside the template, which cook away — the generated smoke.mjs
+  would have received `[$w]+s*,s*...` (a guard that never matches). Fixed
+  (escaped backticks + doubled regex backslashes); verified: parses, cooked
+  regex matches the dynamic form and ignores stripped/static forms, full
+  `npm run test:pack` green.
+- **GitHub issue #2 (automated review of 65d1ba5) — all findings fixed
+  (2026-09-17)**: verify.mjs treats `CI` env as headless (mirrors
+  playwright.config.ts); README link `../tests/framework/` →
+  `tests/framework/`; both 3s shutdown bounds in `serveApp().stop()` now
+  clear their timers on early resolve (was holding the loop up to 3s per
+  app, ~42s over a 14-app run).
+- **Framework docs audited 7/7 (2026-09-17)**: every `docs/frameworks/*.md`
+  code block matches its validated app source verbatim (modulo harness
+  markers); claims spot-verified (vue index.html body reset, sveltekit
+  `app.html` margin + required `style.css` import in `+page.svelte`, nuxt
+  `html,body` reset + `css`/`runtimeConfig`, angular `inlineCritical:false` +
+  zone.js polyfill, `dist/style/bkoi-gl.css` export path exists).
+- **Framework matrix re-verified (2026-09-17)**: first full run 12/14 — both
+  React Vite cells failed verification with worker-200/zero-errors/no-load
+  (Barikoi API stall window after the session's e2e suites); both passed
+  isolated and the immediate full re-run was **14/14 PASS**. Transient, not
+  order-dependent.
 
 - **Library dist fix #2 (A2, unplanned)**: the styles/setstyle spec exposed
   that maplibre v6's AttributionControl rebuilds its inner HTML on every
@@ -282,12 +321,10 @@ and fixes, all verified live:
 ## Definition of done
 
 - [ ] `npm run test:framework` green across 14 apps (npm) + `--pm-subset` green
-- [ ] `npm run e2e` green; new specs deterministic
-      ⚠️ **PENDING RE-VERIFY** — last full run after the fixtures refactor:
-      13 failed / 7 passed. The failure set was not yet triaged (session
-      stopped for commit prep). Run `npm run e2e` and triage before treating
-      A2/AC as closed; `e2e:review -- --headless --dwell=0` was green 13/13
-      and `controls.spec.ts` green 5/5 in isolation, so suspect the fixture
-      refactor's per-spec applicability or the shared server lifecycle.
-- [ ] CHANGELOG rewritten, top version = package.json version
+- [x] `npm run e2e` green; new specs deterministic
+      ✅ 2026-09-17: 20/20 green (consecutive full runs; one flake triaged as a
+      remote style-fetch hang — not a code defect; styles.spec green ×2 in
+      isolation). The earlier 13-failed run no longer reproduces — fixed by
+      the commits landed after that plan note.
+- [x] CHANGELOG rewritten, top version = package.json version
 - [ ] Both workflows valid; first push to main runs the gate green

@@ -25,7 +25,10 @@ const eslintconfig = [
       '**/coverage/**',
       '**/playwright-report/**',
       '**/test-results/**',
-      'tests/framework/**/*.tgz',
+      // Framework matrix: 14 consumer-fixture apps with their own toolchains,
+      // build outputs (.next/.nuxt/.output/...) and packed installs — never
+      // lintable as first-party code (maintainer decision 2026-09-17).
+      'tests/framework/**',
       // Generated 490KB worker bundle (see scripts/build-worker.mjs)
       'src/worker-bundle.generated.ts',
       // Generated README-example manifest (see scripts/extract-readme-examples.mjs)
@@ -159,7 +162,7 @@ const eslintconfig = [
 
   // Harness scripts print progress to stdout by design.
   {
-    files: ['tests/framework/**/*.{js,mjs,ts}', 'scripts/**/*.mjs', 'tests/e2e/**/*.mjs'],
+    files: ['scripts/**/*.mjs', 'tests/e2e/**/*.mjs'],
     rules: {
       'no-console': 'off',
     },

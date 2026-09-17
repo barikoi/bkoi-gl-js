@@ -9,8 +9,9 @@
  * uncaught page errors occurred.
  *
  * Usage: node verify.mjs --name <label> --url <http://host:port> [--out results.json]
- *        [--headless]  (verification is HEADED by default; use --headless
- *         or HEADLESS=1 for CI/remote sessions — matching e2e:review)
+ *        [--headless]  (verification is HEADED by default; use --headless,
+ *         HEADLESS=1 or CI env for CI/remote sessions — matching
+ *         playwright.config.ts and e2e:review)
  * (For static build dirs pass --dir instead of --url; a static server is
  * started on --port.)
  */
@@ -30,7 +31,9 @@ const dir = arg('dir')
 const port = Number(arg('port', 6180))
 const outFile = arg('out')
 const headless =
-  process.argv.includes('--headless') || process.env.HEADLESS === '1'
+  process.argv.includes('--headless') ||
+  process.env.HEADLESS === '1' ||
+  !!process.env.CI // mirrors playwright.config.ts — CI runners have no display
 
 let server
 if (!url && dir) {

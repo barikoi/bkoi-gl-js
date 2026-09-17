@@ -354,8 +354,11 @@ export async function serveApp(app) {
           child.kill('SIGTERM')
         }
         await new Promise(r => {
-          child.on('exit', r)
-          setTimeout(r, 3000)
+          const t = setTimeout(r, 3000) // bound the wait; cleared on exit
+          child.on('exit', () => {
+            clearTimeout(t)
+            r()
+          })
         })
         await killPortUsers(port)
       },
@@ -371,8 +374,11 @@ export async function serveApp(app) {
       // then bound the wait.
       server.closeAllConnections?.()
       await new Promise(r => {
-        server.close(r)
-        setTimeout(r, 3000)
+        const t = setTimeout(r, 3000) // bound the wait; cleared on close
+        server.close(() => {
+          clearTimeout(t)
+          r()
+        })
       })
       await killPortUsers(port)
     },
