@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 import { bkoiConfig, Map as BkoiGlMap } from 'bkoi-gl'
 import exported from 'bkoi-gl'
+import { AttributionControl } from 'maplibre-gl'
 import { load } from './helpers'
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
@@ -121,6 +122,22 @@ describe('BkoiGlMap attribution', () => {
     const attrib = map._controls.find(c => c.position === 'bottom-right')
     expect(attrib?.control?.options?.compact).toBe(false)
     map.remove()
+  })
+
+  test('missing attribution _container is tolerated (defensive guard)', async () => {
+    // `_container` is a maplibre private; a future engine version that stops
+    // exposing it must not break construction — the observer setup is skipped.
+    const onAdd = vi.spyOn(AttributionControl.prototype, 'onAdd').mockImplementation(function () {
+      return document.createElement('div') // element, but no _container
+    })
+    try {
+      const map = await createMap()
+      expect(onAdd).toHaveBeenCalled()
+      expect(map.getContainer().querySelector('.maplibregl-ctrl-attrib-inner')).toBe(null)
+      map.remove()
+    } finally {
+      onAdd.mockRestore()
+    }
   })
 
   test('logo is added at construction — later bottom-left controls stack above it', async () => {

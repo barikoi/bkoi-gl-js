@@ -294,10 +294,16 @@ resolution across `node_modules`.
 
 ### CI
 
-The Release workflow (`.github/workflows/`) runs on push to `main` and creates
-the GitHub Release from the CHANGELOG; a separate workflow runs LLM code review
-on `dev` pushes. The heavy suites (unit + browser coverage, e2e, framework
-matrix) are local-only:
+Only two workflows run through GitHub Actions (react-bkoi-gl pattern):
+`release.yml` and `review.yaml`. The Release workflow gates every push to
+`main`: CodeQL scans in a parallel job while the gate runs typecheck, lint,
+build, the full vitest suite (unit + browser, 100% coverage thresholds
+enforced) with the lcov uploaded to Codecov tokenlessly, the README-manifest
+check, and the pack/resolution smoke tests; on pushes it also fails on a
+CHANGELOG ⇄ `package.json` version mismatch and creates the GitHub Release
+from the top CHANGELOG section. The review workflow runs LLM code review on
+`dev` pushes. The key-requiring suites (e2e, framework matrix) are local-only
+— the repo runs on zero GitHub secrets:
 
 - Full gate before release: `npm run typecheck` → `npm run lint` → `npm test`
   → `npm run e2e` → `npm run test:pack`. `prepublishOnly` enforces typecheck +
