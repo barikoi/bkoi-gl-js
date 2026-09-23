@@ -1,28 +1,35 @@
 # Barikoi GL JS
 
-[![npm version](https://img.shields.io/npm/v/bkoi-gl.svg)](https://www.npmjs.com/package/bkoi-gl)
-[![npm downloads](https://img.shields.io/npm/dw/bkoi-gl)](https://www.npmjs.com/package/bkoi-gl)
-[![Bundle Size](https://img.shields.io/bundlephobia/min/bkoi-gl)](https://bundlephobia.com/package/bkoi-gl)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-<!-- Framework compatibility badges — versions validated per integration
-     guide under docs/frameworks/. -->
-<a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
-<a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-15%20%7C%2016-black?logo=nextdotjs" alt="Next.js 15 | 16"></a>
-<a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
-<a href="docs/frameworks/nuxt.md"><img src="https://img.shields.io/badge/Nuxt-3%20%7C%204-00DC82?logo=nuxt&logoColor=white" alt="Nuxt 3 | 4"></a>
-<a href="docs/frameworks/svelte.md"><img src="https://img.shields.io/badge/Svelte-4%20%7C%205-FF3E00?logo=svelte&logoColor=white" alt="Svelte 4 | 5"></a>
-<a href="docs/frameworks/sveltekit.md"><img src="https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white" alt="SvelteKit 2"></a>
-<a href="docs/frameworks/angular.md"><img src="https://img.shields.io/badge/Angular-20%20%7C%2021-DD0031?logo=angular&logoColor=white" alt="Angular 20 | 21"></a>
-<a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/CRA-5-09D3AC?logo=react&logoColor=white" alt="CRA 5"></a>
-<img src="https://img.shields.io/badge/Vite-5%20%7C%207-646CFF?logo=vite&logoColor=white" alt="Vite 5 | 7">
-<img src="https://img.shields.io/badge/WebGL-2-orange?logo=webgl" alt="WebGL2">
-<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/npm-%E2%9C%93-CB3837?logo=npm&logoColor=white" alt="npm supported"></a>
-<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/pnpm-%E2%9C%93-F69220?logo=pnpm&logoColor=white" alt="pnpm supported"></a>
-<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/yarn%20classic-%E2%9C%93-2C8EBB?logo=yarn&logoColor=white" alt="yarn classic supported"></a>
-<a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/bun-%E2%9C%93-000?logo=bun" alt="bun supported"></a>
+<p align="center">
+  <!-- Public-repo badges: the workflow badge tracks the Release workflow
+       (gate + CodeQL scanning + GitHub Release); coverage is served by
+       Codecov (uploaded tokenlessly by CI). Framework badges link to the
+       validated integration guides under docs/frameworks/. -->
+  <a href="https://github.com/barikoi/bkoi-gl-js/actions/workflows/release.yml"><img src="https://github.com/barikoi/bkoi-gl-js/actions/workflows/release.yml/badge.svg" alt="CI"></a>
+  <a href="https://codecov.io/gh/barikoi/bkoi-gl-js"><img src="https://codecov.io/gh/barikoi/bkoi-gl-js/badge.svg" alt="codecov"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/v/bkoi-gl.svg?logo=npm&logoColor=white" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/dw/bkoi-gl.svg?label=downloads" alt="npm weekly downloads"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/l/bkoi-gl.svg?label=license" alt="license"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/node/v/bkoi-gl?label=node" alt="node"></a>
+  <a href="https://github.com/barikoi/bkoi-gl-js/releases"><img src="https://img.shields.io/github/v/release/barikoi/bkoi-gl-js?logo=github" alt="GitHub release"></a>
+  <a href="https://github.com/barikoi/bkoi-gl-js"><img src="https://img.shields.io/github/stars/barikoi/bkoi-gl-js?style=flat&logo=github" alt="GitHub stars"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://maplibre.org/maplibre-gl-js/docs/"><img src="https://img.shields.io/badge/MapLibre%20GL%20JS-v6-informational" alt="MapLibre GL JS v6"></a>
+  <img src="https://img.shields.io/badge/WebGL-2-orange?logo=webgl" alt="WebGL2">
+  <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
+  <a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-15%20%7C%2016-black?logo=nextdotjs" alt="Next.js 15 | 16"></a>
+  <a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
+  <a href="docs/frameworks/nuxt.md"><img src="https://img.shields.io/badge/Nuxt-3%20%7C%204-00DC82?logo=nuxt&logoColor=white" alt="Nuxt 3 | 4"></a>
+  <a href="docs/frameworks/svelte.md"><img src="https://img.shields.io/badge/Svelte-4%20%7C%205-FF3E00?logo=svelte&logoColor=white" alt="Svelte 4 | 5"></a>
+  <a href="docs/frameworks/sveltekit.md"><img src="https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white" alt="SvelteKit 2"></a>
+  <a href="docs/frameworks/angular.md"><img src="https://img.shields.io/badge/Angular-20%20%7C%2021-DD0031?logo=angular&logoColor=white" alt="Angular 20 | 21"></a>
+  <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/CRA-5-09D3AC?logo=react&logoColor=white" alt="CRA 5"></a>
+  <img src="https://img.shields.io/badge/Vite-5%20%7C%207-646CFF?logo=vite&logoColor=white" alt="Vite 5 | 7">
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/npm-%E2%9C%93-CB3837?logo=npm&logoColor=white" alt="npm supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/pnpm-%E2%9C%93-F69220?logo=pnpm&logoColor=white" alt="pnpm supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/yarn%20classic-%E2%9C%93-2C8EBB?logo=yarn&logoColor=white" alt="yarn classic supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/bun-%E2%9C%93-000?logo=bun" alt="bun supported"></a>
+</p>
 
 ---
 

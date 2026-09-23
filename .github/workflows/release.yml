@@ -1,9 +1,25 @@
+# Gate + release workflow (react-bkoi-gl release.yaml pattern, adapted).
+# Zero-secrets policy (maintainer decision 2026-09-15): no BARIKOI_API_KEY
+# secret exists, so the e2e and framework-matrix runs are LOCAL-ONLY (both
+# need the key; run `npm run e2e` / `npm run test:framework` before pushing).
+# CI proves the remote half of the gate: typecheck, lint, build, the full
+# vitest suite (unit + browser, 100% coverage thresholds enforced) with the
+# lcov uploaded to Codecov tokenlessly, README-manifest check, pack smoke,
+# resolution smoke. CodeQL scans in parallel.
+# On pushes to main, the gate additionally:
+#   1. fails on a CHANGELOG ⇄ package.json version mismatch,
+#   2. creates the v<x.y.z> GitHub Release from the top CHANGELOG section
+#      (skipped when the release already exists).
+# The changelog is the source of truth for the version. npm publish stays
+# manual behind `prepublishOnly` — CI never publishes.
+# No pull_request trigger: the maintainer works via direct pushes.
+
 name: Release
 
 on:
   push:
-    branches:
-      - main
+    branches: ['main']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,16 +28,85 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
+env:
+  NODE_VERSION: '24'
 
+jobs:
+  codeql:
+    name: CodeQL analysis
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@3ea06614dafe36dec890db3446326e0d40ce53d4 # v3
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@3ea06614dafe36dec890db3446326e0d40ce53d4 # v3
+        with:
+          category: '/language:javascript-typescript'
+
+  gate:
+    name: Typecheck, lint, test, build, release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck and lint
+        run: npm run typecheck && npm run lint
+
+      - name: Build
+        run: npm run build
+
+      # The browser vitest project runs headless Chromium against dist/.
+      - name: Install Chromium for the browser test project
+        run: npx playwright install --with-deps chromium
+
+      # Full suite: unit (mocked engine) + browser (real rendering), with the
+      # 100% coverage thresholds from vitest.config.ts enforced — a drop
+      # below the floor fails the gate.
+      - name: Tests with coverage
+        run: npm test
+
+      # Tokenless on public repos; an upload problem must never fail the gate.
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
+        with:
+          files: coverage/lcov.info
+        continue-on-error: true
+
+      - name: README example manifest check
+        run: npm run check:readme
+
+      - name: Pack tarball smoke test
+        run: npm run test:pack
+
+      - name: Resolution smoke test
+        run: npm run test:resolution
+
+      # ---- push to main only: version match + GitHub Release ----
 
       - name: Extract version from CHANGELOG
+        if: github.event_name == 'push'
         id: version
         run: |
           # Validate CHANGELOG.md exists
@@ -48,19 +133,35 @@ jobs:
           echo "Successfully extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Check version matches package.json
+        if: github.event_name == 'push'
+        run: |
+          VERSION="${VERSION_FROM_CHANGELOG}"
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if [ "$VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "ERROR: CHANGELOG version ($VERSION) != package.json version ($PACKAGE_VERSION)"
+            exit 1
+          fi
+        env:
+          VERSION_FROM_CHANGELOG: ${{ steps.version.outputs.version }}
+
       - name: Extract release notes from CHANGELOG
+        if: github.event_name == 'push'
         id: release-notes
         run: |
-          VERSION=${{ steps.version.outputs.version }}
+          VERSION="${VERSION_FROM_CHANGELOG}"
           NOTES=$(awk "/^## \\[${VERSION//./\\.}\\]/{flag=1; next} /^## \\[/{if(flag) exit} flag" CHANGELOG.md | sed '1d')
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          VERSION_FROM_CHANGELOG: ${{ steps.version.outputs.version }}
 
       - name: Check if release exists
+        if: github.event_name == 'push'
         id: check_release
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
+          VERSION="${VERSION_FROM_CHANGELOG}"
           if gh release view "v${VERSION}" --repo "${{ github.repository }}" &>/dev/null; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "Release v${VERSION} already exists, skipping..."
@@ -68,11 +169,12 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
         env:
+          VERSION_FROM_CHANGELOG: ${{ steps.version.outputs.version }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
-        if: steps.check_release.outputs.exists == 'false'
-        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' && steps.check_release.outputs.exists == 'false'
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
