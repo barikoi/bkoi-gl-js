@@ -4,7 +4,7 @@ Validated by `tests/framework/angular20-app` (Angular 20, zone-based) and `tests
 
 ## Styles — angular.json
 
-Angular has no JS-side stylesheet import path here; add the library CSS to the build's global styles. **Also disable `inlineCritical`** — Angular's critical-CSS inliner (Beasties) defers the whole stylesheet behind `media="print" onload=…`, the map mounts before it applies, and the logo/attribution render unstyled:
+Angular has no JS-side stylesheet import path here; add the library CSS to the build's global styles. **Also disable `inlineCritical`** — Angular's critical-CSS inliner (Beasties) defers the whole stylesheet behind `media="print" onload="this.media='all'"`, and the map mounts before the deferred sheet applies, so the logo/attribution flash unstyled. Worse: a deferred stylesheet whose `@import`s fail to load never fires `load` on the `<link>` at all (Chrome fires `error` instead), so `media` never flips and the styles **never** apply — an unstyled map forever, not a flash. bkoi-gl ships its CSS self-contained for exactly this reason, but keep `inlineCritical` disabled anyway to avoid the flash:
 
 ```json
 "options": {
@@ -16,6 +16,19 @@ Angular has no JS-side stylesheet import path here; add the library CSS to the b
   }
 }
 ```
+
+**Clear the production size budgets** — the scaffold's default `initial` budget (500 kB warning / 1 MB error) rejects the ~2 MB bundle and `ng build` fails with `bundle initial exceeded maximum budget`. This is the one build-target change the guide requires (matching `tests/framework/angular20-app/angular.json`):
+
+```json
+"configurations": {
+  "production": {
+    "budgets": [],
+    "outputHashing": "all"
+  }
+}
+```
+
+(Raise the `initial` `maximumError` instead if you want to keep budgets for your own code.)
 
 Reset the page in `src/styles.css` so the 100vw/100vh map does not overflow:
 

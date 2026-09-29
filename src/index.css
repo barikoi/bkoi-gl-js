@@ -12,13 +12,19 @@
 
 /**
  * @section Base Imports
- * Import the base MapLibre GL CSS and extend it with Barikoi-specific customizations
+ * The vendor stylesheets (maplibre-gl + maplibre-gl-draw) are NOT @import-ed
+ * from a CDN here. They are concatenated into dist/style/bkoi-gl.css at build
+ * time (see `bundleStyles` in rollup.config.js), in the order maplibre-gl →
+ * maplibre-gl-draw → this file, preserving the cascade described below.
+ *
+ * The previous remote @imports broke consumers: the draw URL 404'd
+ * (maplibre-gl-draw@1.6.9 ships `mapbox-gl-draw.css`, not
+ * `maplibre-gl-draw.css`), and a stylesheet whose @import fails never fires
+ * `load` on its <link> in Chrome — so Angular's inlineCritical deferral
+ * (media="print" onload="this.media='all'") never recovered and map chrome
+ * stayed unstyled indefinitely. Bundling also pins the CSS to the exact
+ * dependency versions the JS is built against.
  */
-
-/* Import Maplibre CSS */
-@import url('https://unpkg.com/maplibre-gl@5.13.0/dist/maplibre-gl.css');
-/* Import maplibre-gl-draw CSS */
-@import url('https://unpkg.com/maplibre-gl-draw@1.6.9/dist/maplibre-gl-draw.css');
 
 /*
  * Barikoi style overrides — ported VERBATIM from react-bkoi-gl styles/overrides.css

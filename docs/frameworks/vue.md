@@ -4,6 +4,8 @@ Validated by `tests/framework/vue3-vite-app` (Vue 3 + Vite 7) and `tests/framewo
 
 **The stylesheet import is required in both versions** — without `import 'bkoi-gl/style.css'` the map still renders but controls (logo, attribution) are unstyled and the attribution can overflow the viewport.
 
+Create `.env` with `VITE_BARIKOI_API_KEY=your_key` (restart the dev server after adding it).
+
 ## Vue 3
 
 ```js

@@ -30,12 +30,18 @@ function App() {
   return <div ref={ref} style={{ width: '100vw', height: '100vh' }} />
 }
 
-createRoot(document.getElementById('app')).render(<App />)
+createRoot(document.getElementById('root')).render(<App />)
 ```
+
+The template's `index.html` mounts into `<div id="root">` (the Vite React scaffold does not use `#app` — mounting to the wrong id throws `Target container is not a DOM element`). Replacing `main.jsx` also drops the template's `index.css` import, so reset the default body margin in `index.html` (`body { margin: 0 }`), or the 100vw/100vh map overflows by 16px on both axes.
+
+Create `.env` with `VITE_BARIKOI_API_KEY=your_key` (restart the dev server after adding it).
 
 ## CRA 5 (react-scripts)
 
-Same component; the key comes from `process.env.REACT_APP_BARIKOI_API_KEY`.
+Scaffold with `npx create-react-app@5.1.0 my-app` — pinning `@5.0.1` prints a "behind the latest release" refusal and **exits 0**, so scripted setups silently dead-end.
+
+Same component; the key comes from `process.env.REACT_APP_BARIKOI_API_KEY` (create `.env` with `REACT_APP_BARIKOI_API_KEY=your_key` and restart the dev server).
 
 ```jsx
 import { useEffect, useRef } from 'react'
@@ -61,6 +67,15 @@ export default function App() {
 
 CRA notes (validated by the cra5 cell):
 
-- Build without `CI=true` — react-scripts promotes webpack's "Critical dependency" warning (from the engine's `new URL(..., import.meta.url)` worker resolution) to a build error when `CI` is set.
+- No special build flags: `npm run build` and `CI=true npm run build` both pass with bkoi-gl 4.0.0 — webpack 5 resolves the engine's worker `new URL(..., import.meta.url)` silently, and react-scripts excludes source-map warnings from CI promotion.
 - In monorepos, build with `DISABLE_ESLINT_PLUGIN=true` (react-scripts' lint crashes on conflicting parent `@typescript-eslint` installs).
-- Jest/CRA tests: mock `bkoi-gl` — CRA's 2022 babel preset cannot parse the engine's ES2022 syntax (static class blocks).
+- Jest/CRA tests: CRA's jest only scans `src/` (a root-level `__mocks__/` is silently ignored) and cannot resolve the package's `exports` subpaths, so a component importing bkoi-gl needs three pieces — the real failure is jsdom's missing `TextDecoder`, not babel syntax:
+  1. `src/__mocks__/bkoi-gl.js`: `export const Map = class {}`
+  2. `src/__mocks__/bkoi-gl-style.js`: `module.exports = {}`
+  3. in `package.json`:
+     ```json
+     "jest": {
+       "moduleNameMapper": { "^bkoi-gl/style.css$": "<rootDir>/src/__mocks__/bkoi-gl-style.js" }
+     }
+     ```
+     and at the top of the test file: `jest.mock('bkoi-gl')`
