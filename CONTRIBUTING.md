@@ -129,12 +129,12 @@ quick-start path.
 ### Framework Compatibility (`tests/framework/`)
 
 One real consumer app per framework — Vite/React 18+19, Vue 2+3, Svelte 4+5,
-Next.js 15+16 (Turbopack and webpack), CRA 5, Nuxt 3+4, SvelteKit 2, Angular
-20+21 — installed from the packed tarball and verified for actual tile
-rendering (worker constructed + 200, engine `load` + `idle`, no uncaught
-errors; browser verification is **headed by default**, `--headless` /
-`HEADLESS=1` opts out). Covers the README's zero-config claims across
-14 apps / 15 cells.
+Next.js 13–16 (13 needs prod minification off; 15 webpack; 16 Turbopack and
+webpack), CRA 5, Nuxt 3+4, SvelteKit 2, Angular 20+21 — installed from the
+packed tarball and verified for actual tile rendering (worker constructed +
+200, engine `load` + `idle`, no uncaught errors; browser verification is
+**headed by default**, `--headless` / `HEADLESS=1` opts out). Covers the
+README's zero-config claims across 16 apps / 17 cells.
 
 ```bash
 npm run test:framework                          # full matrix (~30 min; run detached)

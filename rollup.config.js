@@ -5,6 +5,27 @@ import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-copy";
 import terser from "@rollup/plugin-terser";
 import dts from "rollup-plugin-dts";
+import esbuild from "esbuild";
+
+// maplibre-gl v6 ships prebuilt es2022 dist (static blocks, #private fields).
+// Older consumer toolchains can't handle it: Next 13's pinned SWC minifier
+// corrupts it at runtime ("symbolInstance.crossTileID can't be 0", blank map),
+// and CRA5's react-scripts parser hard-fails on it. Lower dependency code to
+// es2020 at bundle time so no consumer ever sees es2022 syntax.
+const lowerDepSyntax = () => ({
+  name: "lower-dependency-syntax-to-es2020",
+  async transform(code, id) {
+    if (!/node_modules/.test(id) || !/\.[cm]?js$/.test(id.split("?", 1)[0]))
+      return null;
+    const out = await esbuild.transform(code, {
+      target: ["es2020"],
+      loader: "js",
+      sourcefile: id,
+      sourcemap: true,
+    });
+    return { code: out.code, map: JSON.parse(out.map) };
+  },
+});
 
 // Turbopack (Next 16) statically analyzes `new URL(<dynamic>, import.meta.url)`
 // as an asset import and hard-fails the build ("Can't resolve ('' | <dynamic>)")
@@ -80,6 +101,7 @@ export default [
       clear({ targets: ["dist"] }),
       nodeResolveBrowser,
       commonjs(),
+      lowerDepSyntax(),
       typescript(typescriptConfig),
       copy({
         targets: [
@@ -111,6 +133,7 @@ export default [
       nodeResolveNode,
       stripDynamicImportMetaUrlBase(),
       commonjs(),
+      lowerDepSyntax(),
       typescript(typescriptConfig),
       terser(terserConfig),
     ],

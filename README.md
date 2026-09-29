@@ -17,7 +17,7 @@
   <a href="https://maplibre.org/maplibre-gl-js/docs/"><img src="https://img.shields.io/badge/MapLibre%20GL%20JS-v6-informational" alt="MapLibre GL JS v6"></a>
   <img src="https://img.shields.io/badge/WebGL-2-orange?logo=webgl" alt="WebGL2">
   <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
-  <a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-15%20%7C%2016-black?logo=nextdotjs" alt="Next.js 15 | 16"></a>
+  <a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-13%20%7C%2014%20%7C%2015%20%7C%2016-black?logo=nextdotjs" alt="Next.js 13 | 14 | 15 | 16"></a>
   <a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
   <a href="docs/frameworks/nuxt.md"><img src="https://img.shields.io/badge/Nuxt-3%20%7C%204-00DC82?logo=nuxt&logoColor=white" alt="Nuxt 3 | 4"></a>
   <a href="docs/frameworks/svelte.md"><img src="https://img.shields.io/badge/Svelte-4%20%7C%205-FF3E00?logo=svelte&logoColor=white" alt="Svelte 4 | 5"></a>
@@ -274,7 +274,7 @@ and verified (worker constructed, map `load` + `idle`, no page errors).
 |---|---|---|
 | React (Vite) | React 18, React 19 | [docs/frameworks/react.md](docs/frameworks/react.md) |
 | Create React App | react-scripts 5 | [docs/frameworks/react.md](docs/frameworks/react.md) |
-| Next.js | 15 (webpack), 16 (Turbopack + webpack) | [docs/frameworks/nextjs.md](docs/frameworks/nextjs.md) |
+| Next.js | 13, 14 (webpack; 13 needs minification off — see guide), 15 (webpack), 16 (Turbopack + webpack) | [docs/frameworks/nextjs.md](docs/frameworks/nextjs.md) |
 | Vue (Vite) | Vue 3, Vue 2.7 | [docs/frameworks/vue.md](docs/frameworks/vue.md) |
 | Nuxt | 3, 4 | [docs/frameworks/nuxt.md](docs/frameworks/nuxt.md) |
 | Svelte (Vite) | Svelte 5, Svelte 4 | [docs/frameworks/svelte.md](docs/frameworks/svelte.md) |

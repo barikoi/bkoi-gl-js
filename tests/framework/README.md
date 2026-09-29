@@ -13,6 +13,8 @@ for basic map rendering.
 | `vue3-vite-app` | Vue 3 + Vite 7 | same |
 | `svelte4-vite-app` | Svelte 4 + Vite 5 | same |
 | `svelte5-vite-app` | Svelte 5 + Vite 7 | same |
+| `next13-app` | Next.js 13 (webpack) | prod build served via `next start`; ships unminified (see `nextjs.md`) |
+| `next14-app` | Next.js 14 (webpack) | node-server build served via `next start` |
 | `next15-app` | Next.js 15 (webpack) | node-server build served via `next start` |
 | `next16-app` | Next.js 16 — **two cells**: Turbopack + `--webpack` | same ×2 |
 | `cra5-app` | react-scripts 5 (React 18) | CRA's webpack 5 path |
