@@ -38,7 +38,13 @@ const compile = outfile =>
     bundle: true,
     format: 'esm',
     platform: 'browser',
-    target: 'es2022',
+    // es2020 — matches the rollup-side lowering (lowerDepSyntax) so the whole
+    // published package (main bundle AND worker asset) carries no es2022
+    // syntax (static blocks, #private fields). Some consumers parse the
+    // worker file as a JS module (CRA5, bundlers tracing worker assets), and
+    // WebGL2 browsers without es2022 syntax support (e.g. Safari 15.0–16.3)
+    // would SyntaxError on the worker and show a blank map.
+    target: ['es2020'],
     // minify: false — REQUIRED. Minifying the worker bundle corrupts
     // maplibre's worker (every tile fails to parse at runtime: "Invalid code
     // point NaN", "codePointAt is not a function", etc. depending on

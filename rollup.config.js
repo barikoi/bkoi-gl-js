@@ -11,7 +11,9 @@ import esbuild from "esbuild";
 // Older consumer toolchains can't handle it: Next 13's pinned SWC minifier
 // corrupts it at runtime ("symbolInstance.crossTileID can't be 0", blank map),
 // and CRA5's react-scripts parser hard-fails on it. Lower dependency code to
-// es2020 at bundle time so no consumer ever sees es2022 syntax.
+// es2020 at bundle time — together with the worker bundle (see
+// scripts/build-worker.mjs, same target) the whole published package stays
+// free of es2022 syntax.
 const lowerDepSyntax = () => ({
   name: "lower-dependency-syntax-to-es2020",
   async transform(code, id) {
