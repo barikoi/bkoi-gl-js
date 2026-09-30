@@ -86,4 +86,6 @@ export class App implements AfterViewInit, OnDestroy {
 <div #mapEl style="width: 100vw; height: 100vh"></div>
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 Angular 20 needs `zone.js` in the build `polyfills` (the v21 app is zoneless). No worker configuration is needed in either version — Angular's esbuild builder does not emit the worker asset, and the library falls back to its self-contained worker automatically.

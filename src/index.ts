@@ -34,6 +34,8 @@ import MapboxDraw from 'maplibre-gl-draw'
 import { bkoiConfig } from './utils/config'
 import { isBarikoiStyle } from './utils/validator'
 import type { BkoiMapOptions, StyleConfig, MinimapOptions } from './types'
+import type { BkoiMapEventType } from './types/draw-events'
+import type { MapLayerEventType, Listener, Subscription } from 'maplibre-gl'
 import { Minimap } from './controls/Minimap'
 import { ensureWorkerUrl } from './worker-setup'
 
@@ -51,6 +53,48 @@ const { setRTLTextPlugin, getRTLTextPluginStatus, prewarm, clearPrewarmedResourc
  *
  * @extends {Map}
  */
+// The merge is intentional and safe: the interface only ADDS overload
+// signatures for the `draw.*` events; the class supplies the implementations.
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
+export interface BkoiGlMap {
+  on<T extends keyof BkoiMapEventType>(
+    type: T,
+    listener: (ev: BkoiMapEventType[T] & object) => void
+  ): Subscription
+  on<T extends keyof MapLayerEventType>(
+    type: T,
+    layer: string,
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): Subscription
+  on<T extends keyof MapLayerEventType>(
+    type: T,
+    layerIds: string[],
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): Subscription
+  on(type: string, listener: Listener): Subscription
+  off<T extends keyof MapLayerEventType>(
+    type: T,
+    layer: string,
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): this
+  off<T extends keyof MapLayerEventType>(
+    type: T,
+    layers: string[],
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): this
+  off<T extends keyof BkoiMapEventType>(
+    type: T,
+    listener: (ev: BkoiMapEventType[T] & object) => void
+  ): this
+  off(type: keyof BkoiMapEventType, listener: Listener): this
+}
+
+/**
+ * Barikoi map — a maplibre Map with Barikoi integration. The event methods
+ * above are widened (via this interface merge) so the six `draw.*` events
+ * emitted by the bundled maplibre-gl-draw compile without casts.
+ */
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 export class BkoiGlMap extends Map {
   /**
    * @private
@@ -537,6 +581,17 @@ export {
  * This is the primary way to create maps with Barikoi integration.
  */
 export { BkoiGlMap as Map }
+
+// Draw event types — payloads for the `draw.*` events on `Map.on/once/off`.
+export type {
+  BkoiMapEventType,
+  BkoiDrawCreateEvent,
+  BkoiDrawUpdateEvent,
+  BkoiDrawDeleteEvent,
+  BkoiDrawSelectionChangeEvent,
+  BkoiDrawModeChangeEvent,
+  BkoiDrawActionableEvent,
+} from './types/draw-events'
 
 // Default export with all Maplibre features + Barikoi extensions
 /**

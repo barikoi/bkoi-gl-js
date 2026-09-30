@@ -62,4 +62,6 @@ body {
 </style>
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 The `html, body` reset is required in Nuxt — there is no `index.html` of your own to put it in, and without it the map overflows the viewport by 16px on both axes (page scrolls).

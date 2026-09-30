@@ -11,8 +11,10 @@ Validated by `tests/framework/next13-app` (Next 13), `next14-app` (Next 14), `ne
 
 Map components need `"use client"` — the map requires a real DOM and a worker, so it cannot render on the server. No worker configuration is needed; the automatic worker URL registration works in all bundlers.
 
+TypeScript is the supported path (`.tsx`); the snippets below compile verbatim with `tsc --noEmit` and pass `next build` on Next 13.5 / 14.2 / 15.5 / 16.3. Scope the map to a route (e.g. `/guide`) rather than writing over your root `app/page.*`:
+
 ```tsx
-// app/map-view.jsx
+// app/guide/map-view.tsx
 'use client'
 
 import { useEffect, useRef } from 'react'
@@ -20,24 +22,40 @@ import { Map } from 'bkoi-gl'
 import 'bkoi-gl/style.css'
 
 export default function MapView() {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const mapRef = useRef<Map | null>(null)
 
   useEffect(() => {
-    const map = new Map({
+    if (!ref.current) return   // null-container guard
+    if (mapRef.current) return // re-entry guard: React StrictMode double-invokes
+                               // effects in dev (2 mounts per render on Next 13/14/16
+                               // defaults; Next 15 defaults differ — keep the guard
+                               // unconditionally)
+    mapRef.current = new Map({
       container: ref.current,
       accessToken: process.env.NEXT_PUBLIC_BARIKOI_API_KEY,
       center: [90.3938, 23.8216],
       zoom: 12,
     })
-    return () => map.remove()
+    return () => {
+      mapRef.current?.remove()
+      mapRef.current = null
+    }
   }, [])
 
-  return <div ref={ref} style={{ width: '100vw', height: '100vh' }} />
+  return (
+    // Container sizing: give the div an explicit height (inline style or a
+    // dedicated CSS rule). maplibre applies `.maplibregl-map { position:
+    // relative }` to the container and can override positioning utility
+    // classes like Tailwind's `absolute inset-0` — which collapses the
+    // container to height 0 (blank map, zero console errors).
+    <div ref={ref} style={{ width: '100%', height: '100vh' }} />
+  )
 }
 ```
 
-```jsx
-// app/page.jsx
+```tsx
+// app/guide/page.tsx
 import MapView from './map-view'
 
 export default function Page() {

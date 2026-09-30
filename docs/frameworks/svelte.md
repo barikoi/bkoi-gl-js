@@ -59,6 +59,8 @@ The component is identical in both majors:
 <div bind:this={el} style="width: 100vw; height: 100vh"></div>
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 Note: Svelte 4 requires `@sveltejs/vite-plugin-svelte@3` (the v4/v5 plugins target Svelte 5) and pairs with Vite 5.
 
 Reset the default body margin in `index.html` (`body { margin: 0 }`), or the 100vw/100vh map overflows by 16px on both axes — the Vite Svelte template does not reset it, and the `main.js` above replaces the template's (which was the only thing importing `app.css`).

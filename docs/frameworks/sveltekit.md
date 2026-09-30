@@ -42,6 +42,8 @@ export const prerender = true
 <div bind:this={el} style="width: 100vw; height: 100vh"></div>
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 Set the key via `.env` (`PUBLIC_BARIKOI_API_KEY=your_key`).
 
 Reset the default `body` margin in `src/app.html` (`<body style="margin: 0" ...>`) so the 100vw/100vh map does not overflow the viewport.

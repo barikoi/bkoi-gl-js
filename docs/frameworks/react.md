@@ -33,6 +33,8 @@ function App() {
 createRoot(document.getElementById('root')).render(<App />)
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 The template's `index.html` mounts into `<div id="root">` (the Vite React scaffold does not use `#app` — mounting to the wrong id throws `Target container is not a DOM element`). Replacing `main.jsx` also drops the template's `index.css` import, so reset the default body margin in `index.html` (`body { margin: 0 }`), or the 100vw/100vh map overflows by 16px on both axes.
 
 Create `.env` with `VITE_BARIKOI_API_KEY=your_key` (restart the dev server after adding it).

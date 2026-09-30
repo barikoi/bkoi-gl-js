@@ -43,6 +43,8 @@ onBeforeUnmount(() => map?.remove())
 </template>
 ```
 
+> **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
+
 ## Vue 2.7
 
 Vue 2 pairs with `@vitejs/plugin-vue2` and Vite 5 (the plugin-vue major that targets Vue 2). Vue 2.7 supports the composition API, but the validated app uses the options API with `$refs`:

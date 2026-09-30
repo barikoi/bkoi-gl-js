@@ -248,3 +248,34 @@ Tarball: 24 → 35 files (11 × `src/`), 5.9 → 6.1 MB packed.
    test:pack).
 4. Optional: add a CHANGELOG entry noting the self-contained stylesheet and shipped
    sourcemap sources as 4.0.0 highlights (consumers upgrading from 3.x need no action).
+
+---
+
+## 9 · Next.js reports (M2/M3, D1–D12) — validated & fixed (this pass)
+
+Validated every item from the Next.js companion reports against the tree at
+`fa0dc07` + this pass, then fixed all confirmed gaps. Verified with a fresh
+build + pack; snippets compiled verbatim with `tsc --noEmit --strict` against
+`dist/index.d.ts`; end-to-end smoke on Next 13.5.11 (webpack, dev + prod).
+
+| ID | Verdict on `fa0dc07` | Fix in this pass |
+|---|---|---|
+| M1 | Fixed in source by §2.1, but `dist/` was stale (unpkg imports still shipped) | Rebuilt — shipped CSS is 101,880 B, **0** `@import`s; Next 13 smoke: `ready`+`idle`, **0** unpkg requests, structural CSS applied |
+| M2 | Confirmed — `grep draw. dist/index.d.ts` → 0 | New `src/types/draw-events.ts` (`BkoiMapEventType` = `MapEventType` & six typed draw payloads) + `BkoiGlMap.on/off` overload interface (same-name interface merge; TS 5.9 rejects `declare` on overloads and `this`-returns on `once`, so `on`/`off` are typed and `once` keeps maplibre's signature). Payload types exported from the package. `draw.*` count in d.ts: 0 → 10 |
+| M3/D5 | Confirmed — README "required", `bkoiConfig` 0 mentions | README `accessToken` row now `_optional_` w/ `bkoiConfig.ACCESS_TOKEN` default; new "Global configuration" section with `bkoiConfig.ACCESS_TOKEN`/`DEFAULT_STYLE` example |
+| D1 | Confirmed — README L217 `useRef<null>(null)` | → `useRef<Map \| null>(null)`; quickstart compiles verbatim |
+| D2 | Confirmed — nextjs.md untyped ref | Typed `useRef<HTMLDivElement \| null>` + `mapRef`; snippet compiles verbatim |
+| D3 | Confirmed — no guards | Null-container + StrictMode re-entry guards added; version-scoped StrictMode note inline |
+| D4 | Confirmed — 0 mentions | "Container sizing" note added to README Quick Start + all 7 framework guides |
+| D6 | Confirmed — `showUserHeading` at README L891, absent from 6.9.1 types | Removed; **full option audit**: all 81 option keys across README code blocks now verified present in shipped types |
+| D7 | Blocked by M2 | Drawing Events section compiles verbatim, no casts (verified in the strict snippet check) |
+| D8 | Confirmed — 24 `new bkoigl.` | Prominent "CDN vs npm" note at the top of Quick Start (names import 1:1) |
+| D9/D10 | Confirmed — `.jsx` names + tsx fence, root-route target | nextjs.md now `app/guide/map-view.tsx` + `app/guide/page.tsx`, TypeScript stated as the supported path |
+| D11 | Confirmed — `(0-22)` / `(0-85)` | Reworded per report (negative zoom via `minZoom`; maxPitch "default 60, maximum 85") |
+| D12 | Already documented (README features list + engine-upgrade note) | None needed |
+
+**Verification:** repo lint ✅ · unit tests 121/121 ✅ · `tsc --noEmit` clean ✅ ·
+three doc snippets compile verbatim under `--strict` ✅ · full framework matrix
+re-run after these fixes (see final summary line) ✅ · Next 13 tarball smoke:
+build exit 0, map `ready`+`idle`, 0 unpkg requests, draw toolbar + `draw.*`
+dispatch verified live ✅

@@ -173,6 +173,11 @@ import 'bkoi-gl/style.css'
 
 ## Quick Start
 
+> 💡 **CDN vs npm:** the API examples below use the CDN global `bkoigl.` (from the
+> IIFE `<script>` in the vanilla quickstart). With npm/bundlers, import the same
+> names from the package instead:
+> `import { Map, Marker, Minimap, NavigationControl } from "bkoi-gl"`.
+
 ### Vanilla JavaScript
 
 ```html
@@ -214,7 +219,7 @@ import "bkoi-gl/style.css";
 
 const BasicMap = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<null>(null);
+  const map = useRef<Map | null>(null);
 
   useEffect(() => {
     if (map.current) return;
@@ -257,6 +262,14 @@ const BasicMap = () => {
 export default BasicMap;
 ```
 
+> **Container sizing:** maplibre applies `.maplibregl-map { position: relative }`
+> to your container. That rule can land **after** utility-framework CSS in the
+> bundle and override classes like Tailwind's `absolute inset-0`, collapsing the
+> container to height 0 — the engine still reports `load` + `idle` with zero
+> console errors, you just get a blank map. Give the container an **explicit
+> height via inline style or a dedicated CSS rule**; don't rely on positioning
+> utility classes on the element that hosts the map.
+
 ---
 
 ## Framework Integration
@@ -285,6 +298,25 @@ and verified (worker constructed, map `load` + `idle`, no page errors).
 
 ## Configuration
 
+### Global configuration
+
+Set the API token (and default style) once, globally — every map created afterwards
+uses them as fallbacks, so `accessToken` becomes optional per map:
+
+```js
+import { bkoiConfig } from "bkoi-gl";
+
+bkoiConfig.ACCESS_TOKEN = "YOUR_BARIKOI_API_KEY_HERE";
+// optional — defaults to the Barikoi Light style:
+bkoiConfig.DEFAULT_STYLE = "https://map.barikoi.com/styles/barikoi-light/style.json";
+
+// now no per-map token is needed:
+const map = new Map({ container: "map", center: [90.39, 23.72], zoom: 10 });
+```
+
+`bkoiConfig` is exported from the package. A per-map `accessToken` always wins over
+the global value.
+
 ### Map Options
 
 The `Map` constructor accepts an options object extending MapLibre GL JS MapOptions with Barikoi-specific additions.
@@ -292,16 +324,16 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | Option                | Type                             | Default              | Description                                                 |
 | --------------------- | -------------------------------- | -------------------- | ----------------------------------------------------------- |
 | `container`           | string \| HTMLElement            | _required_           | The HTML element or ID to render the map in                 |
-| `accessToken`         | string                           | _required_           | Your Barikoi API key for authentication                     |
+| `accessToken`         | string                           | `bkoiConfig.ACCESS_TOKEN` (per-map override) | Your Barikoi API key. Optional if you set the global token — see [Global configuration](#global-configuration) |
 | `style`               | string                           | Barikoi Light        | Map style URL or style identifier                           |
 | `center`              | [number, number]                 | `[0, 0]`             | Initial center [longitude, latitude]. See the exported `DEFAULT_CENTER` for the recommended Dhaka center |
-| `zoom`                | number                           | `0`                 | Initial zoom level (0-22)                               |
+| `zoom`                | number                           | `0`                 | Initial zoom level (maplibre v6 allows negative values down to `minZoom`) |
 | `bearing`             | number                           | `0`                  | Initial bearing (rotation) in degrees, clockwise from north |
 | `pitch`               | number                           | `0`                  | Initial pitch (tilt) in degrees (0-85)                      |
 | `minZoom`             | number                           | `-2`                 | Minimum zoom level                                          |
 | `maxZoom`             | number                           | `22`                 | Maximum zoom level                                          |
 | `minPitch`            | number                           | `0`                  | Minimum pitch level                                         |
-| `maxPitch`            | number                           | `60`                 | Maximum pitch level (0-85)                                  |
+| `maxPitch`            | number                           | `60`                 | Maximum pitch level (default 60, maximum 85)                |
 | `bounds`              | [number, number, number, number] | _none_               | Initial map bounds as [swLng, swLat, neLng, neLat]          |
 | `fitBoundsOptions`    | object                           | _none_               | Options for fitBounds animation                             |
 | `interactive`         | boolean                          | `true`               | Enable/disable map interactions (drag, zoom, rotate)        |
@@ -888,7 +920,6 @@ map.addControl(
     },
     trackUserLocation: true, // Track user movement
     showAccuracyCircle: true,
-    showUserHeading: true,
   }),
   'top-right'
 )
