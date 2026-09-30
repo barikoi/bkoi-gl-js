@@ -83,6 +83,48 @@ async function holdForReview(page: Page, testInfo: TestInfo) {
 // hooks in a shared module attach only to the first importing file.
 export const test = base.extend({
   page: async ({ page: basePage }, use, testInfo) => {
+    // The Barikoi default styles include a background raster source hosted on
+    // klokantech.github.io — third-party GitHub Pages. Two failure modes, both
+    // seen live:
+    //   1. GitHub Pages unreachable → 16 tile requests sit in maplibre's retry
+    //      loop for the whole settle window → gotoCase times out.
+    //   2. Headless Chromium's image-decode service intermittently rejects
+    //      even byte-perfect fulfilled tiles ("InvalidStateError: The source
+    //      image could not be decoded" from createImageBitmap), and every
+    //      retry fails the same way.
+    // Deterministic fix: rewrite the style JSON in transit and drop the
+    // external raster layer+source entirely. The e2e suite validates OUR
+    // library, not GitHub Pages' uptime or the machine's image decoder.
+    // (Root fix — hosting the relief tiles on Barikoi's own CDN — belongs to
+    // the style team.)
+    await basePage.route('**klokantech.github.io/**', route => route.abort())
+    await basePage.route('**map.barikoi.com/styles/**/style.json**', async route => {
+      try {
+        const res = await route.fetch()
+        const style = await res.json()
+        const stripped = Object.entries(style.sources || {})
+          .filter(([, src]) => {
+            const s = JSON.stringify(src)
+            return !s.includes('klokantech') && !s.includes('naturalearthtiles')
+          })
+          .map(([name, src]) => [name, src])
+        const removed = new Set(
+          Object.keys(style.sources || {}).filter(n => !stripped.some(([n2]) => n2 === n))
+        )
+        style.sources = Object.fromEntries(stripped)
+        style.layers = (style.layers || []).filter(
+          (l: { source?: string }) => l.source == null || !removed.has(l.source)
+        )
+        await route.fulfill({
+          status: res.status(),
+          contentType: 'application/json',
+          body: JSON.stringify(style),
+        })
+      } catch {
+        // Non-JSON or failed passthrough — let it through untouched.
+        await route.fallback()
+      }
+    })
     await use(basePage)
     await holdForReview(basePage, testInfo)
   },
