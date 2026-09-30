@@ -18,7 +18,7 @@ const camera = (page: Page) =>
     }
   }) as Promise<Cam>
 
-async function until(page: Page, pred: (cam: Cam) => boolean, { timeout = 20_000 } = {}) {
+async function until(page: Page, pred: (cam: Cam) => boolean, { timeout = 30_000 } = {}) {
   let cam = await camera(page)
   const t0 = Date.now()
   while (!pred(cam)) {
@@ -64,6 +64,11 @@ test('camera/api: jumpTo, panTo, zoom/rotation/pitch setters apply immediately',
 test('camera/api: flyTo, easeTo, zoomTo/zoomIn/zoomOut, rotateTo, resetNorth animate to target', async ({
   page,
 }) => {
+  // Headless Chromium rasterizes tiles in software (SwiftShader): every zoom-
+  // level change re-rasterizes the tile set and saturates the main thread for
+  // ~10s, so `page.evaluate` roundtrips between steps queue behind it. Eight
+  // sequential transitions need ~60s+ — give explicit headroom.
+  test.setTimeout(180_000)
   await gotoCase(page, 'map/basic')
 
   await page.evaluate(() =>
