@@ -46,7 +46,7 @@ test('layers/sources: GeoJSON source + circle/line/fill layers render and query'
   // source, so ALL layers must go first.
   const removed = await page.evaluate(
     () =>
-      new Promise(resolve => {
+      new Promise<{ sourceInStyle: boolean; layerInStyle: boolean }>(resolve => {
         const map = window.__MAP__
         for (const id of ['my-circle-layer', 'my-line-layer', 'my-fill-layer']) {
           if (map.getLayer(id)) map.removeLayer(id)
@@ -120,7 +120,10 @@ test('utility/handlers: every documented handler exists, disable/enable works', 
 
   // All 8 handlers from the README table exist and toggle without throwing
   const handlers = await page.evaluate(() => {
-    const map = window.__MAP__
+    const map = window.__MAP__ as unknown as Record<
+      string,
+      { enable(): void; disable(): void } | undefined
+    >
     const names = [
       'scrollZoom',
       'dragPan',
@@ -131,11 +134,11 @@ test('utility/handlers: every documented handler exists, disable/enable works', 
       'touchPitch',
       'boxZoom',
     ]
-    const out = {}
+    const out: Record<string, boolean> = {}
     for (const n of names) {
       const h = map[n]
       out[n] = Boolean(h && typeof h.enable === 'function' && typeof h.disable === 'function')
-      if (out[n]) {
+      if (out[n] && h) {
         h.disable()
         h.enable()
       }

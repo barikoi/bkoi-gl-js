@@ -72,6 +72,30 @@ export interface BkoiGlMap {
     listener: (ev: MapLayerEventType[T] & object) => void
   ): Subscription
   on(type: string, listener: Listener): Subscription
+  once<T extends keyof BkoiMapEventType>(
+    type: T,
+    listener: (ev: BkoiMapEventType[T] & object) => void
+  ): this
+  once<T extends keyof BkoiMapEventType>(type: T): Promise<BkoiMapEventType[T] & object>
+  once<T extends keyof MapLayerEventType>(
+    type: T,
+    layer: string,
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): this
+  once<T extends keyof MapLayerEventType>(
+    type: T,
+    layer: string
+  ): Promise<MapLayerEventType[T] & object>
+  once<T extends keyof MapLayerEventType>(
+    type: T,
+    layerIds: string[],
+    listener: (ev: MapLayerEventType[T] & object) => void
+  ): this
+  once<T extends keyof MapLayerEventType>(
+    type: T,
+    layerIds: string[]
+  ): Promise<MapLayerEventType[T] & object>
+  once(type: keyof BkoiMapEventType, listener?: Listener): this | Promise<unknown>
   off<T extends keyof MapLayerEventType>(
     type: T,
     layer: string,
@@ -91,7 +115,7 @@ export interface BkoiGlMap {
 
 /**
  * Barikoi map — a maplibre Map with Barikoi integration. The event methods
- * above are widened (via this interface merge) so the six `draw.*` events
+ * above are widened (via this interface merge) so the nine `draw.*` events
  * emitted by the bundled maplibre-gl-draw compile without casts.
  */
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
@@ -591,6 +615,9 @@ export type {
   BkoiDrawSelectionChangeEvent,
   BkoiDrawModeChangeEvent,
   BkoiDrawActionableEvent,
+  BkoiDrawRenderEvent,
+  BkoiDrawCombineEvent,
+  BkoiDrawUncombineEvent,
 } from './types/draw-events'
 
 // Default export with all Maplibre features + Barikoi extensions

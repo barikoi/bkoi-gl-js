@@ -33,8 +33,8 @@ test('controls/navigation: navigation + scale controls mount and work', async ({
   // (react-bkoi-gl visual contract)
   const logoPaint = await page.locator('a.maplibregl-ctrl-logo').evaluate(el => ({
     painted: getComputedStyle(el).backgroundImage !== 'none',
-    w: el.offsetWidth,
-    h: el.offsetHeight,
+    w: (el as HTMLElement).offsetWidth,
+    h: (el as HTMLElement).offsetHeight,
   }))
   expect(logoPaint.painted).toBe(true)
   expect(logoPaint.w).toBe(66)
@@ -105,8 +105,8 @@ test('controls/attribution-off: attribution hidden, logo still renders', async (
   await expect(logo).toBeVisible()
   const paint = await logo.evaluate(el => ({
     painted: getComputedStyle(el).backgroundImage !== 'none',
-    w: el.offsetWidth,
-    h: el.offsetHeight,
+    w: (el as HTMLElement).offsetWidth,
+    h: (el as HTMLElement).offsetHeight,
   }))
   expect(paint.painted).toBe(true)
   expect(paint.w).toBe(66)

@@ -74,11 +74,14 @@ test('config/defaults: bare constructor matches the documented defaults', async 
   expect(state.maxBounds).toBeNull()
   expect(state.renderWorldCopies).toBe(true)
 
-  // Negative zoom is valid in v6: configured default -2. On a canvas larger
-  // than one 512px world the viewport-constrained minimum sits ABOVE -1, so
-  // setZoom(-1) clamps up to exactly that constrained floor — assert the
-  // clamp, which is the real contract.
-  const constrainedMin = await page.evaluate(() => window.__MAP__.getMinZoom(true))
+  // Negative zoom is valid in v6: configured default -2. On a canvas taller
+  // than one 512px world the viewport-constrained floor —
+  // log2(canvasHeight / 512) — sits ABOVE -1, so setZoom(-1) clamps up to
+  // exactly that floor. getMinZoom() reports only the CONFIGURED value, so
+  // compute the real floor from the canvas and assert the clamp.
+  const constrainedMin = await page.evaluate(() =>
+    Math.max(window.__MAP__.getMinZoom(), Math.log2(window.__MAP__.getCanvas().height / 512))
+  )
   expect(constrainedMin).toBeGreaterThan(-2)
   await page.evaluate(() => window.__MAP__.setZoom(-1))
   const zoomAfter = await page.evaluate(() => window.__MAP__.getZoom())

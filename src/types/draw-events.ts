@@ -46,9 +46,24 @@ export interface BkoiDrawActionableEvent {
   }
 }
 
+/** Emitted after every draw-mode render pass; carries no payload. */
+export type BkoiDrawRenderEvent = Record<string, never>
+
+/** Emitted when features are combined into one Multi* feature. */
+export interface BkoiDrawCombineEvent {
+  createdFeatures: Feature[]
+  deletedFeatures: Feature[]
+}
+
+/** Emitted when a Multi* feature is split back into its parts. */
+export interface BkoiDrawUncombineEvent {
+  createdFeatures: Feature[]
+  deletedFeatures: Feature[]
+}
+
 /**
  * The full event-name → payload map accepted by `BkoiGlMap.on/once/off`:
- * every maplibre `Map` event plus the six `draw.*` events.
+ * every maplibre `Map` event plus the nine `draw.*` events.
  */
 export type BkoiMapEventType = MapEventType & {
   'draw.create': BkoiDrawCreateEvent
@@ -57,6 +72,9 @@ export type BkoiMapEventType = MapEventType & {
   'draw.selectionchange': BkoiDrawSelectionChangeEvent
   'draw.modechange': BkoiDrawModeChangeEvent
   'draw.actionable': BkoiDrawActionableEvent
+  'draw.render': BkoiDrawRenderEvent
+  'draw.combine': BkoiDrawCombineEvent
+  'draw.uncombine': BkoiDrawUncombineEvent
 }
 
 export type { MapEventType, MapLayerEventType, Listener, Subscription }

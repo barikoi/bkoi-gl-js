@@ -33,6 +33,11 @@ async function until(page: Page, pred: (cam: Cam) => boolean, { timeout = 30_000
 test('camera/api: jumpTo, panTo, zoom/rotation/pitch setters apply immediately', async ({
   page,
 }) => {
+  // jumpTo zoom 14 re-rasterizes the full tile set; on slow rasterizers
+  // (headless SwiftShader, or headed on integrated graphics with a maximized
+  // 1920×1080 window) every subsequent page.evaluate roundtrip queues behind
+  // it for 5–15s. Same headroom as the transition test below.
+  test.setTimeout(180_000)
   await gotoCase(page, 'map/basic')
 
   // Indication UI (ported from react-bkoi-gl): top-left live camera panel

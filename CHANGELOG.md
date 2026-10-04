@@ -12,6 +12,7 @@ Major release: the underlying engine migrates to **MapLibre GL JS v6** (bundled 
 ### Added
 - **Zero-config map rendering in every bundler.** The package ships a self-contained Web Worker and registers it automatically before the first map is constructed — no `setWorkerUrl()` call, no bundler worker rules, no files to copy. New `bkoi-gl/worker` export for strict-CSP environments that need the worker as a separate file.
 - **Per-framework integration guides** (`docs/frameworks/`) for React, CRA, Next.js, Vue, Nuxt, Svelte, SvelteKit, and Angular — each a reflection of the validated compatibility matrix, linked from the README's new Framework Integration section.
+- **Typed `draw.*` events.** All nine maplibre-gl-draw events (`draw.create`, `draw.update`, `draw.delete`, `draw.selectionchange`, `draw.modechange`, `draw.actionable`, `draw.render`, `draw.combine`, `draw.uncombine`) carry typed payloads on `Map.on/once/off` — TypeScript consumers no longer need casts for draw event listeners.
 
 ### Breaking (relative to 3.3.0)
 - **MapLibre GL JS v6 bundled.** WebGL2 is required (unsupported browsers throw `GPUInitializationError` and cannot render). Check event-payload fields your code relies on against the v6 event contracts when upgrading.

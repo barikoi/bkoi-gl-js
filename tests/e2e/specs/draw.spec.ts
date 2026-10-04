@@ -3,6 +3,20 @@
 // switch, doubleClickZoom stealing the finishing dblclick.
 import { test, expect, gotoCase, waitForLog } from '../fixtures/map.js'
 
+// `draw` is private on BkoiGlMap and getSource() is typed as the base Source;
+// narrow to the shape these API-level tests exercise (the e2e globals keep
+// __MAP__ as the public BkoiGlMap, so the escape hatch lives here).
+type DrawTestMap = {
+  draw: {
+    add(feature: object): string[]
+    getAll(): { features: unknown[] }
+    changeMode(mode: string, opts?: { featureIds?: string[] }): void
+    trash(): void
+  }
+  getSource(id: string): { getData(): Promise<{ features: unknown[] }> } | undefined
+  triggerRepaint(): void
+}
+
 // maplibre-gl-draw connects lazily; its cold source is the concrete
 // readiness signal — same gate as the browser-mode spec.
 async function drawReady(page) {
@@ -60,8 +74,9 @@ test('draw/tools: polygon draw end-to-end via toolbar', async ({ page }) => {
   await expect
     .poll(() =>
       page.evaluate(async () => {
+        const map = window.__MAP__ as unknown as DrawTestMap
         const count = async id => {
-          const source = window.__MAP__.getSource(id)
+          const source = map.getSource(id)
           return source ? (await source.getData()).features.length : 0
         }
         return (await count('mapbox-gl-draw-cold')) + (await count('mapbox-gl-draw-hot'))
@@ -79,7 +94,8 @@ test('draw/tools: API-driven add / changeMode / trash with event payloads', asyn
   // proves it renders). The source update only happens on a render frame,
   // so nudge one — the map is idle after load.
   const id = await page.evaluate(() => {
-    const ids = window.__MAP__.draw.add({
+    const map = window.__MAP__ as unknown as DrawTestMap
+    const ids = map.draw.add({
       type: 'Feature',
       properties: { name: 'api-polygon' },
       geometry: {
@@ -94,17 +110,22 @@ test('draw/tools: API-driven add / changeMode / trash with event payloads', asyn
         ],
       },
     })
-    window.__MAP__.triggerRepaint()
+    map.triggerRepaint()
     window.__DRAW_ID__ = ids[0]
     return ids[0]
   })
   expect(id).toBeTruthy()
-  await expect.poll(() => page.evaluate(() => window.__MAP__.draw.getAll().features.length)).toBe(1)
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window.__MAP__ as unknown as DrawTestMap).draw.getAll().features.length)
+    )
+    .toBe(1)
   await expect
     .poll(() =>
       page.evaluate(async () => {
+        const map = window.__MAP__ as unknown as DrawTestMap
         const count = async sourceId => {
-          const source = window.__MAP__.getSource(sourceId)
+          const source = map.getSource(sourceId)
           return source ? (await source.getData()).features.length : 0
         }
         return (await count('mapbox-gl-draw-cold')) + (await count('mapbox-gl-draw-hot'))
@@ -122,14 +143,20 @@ test('draw/tools: API-driven add / changeMode / trash with event payloads', asyn
   // 3. changeMode → simple_select with the feature selected (selectionchange
   // fires from the mode setup's non-silent setSelected).
   await page.evaluate(() =>
-    window.__MAP__.draw.changeMode('simple_select', { featureIds: [window.__DRAW_ID__] })
+    (window.__MAP__ as unknown as DrawTestMap).draw.changeMode('simple_select', {
+      featureIds: [window.__DRAW_ID__],
+    })
   )
   const selection = (await waitForLog(page, 'draw.selectionchange')).at(-1)
   expect(selection.features).toBe(1)
 
   // 4. trash() with an active selection → draw.delete payload + store emptied
-  await page.evaluate(() => window.__MAP__.draw.trash())
+  await page.evaluate(() => (window.__MAP__ as unknown as DrawTestMap).draw.trash())
   const deleted = (await waitForLog(page, 'draw.delete')).at(-1)
   expect(deleted.features).toBe(1)
-  await expect.poll(() => page.evaluate(() => window.__MAP__.draw.getAll().features.length)).toBe(0)
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window.__MAP__ as unknown as DrawTestMap).draw.getAll().features.length)
+    )
+    .toBe(0)
 })

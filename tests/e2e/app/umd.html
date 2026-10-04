@@ -5,9 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bkoi-gl e2e — UMD</title>
     <link rel="stylesheet" href="/style/bkoi-gl.css" />
+    <!-- 100% (not 100vw/vh) + zero body margin: 100vw ignores the vertical
+         scrollbar width and the UA body margin adds 16px, so the map overflowed
+         the viewport with scrollbars on both axes. -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
   </head>
   <body>
-    <div id="map" style="width: 100vw; height: 100vh"></div>
+    <div id="map"></div>
     <!-- Plain script tags, no bundler: exercises dist/umd/bkoi-gl.js exactly
          as a non-module consumer loads it. Worker files resolve as siblings
          of /umd/bkoi-gl.js (rollup copies them there). -->

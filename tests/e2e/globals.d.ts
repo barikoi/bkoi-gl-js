@@ -9,15 +9,24 @@
  * here would duplicate src/ typing for no test value.
  */
 import type { BkoiGlMap } from '../../src/index'
+import type * as BkoiGl from '../../src/index'
+import type { Minimap } from '../../src/controls/Minimap'
 
 declare global {
   interface Window {
     /** The case's live map — mounted by every case in tests/e2e/app/cases.js. */
     __MAP__: BkoiGlMap
-    /** Ordered event log the cases push to; specs wait on entries via waitForLog. */
-    __LOG__: { type: string; [k: string]: unknown }[]
-    /** Minimap control instance (controls/minimap cases). */
-    __MINIMAP__: unknown
+    /** Ordered event log the cases push to; specs wait on entries via waitForLog.
+     * Payload fields are heterogeneous per event, so the index is `any` by
+     * design (specs read entry.center.lng etc. without per-event unions). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    __LOG__: { type: string; [k: string]: any }[]
+    /** Minimap control instance (controls/minimap cases) — `map` is public. */
+    __MINIMAP__: Minimap
+    /** Page errors recorded from first script (app/main.js) — stringified. */
+    __pageErrors__: string[]
+    /** IIFE/UMD global installed by the script-tag builds (formats.spec). */
+    bkoigl: typeof BkoiGl
     /** Worker URLs captured by the init-script shim in formats.spec. */
     __WORKER_URLS__: string[]
     /** Per-block results of the README example runner (cases.js). */
