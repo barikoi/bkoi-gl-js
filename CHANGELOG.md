@@ -19,6 +19,9 @@ Major release: the underlying engine migrates to **MapLibre GL JS v6** (bundled 
 - **WebGL2 is required** — unsupported browsers throw `GPUInitializationError` and cannot render.
 - **Check event payloads** your code reads (`Map.on` handlers) against the MapLibre v6 event contracts.
 
+### Fixed
+- **Minimap no longer crashes after `setStyle`** — a style swap wiped the parent-rectangle source; the next parent move hit a non-null assertion. The overlay is now re-created on the new style's `style.load` (maplibre fires `load` only once per map).
+
 ## [3.3.0] - 18-02-2026
 
 ### Added
