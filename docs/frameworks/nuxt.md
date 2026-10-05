@@ -1,14 +1,32 @@
 # Nuxt
 
-Validated by `tests/framework/nuxt3-app` (Nuxt 3) and `tests/framework/nuxt4-app` (Nuxt 4, `app/` dir layout).
+Validated by `tests/framework/nuxt3-app` (Nuxt 3) and `nuxt4-app` (Nuxt 4). Full harness run 2026-10-05, Node 24 LTS, npm — all cells pass, `nuxi generate` SPA output (receipts: `tests/framework/results.json`).
 
-## Config
+| Nuxt | Output | Status | Notes |
+|---|---|---|---|
+| 3 | `nuxi generate` (SPA) | ✅ verified | — |
+| 4 | `nuxi generate` (SPA) | ✅ verified | `app/` directory layout |
+
+Not listed = untested. Nuxt 4 requires Node 24 (even LTS) in the matrix.
+
+## Prerequisites
+
+- Node 24 LTS (required to run the Nuxt 4 cell; the whole matrix validates on it)
+- A Barikoi API key
+
+## Install
+
+```sh
+npm i bkoi-gl
+```
+
+## Configuration
 
 The map needs a real DOM + worker, so disable SSR. Load the stylesheet through Nuxt's `css` option and expose the key through `runtimeConfig.public`:
 
 ```ts
 // nuxt.config.ts
-// SPA-only: maplibre needs a real DOM + worker, so no SSR/prerender.
+// SPA-only: maplibre needs a real DOM and a worker, so no SSR/prerender.
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
@@ -22,7 +40,15 @@ export default defineNuxtConfig({
 })
 ```
 
-## App component
+## API key
+
+Set it via `.env` — `runtimeConfig.public.barikoiApiKey` is populated from it at build time:
+
+```
+NUXT_PUBLIC_BARIKOI_API_KEY=your_key
+```
+
+## Quickstart
 
 ```vue
 <!-- app.vue (Nuxt 3) / app/app.vue (Nuxt 4) -->
@@ -62,6 +88,17 @@ body {
 </style>
 ```
 
+Expected result: a street map of Dhaka fills the viewport and the console stays clean. No worker configuration is needed — the library registers its self-contained worker automatically.
+
 > **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
 
-The `html, body` reset is required in Nuxt — there is no `index.html` of your own to put it in, and without it the map overflows the viewport by 16px on both axes (page scrolls).
+## Version-specific notes
+
+- **Nuxt 4** uses the `app/` directory layout — the component above lives at `app/app.vue` instead of the project root. Everything else is identical between majors.
+- The validated cells are **SPA output** (`ssr: false` + `nuxi generate`). Server-rendering a map component is not a tested path.
+
+## Troubleshooting
+
+- **Server-side rendering error / hydration mismatch** — the map needs a real DOM and a worker; keep `ssr: false` in `nuxt.config.ts`.
+- **Page scrolls 16px on both axes** — Nuxt owns the document HTML; the `html, body { margin: 0 }` reset in the component's `<style>` block above is required.
+- **Blank map, no console errors** — the map container has no height (see the container-sizing note above).

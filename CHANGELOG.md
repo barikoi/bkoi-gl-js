@@ -5,36 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - Unreleased
+## [4.0.0] - 05-10-2026
 
-Major release: the underlying engine migrates to **MapLibre GL JS v6** (bundled — maplibre is no longer a peer you install or configure) and the package ships a self-contained Web Worker, making map rendering zero-config in every bundler.
+Major release: the underlying engine migrates to **MapLibre GL JS v6** (bundled — maplibre is no longer a peer you install or configure; WebGL2 required) and the package ships a self-contained Web Worker, making map rendering zero-config in every bundler.
 
 ### Added
-- **Zero-config map rendering in every bundler.** The package ships a self-contained Web Worker and registers it automatically before the first map is constructed — no `setWorkerUrl()` call, no bundler worker rules, no files to copy. New `bkoi-gl/worker` export for strict-CSP environments that need the worker as a separate file.
-- **Per-framework integration guides** (`docs/frameworks/`) for React, CRA, Next.js, Vue, Nuxt, Svelte, SvelteKit, and Angular — each a reflection of the validated compatibility matrix, linked from the README's new Framework Integration section.
-- **Typed `draw.*` events.** All nine maplibre-gl-draw events (`draw.create`, `draw.update`, `draw.delete`, `draw.selectionchange`, `draw.modechange`, `draw.actionable`, `draw.render`, `draw.combine`, `draw.uncombine`) carry typed payloads on `Map.on/once/off` — TypeScript consumers no longer need casts for draw event listeners.
+- **Zero-config map rendering in every bundler** — the self-contained Web Worker registers automatically before the first map is constructed; no `setWorkerUrl()` call, no bundler worker rules, no files to copy. New `bkoi-gl/worker` export for strict-CSP environments.
+- **Typed `draw.*` events** — all nine maplibre-gl-draw events carry typed payloads on `Map.on/once/off`.
+- **Per-framework integration guides** (`docs/frameworks/`) for React, CRA, Next.js, Vue, Nuxt, Svelte, SvelteKit, and Angular, each backed by a validated compatibility matrix.
 
 ### Breaking (relative to 3.3.0)
-- **MapLibre GL JS v6 bundled.** WebGL2 is required (unsupported browsers throw `GPUInitializationError` and cannot render). Check event-payload fields your code relies on against the v6 event contracts when upgrading.
-- **Manual worker setups removed (and no longer needed)** — consumers who hosted or intercepted the maplibre worker themselves must switch to the bundled worker or the `bkoi-gl/worker` export.
-- **Jest replaced by Vitest** (dev-facing): unit (jsdom, mocked engine) + browser (real WebGL in Chromium) projects.
-
-### Changed
-- **Attribution renders exactly once and stays expanded**, surviving every style/source rebuild instead of duplicating copyright text.
-- **Barikoi logo matches the sibling `react-bkoi-gl` styling** (88×23, bottom-left, other bottom-left controls stack above it).
-- All `npm audit` vulnerabilities resolved (13 → 0); unused dependencies removed.
-- The stale `DEVELOPER_GUIDE.md` (and duplicate `env.example`) replaced by `CONTRIBUTING.md`.
-
-### Testing
-- **End-to-end suite runs against the built package** (`dist/`, not sources): map init/style, controls, drawing, markers/popups, and UMD script-tag usage.
-- **README examples are executable contracts** — every fenced example runs automatically against the built artifact; a documented example that stops working fails CI (`npm run check:readme`).
-- **Framework compatibility suite** — real consumer apps (React 18+19, Vue 2+3, Svelte 4+5, Next.js 15+16 in Turbopack and webpack modes, CRA 5, Nuxt 3+4, SvelteKit 2, Angular 20+21) install the packed tarball across npm/pnpm/yarn/bun and are verified for actual tile rendering (worker constructed + 200, engine `load` + `idle`, no page errors). 8 frameworks / 14 apps / 15 build cells.
-- **The framework matrix caught a real consumer-breaking bug before release** — maplibre v6's cross-origin worker wrapper uses `new URL(<dynamic>, import.meta.url)`, which Next.js 16 Turbopack treats as an unresolvable asset import once inlined into `bkoi-gl/dist`. The base argument is provably dead on that path, so the build strips it and `test:pack` guards that it stays gone.
-- **Headed review flows** — `npm run e2e:review` walks every e2e case and `npm run test:framework:review` walks the full framework matrix, in one visible browser with a HUD; a uniform (white) canvas is reported as a failure.
-- **e2e coverage report** (`npm run e2e:coverage`) mapping README claims to cases; showcase screenshot capture (`npm run screenshots`).
-- **Pre-publish smoke tests** — pack tarball + package-manager resolution (npm, pnpm, yarn, bun): exports map, `./style.css` and `./worker` subpaths, CJS `require()` support.
-- **100% statement/branch/function/line coverage enforced** across the unit + browser projects; README carries a feature matrix mapping every documented feature to its automated verification.
-- **CI** — every push to `main` runs a full gate (typecheck, lint, unit coverage → Codecov, build, pack/resolution smoke) with CodeQL in parallel, and a scheduled run exercises the whole framework matrix; publishing stays manual.
+- **Remove any manual worker setup** — `maplibregl.workerUrl` assignments, hosted worker files, and bundler worker rules are obsolete; the bundled worker registers itself. Only strict-CSP environments need the `bkoi-gl/worker` export.
+- **WebGL2 is required** — unsupported browsers throw `GPUInitializationError` and cannot render.
+- **Check event payloads** your code reads (`Map.on` handlers) against the MapLibre v6 event contracts.
 
 ## [3.3.0] - 18-02-2026
 

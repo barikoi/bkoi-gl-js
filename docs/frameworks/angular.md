@@ -1,8 +1,26 @@
 # Angular
 
-Validated by `tests/framework/angular20-app` (Angular 20, zone-based) and `tests/framework/angular21-app` (Angular 21, zoneless).
+Validated by `tests/framework/angular20-app` (Angular 20, zone-based) and `angular21-app` (Angular 21, zoneless), both on the esbuild application builder. Full harness run 2026-10-05, Node 24 LTS, npm — all cells pass (receipts: `tests/framework/results.json`).
 
-## Styles — angular.json
+| Angular | Builder | Status | Notes |
+|---|---|---|---|
+| 20 | esbuild application builder | ✅ verified | needs `zone.js` in build `polyfills` |
+| 21 | esbuild application builder | ✅ verified | zoneless |
+
+Not listed = untested.
+
+## Prerequisites
+
+- Node 24 LTS (the version the validation matrix runs on)
+- A Barikoi API key
+
+## Install
+
+```sh
+npm i bkoi-gl
+```
+
+## Configuration — angular.json
 
 Angular has no JS-side stylesheet import path here; add the library CSS to the build's global styles. **Also disable `inlineCritical`** — Angular's critical-CSS inliner (Beasties) defers the whole stylesheet behind `media="print" onload="this.media='all'"`, and the map mounts before the deferred sheet applies, so the logo/attribution flash unstyled. Worse: a deferred stylesheet whose `@import`s fail to load never fires `load` on the `<link>` at all (Chrome fires `error` instead), so `media` never flips and the styles **never** apply — an unstyled map forever, not a flash. bkoi-gl ships its CSS self-contained for exactly this reason, but keep `inlineCritical` disabled anyway to avoid the flash:
 
@@ -48,7 +66,7 @@ Angular has no framework env-var mechanism; generate a key module and import it 
 export const BARIKOI_API_KEY = 'your_key'
 ```
 
-## Component
+## Quickstart
 
 ```ts
 // src/app/app.ts
@@ -86,6 +104,16 @@ export class App implements AfterViewInit, OnDestroy {
 <div #mapEl style="width: 100vw; height: 100vh"></div>
 ```
 
+Expected result: a street map of Dhaka fills the viewport and the console stays clean. No worker configuration is needed in either version — Angular's esbuild builder does not emit the worker asset, and the library falls back to its self-contained worker automatically.
+
 > **Container sizing:** keep the explicit inline height (or a dedicated CSS rule) on the map container. maplibre applies `.maplibregl-map { position: relative }` to it and can override positioning utility classes (e.g. Tailwind's `absolute inset-0`), collapsing the container to height 0 — blank map with zero console errors.
 
-Angular 20 needs `zone.js` in the build `polyfills` (the v21 app is zoneless). No worker configuration is needed in either version — Angular's esbuild builder does not emit the worker asset, and the library falls back to its self-contained worker automatically.
+## Version-specific notes
+
+- **Angular 20** needs `zone.js` in the build `polyfills`; **Angular 21** is zoneless and does not.
+
+## Troubleshooting
+
+- **`ng build` fails with `bundle initial exceeded maximum budget`** — the scaffold's default size budgets reject the ~2 MB bundle; clear the `initial` budget as shown in Configuration.
+- **Logo/attribution flash unstyled — or stay unstyled forever** — `inlineCritical` is enabled; Beasties defers the stylesheet behind `media="print"` and the map mounts first. Keep `optimization.styles.inlineCritical: false`.
+- **Blank map, no console errors** — the map container has no height (see the container-sizing note above).
