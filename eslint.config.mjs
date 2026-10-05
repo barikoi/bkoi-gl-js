@@ -40,7 +40,6 @@ const eslintconfig = [
       'eslint.config.mjs',
       // Phase 1 throwaway smoke harness — deleted when the Phase 3 e2e host lands
       'scratch/**',
-      'check_exports.js',
     ],
   },
 
