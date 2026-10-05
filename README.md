@@ -1,17 +1,43 @@
 # Barikoi GL JS
 
-[![npm version](https://img.shields.io/npm/v/bkoi-gl.svg)](https://www.npmjs.com/package/bkoi-gl)
-[![npm downloads](https://img.shields.io/npm/dw/bkoi-gl)](https://www.npmjs.com/package/bkoi-gl)
-[![Bundle Size](https://img.shields.io/bundlephobia/min/bkoi-gl)](https://bundlephobia.com/package/bkoi-gl)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js Version](https://img.shields.io/node/v/bkoi-gl)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <!-- Public-repo badges: the workflow badge tracks the Release workflow
+       (gate + CodeQL scanning + GitHub Release); coverage is served by
+       Codecov (uploaded tokenlessly by CI). Framework badges link to the
+       validated integration guides under docs/frameworks/. -->
+  <a href="https://github.com/barikoi/bkoi-gl-js/actions/workflows/release.yml"><img src="https://github.com/barikoi/bkoi-gl-js/actions/workflows/release.yml/badge.svg" alt="CI"></a>
+  <a href="https://codecov.io/gh/barikoi/bkoi-gl-js"><img src="https://codecov.io/gh/barikoi/bkoi-gl-js/badge.svg" alt="codecov"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/v/bkoi-gl.svg?logo=npm&logoColor=white" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/dw/bkoi-gl.svg?label=downloads" alt="npm weekly downloads"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/npm/l/bkoi-gl.svg?label=license" alt="license"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/node/v/bkoi-gl?label=node" alt="node"></a>
+  <a href="https://github.com/barikoi/bkoi-gl-js/releases"><img src="https://img.shields.io/github/v/release/barikoi/bkoi-gl-js?logo=github" alt="GitHub release"></a>
+  <a href="https://github.com/barikoi/bkoi-gl-js"><img src="https://img.shields.io/github/stars/barikoi/bkoi-gl-js?style=flat&logo=github" alt="GitHub stars"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://maplibre.org/maplibre-gl-js/docs/"><img src="https://img.shields.io/badge/MapLibre%20GL%20JS-v6-informational" alt="MapLibre GL JS v6"></a>
+  <img src="https://img.shields.io/badge/WebGL-2-orange?logo=webgl" alt="WebGL2">
+  <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/React-18%20%7C%2019-149eca?logo=react&logoColor=white" alt="React 18 | 19"></a>
+  <a href="docs/frameworks/nextjs.md"><img src="https://img.shields.io/badge/Next.js-13%20%7C%2014%20%7C%2015%20%7C%2016-black?logo=nextdotjs" alt="Next.js 13 | 14 | 15 | 16"></a>
+  <a href="docs/frameworks/vue.md"><img src="https://img.shields.io/badge/Vue-2.7%20%7C%203-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 2.7 | 3"></a>
+  <a href="docs/frameworks/nuxt.md"><img src="https://img.shields.io/badge/Nuxt-3%20%7C%204-00DC82?logo=nuxt&logoColor=white" alt="Nuxt 3 | 4"></a>
+  <a href="docs/frameworks/svelte.md"><img src="https://img.shields.io/badge/Svelte-4%20%7C%205-FF3E00?logo=svelte&logoColor=white" alt="Svelte 4 | 5"></a>
+  <a href="docs/frameworks/sveltekit.md"><img src="https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white" alt="SvelteKit 2"></a>
+  <a href="docs/frameworks/angular.md"><img src="https://img.shields.io/badge/Angular-20%20%7C%2021-DD0031?logo=angular&logoColor=white" alt="Angular 20 | 21"></a>
+  <a href="docs/frameworks/react.md"><img src="https://img.shields.io/badge/CRA-5-09D3AC?logo=react&logoColor=white" alt="CRA 5"></a>
+  <img src="https://img.shields.io/badge/Vite-5%20%7C%207-646CFF?logo=vite&logoColor=white" alt="Vite 5 | 7">
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/npm-%E2%9C%93-CB3837?logo=npm&logoColor=white" alt="npm supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/pnpm-%E2%9C%93-F69220?logo=pnpm&logoColor=white" alt="pnpm supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/yarn%20classic-%E2%9C%93-2C8EBB?logo=yarn&logoColor=white" alt="yarn classic supported"></a>
+  <a href="https://www.npmjs.com/package/bkoi-gl"><img src="https://img.shields.io/badge/bun-%E2%9C%93-000?logo=bun" alt="bun supported"></a>
+</p>
 
 ---
 
 ## Overview
 
-Barikoi GL JS is a JavaScript library built on top of [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
+Barikoi GL JS is a JavaScript library built on top of [MapLibre GL JS v6](https://maplibre.org/maplibre-gl-js/docs/), designed for seamless integration with Barikoi Maps, offering high-performance and customizable map rendering. This library is optimized for modern web applications and supports React, Next.js, and vanilla JavaScript projects.
+
+> 💡 <b>Note:</b> bkoi-gl 4.0.0 upgrades the underlying engine to <b>MapLibre GL JS v6</b>. The library bundles maplibre and ships a self-contained worker, so no extra maplibre installation or worker hosting is needed. For strict-CSP environments, import <code>bkoi-gl/worker</code> to get the worker as a separate file.
 
 Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package provides tools to integrate maps and location services effortlessly.
 
@@ -24,6 +50,9 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+  - [Vanilla JavaScript](#vanilla-javascript)
+  - [React/Next.js](#reactnextjs)
+- [Framework Integration](#framework-integration)
 - [Configuration](#configuration)
   - [Map Options](#map-options)
   - [Draw Options](#draw-options)
@@ -68,7 +97,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 ## Features
 
 - **High Performance** - WebGL-based map rendering
-- **Framework Support** - Easy integration with React and Next.js
+- **Framework Support** - Validated integrations for React, Next.js, Vue, Nuxt, Svelte, SvelteKit, and Angular (see [Framework Integration](#framework-integration))
 - **Customizable Controls** - Flexible map controls and interactions
 - **Location Services** - Support for Barikoi geolocation services
 - **Lightweight** - Optimized for production use
@@ -77,6 +106,7 @@ Powered by [Barikoi - Maps for Businesses](https://barikoi.com/), this package p
 - **Branded Attribution** - Displays Barikoi logo with proper attribution
 - **Multiple Build Formats** - ESM, CJS, IIFE, and UMD
 - **TypeScript Support** - Full TypeScript definitions included
+- **Self-Contained Worker** - Bundled worker, no extra hosting needed (`bkoi-gl/worker` export for strict-CSP environments)
 
 ---
 
@@ -143,6 +173,11 @@ import 'bkoi-gl/style.css'
 
 ## Quick Start
 
+> 💡 **CDN vs npm:** the API examples below use the CDN global `bkoigl.` (from the
+> IIFE `<script>` in the vanilla quickstart). With npm/bundlers, import the same
+> names from the package instead:
+> `import { Map, Marker, Minimap, NavigationControl } from "bkoi-gl"`.
+
 ### Vanilla JavaScript
 
 ```html
@@ -184,7 +219,7 @@ import "bkoi-gl/style.css";
 
 const BasicMap = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<null>(null);
+  const map = useRef<Map | null>(null);
 
   useEffect(() => {
     if (map.current) return;
@@ -227,9 +262,60 @@ const BasicMap = () => {
 export default BasicMap;
 ```
 
+> **Container sizing:** maplibre applies `.maplibregl-map { position: relative }`
+> to your container. That rule can land **after** utility-framework CSS in the
+> bundle and override classes like Tailwind's `absolute inset-0`, collapsing the
+> container to height 0 — the engine still reports `load` + `idle` with zero
+> console errors, you just get a blank map. Give the container an **explicit
+> height via inline style or a dedicated CSS rule**; don't rely on positioning
+> utility classes on the element that hosts the map.
+
+---
+
+## Framework Integration
+
+`bkoi-gl` is framework-agnostic vanilla JavaScript: it works in every major
+framework with the same three-step contract — import `Map` from `bkoi-gl`,
+import `bkoi-gl/style.css`, and `map.remove()` on unmount. The worker is
+registered automatically (no per-framework worker configuration).
+
+Every guide below is validated end-to-end: each integration is installed from
+the published package in a real app, built with that framework's toolchain,
+and verified (worker constructed, map `load` + `idle`, no page errors).
+
+| Framework | Versions validated | Guide |
+|---|---|---|
+| React (Vite) | React 18, React 19 | [docs/frameworks/react.md](docs/frameworks/react.md) |
+| Create React App | react-scripts 5 | [docs/frameworks/react.md](docs/frameworks/react.md) |
+| Next.js | 13, 14 (webpack; 13 needs minification off — see guide), 15 (webpack), 16 (Turbopack + webpack) | [docs/frameworks/nextjs.md](docs/frameworks/nextjs.md) |
+| Vue (Vite) | Vue 3, Vue 2.7 | [docs/frameworks/vue.md](docs/frameworks/vue.md) |
+| Nuxt | 3, 4 | [docs/frameworks/nuxt.md](docs/frameworks/nuxt.md) |
+| Svelte (Vite) | Svelte 5, Svelte 4 | [docs/frameworks/svelte.md](docs/frameworks/svelte.md) |
+| SvelteKit | 2 (adapter-static) | [docs/frameworks/sveltekit.md](docs/frameworks/sveltekit.md) |
+| Angular | 21 (zoneless), 20 | [docs/frameworks/angular.md](docs/frameworks/angular.md) |
+
 ---
 
 ## Configuration
+
+### Global configuration
+
+Set the API token (and default style) once, globally — every map created afterwards
+uses them as fallbacks, so `accessToken` becomes optional per map:
+
+```js
+import { bkoiConfig } from "bkoi-gl";
+
+bkoiConfig.ACCESS_TOKEN = "YOUR_BARIKOI_API_KEY_HERE";
+// optional — defaults to the Barikoi Light style:
+bkoiConfig.DEFAULT_STYLE = "https://map.barikoi.com/styles/barikoi-light/style.json";
+
+// now no per-map token is needed:
+const map = new Map({ container: "map", center: [90.39, 23.72], zoom: 10 });
+```
+
+`bkoiConfig` is exported from the package. A per-map `accessToken` always wins over
+the global value.
 
 ### Map Options
 
@@ -238,16 +324,16 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | Option                | Type                             | Default              | Description                                                 |
 | --------------------- | -------------------------------- | -------------------- | ----------------------------------------------------------- |
 | `container`           | string \| HTMLElement            | _required_           | The HTML element or ID to render the map in                 |
-| `accessToken`         | string                           | _required_           | Your Barikoi API key for authentication                     |
+| `accessToken`         | string                           | `bkoiConfig.ACCESS_TOKEN` (per-map override) | Your Barikoi API key. Optional if you set the global token — see [Global configuration](#global-configuration) |
 | `style`               | string                           | Barikoi Light        | Map style URL or style identifier                           |
-| `center`              | [number, number]                 | `[90.3938, 23.8216]` | Initial center position [longitude, latitude]               |
-| `zoom`                | number                           | `10`                 | Initial zoom level (0-22)                                   |
+| `center`              | [number, number]                 | `[0, 0]`             | Initial center [longitude, latitude]. See the exported `DEFAULT_CENTER` for the recommended Dhaka center |
+| `zoom`                | number                           | `0`                 | Initial zoom level (maplibre v6 allows negative values down to `minZoom`) |
 | `bearing`             | number                           | `0`                  | Initial bearing (rotation) in degrees, clockwise from north |
 | `pitch`               | number                           | `0`                  | Initial pitch (tilt) in degrees (0-85)                      |
-| `minZoom`             | number                           | `0`                  | Minimum zoom level                                          |
+| `minZoom`             | number                           | `-2`                 | Minimum zoom level                                          |
 | `maxZoom`             | number                           | `22`                 | Maximum zoom level                                          |
 | `minPitch`            | number                           | `0`                  | Minimum pitch level                                         |
-| `maxPitch`            | number                           | `85`                 | Maximum pitch level                                         |
+| `maxPitch`            | number                           | `60`                 | Maximum pitch level (default 60, maximum 85)                |
 | `bounds`              | [number, number, number, number] | _none_               | Initial map bounds as [swLng, swLat, neLng, neLat]          |
 | `fitBoundsOptions`    | object                           | _none_               | Options for fitBounds animation                             |
 | `interactive`         | boolean                          | `true`               | Enable/disable map interactions (drag, zoom, rotate)        |
@@ -261,15 +347,20 @@ The `Map` constructor accepts an options object extending MapLibre GL JS MapOpti
 | `doubleClickZoom`     | boolean                          | `true`               | Enable/disable double-click zoom                            |
 | `touchZoomRotate`     | boolean \| object                | `true`               | Enable/disable touch zoom/rotate                            |
 | `touchPitch`          | boolean \| object                | `true`               | Enable/disable touch pitch                                  |
-| `antialias`           | boolean                          | _auto_               | Enable antialiasing                                         |
+| `canvasContextAttributes` | object                       | `{ antialias: false, ... }` | WebGL context attributes (v6 home of `antialias`)     |
 | `refreshExpiredTiles` | boolean                          | `true`               | Refresh expired tiles                                       |
 | `maxBounds`           | [number, number, number, number] | _none_               | Constrain map to bounds [swLng, swLat, neLng, neLat]        |
-| `projection`          | string                           | `'mercator'`         | Map projection ('mercator' or 'globe')                      |
 | `renderWorldCopies`   | boolean                          | `true`               | Render multiple copies of the world                         |
 | `locale`              | object                           | _none_               | Localization strings for UI                                 |
 | `polygon`             | boolean                          | `false`              | Enable drawing tools for polygons/lines/points              |
 | `drawOptions`         | object                           | `{}`                 | Configuration for drawing tools                             |
 | `minimap`             | object                           | _none_               | Configuration for minimap control                           |
+
+**Projection & zoom notes (maplibre v6):**
+
+- There is **no `projection` constructor option** in v6 — it is silently ignored. Set the projection via the style (`projection: { type: 'globe' }` in the style JSON) or after style load: `map.setProjection({ type: 'globe' })`. Read it back with `map.getProjection()`.
+- `minZoom` defaults to `-2` (negative zoom is valid). The *effective* minimum also depends on the viewport size — query it with `map.getMinZoom(true)`.
+- `antialias` lives inside `canvasContextAttributes` in v6, e.g. `canvasContextAttributes: { antialias: true }`.
 
 ---
 
@@ -592,15 +683,22 @@ map.on('sourcedata', e => {
 
 #### Source & Layer Events
 
-Fired when sources or layers are added, removed, or modified.
+Fired when sources, layers, or style data change. In maplibre v6 there are no
+per-operation events like `layeradd`/`sourceremove` — all source and layer
+changes surface through the data events below (add/remove is visible in the
+`isSourceLoaded`/`source` payload fields).
 
-| Event           | Description                        |
-| --------------- | ---------------------------------- |
-| `sourceloading` | Fired when a source begins loading |
-| `sourceadd`     | Fired when a source is added       |
-| `sourceremove`  | Fired when a source is removed     |
-| `layeradd`      | Fired when a layer is added        |
-| `layerremove`   | Fired when a layer is removed      |
+| Event               | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `sourcedataloading` | Fired when a source begins loading                        |
+| `sourcedata`        | Fired when a source's data loads or changes (add/remove too) |
+| `styledataloading` | Fired when the style begins loading/changing              |
+| `styledata`         | Fired when the style loads or changes (layer add/remove too) |
+| `dataloading`       | Fired when any map data begins loading                    |
+| `data`              | Fired when any map data loads or changes                  |
+| `dataabort`         | Fired when a source request is aborted                    |
+| `sourcedataabort`   | Fired when a source data request is aborted               |
+| `styleimagemissing` | Fired when a style image is missing — add it via `map.addImage()` in the handler |
 
 ---
 
@@ -822,7 +920,6 @@ map.addControl(
     },
     trackUserLocation: true, // Track user movement
     showAccuracyCircle: true,
-    showUserHeading: true,
   }),
   'top-right'
 )
@@ -1526,7 +1623,8 @@ map.setLayoutProperty('my-layer', 'visibility', 'visible')
 // Remove a layer
 map.removeLayer('my-layer')
 
-// Remove a source (remove layers first)
+// Remove a source — remove ALL layers using it first: while any layer
+// still references the source, removeSource() is silently ignored.
 map.removeSource('my-source')
 ```
 
@@ -1561,8 +1659,10 @@ map.setMaxBounds([
   [91.0, 24.5],
 ])
 
-// Get projection
-const projection = map.getProjection()
+// Projection (maplibre v6): undefined until one is applied — set it via
+// setProjection after the style has loaded (or in the style JSON)
+map.setProjection({ type: 'globe' })
+const projection = map.getProjection() // { type: 'globe' }
 
 // World copies
 map.setRenderWorldCopies(true)

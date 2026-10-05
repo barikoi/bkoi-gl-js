@@ -17,12 +17,29 @@ const eslintconfig = [
       '**/.eslintrc.json',
       '**/node_modules/**',
       '**/dist/**',
+      '**/build/**',
+      '**/.output/**',
+      '**/.svelte-kit/**',
+      '**/.nuxt/**',
+      '**/.angular/**',
       '**/coverage/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+      // Framework matrix: 14 consumer-fixture apps with their own toolchains,
+      // build outputs (.next/.nuxt/.output/...) and packed installs — never
+      // lintable as first-party code (maintainer decision 2026-09-17).
+      'tests/framework/**',
+      // Generated 490KB worker bundle (see scripts/build-worker.mjs)
+      'src/worker-bundle.generated.ts',
+      // Generated README-example manifest (see scripts/extract-readme-examples.mjs)
+      'tests/e2e/app/readme-examples.js',
+      '**/*.generated.ts',
       '**/*.config.js',
       '**/*.config.cjs',
       '**/rollup.config.js',
       'eslint.config.mjs',
-      'check_exports.js',
+      // Phase 1 throwaway smoke harness — deleted when the Phase 3 e2e host lands
+      'scratch/**',
     ],
   },
 
@@ -138,6 +155,14 @@ const eslintconfig = [
     },
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
+    },
+  },
+
+  // Harness scripts print progress to stdout by design.
+  {
+    files: ['scripts/**/*.mjs', 'tests/e2e/**/*.mjs'],
+    rules: {
       'no-console': 'off',
     },
   },
