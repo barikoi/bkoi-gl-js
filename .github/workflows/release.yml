@@ -82,7 +82,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       # Full suite: unit (mocked engine) + browser (real rendering), with the
-      # 100% coverage thresholds from vitest.config.ts enforced — a drop
+      # 98% coverage thresholds from vitest.config.ts enforced — a drop
       # below the floor fails the gate.
       - name: Tests with coverage
         run: npm test
