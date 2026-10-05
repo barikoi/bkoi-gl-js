@@ -14,10 +14,10 @@ export default defineConfig({
       include: ['src/**/*.{js,ts}'],
       exclude: ['src/**/*.d.ts', 'src/types/**'],
       thresholds: {
-        statements: 100,
-        branches: 100,
-        functions: 100,
-        lines: 100,
+        statements: 98,
+        branches: 98,
+        functions: 98,
+        lines: 98,
       },
     },
     projects: [

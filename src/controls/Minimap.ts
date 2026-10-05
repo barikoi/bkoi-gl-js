@@ -622,6 +622,17 @@ export class Minimap implements IControl {
   ): void {
     if (this.#differentStyle) {
       this.map.setStyle(style, options)
+      // setStyle wipes every source/layer, and maplibre fires `load` only
+      // once per map (the initial once('load') is spent), so re-add the
+      // parent-rect overlay when the new style settles. Idempotent in case
+      // multiple style swaps land before a single style.load.
+      if (this.#parentRect !== undefined) {
+        this.map.once('style.load', () => {
+          if (this.map.getSource('parentRect') === undefined) {
+            this.#addParentRect(this.#options.parentRect)
+          }
+        })
+      }
     }
     this.#setParentBounds()
   }
@@ -915,9 +926,11 @@ export class Minimap implements IControl {
       ],
     ]
 
-    // Update the source data — the source is created together with
-    // #parentRect, so it exists whenever this method runs with a rect.
-    this.map.getSource<GeoJSONSource>('parentRect')!.setData(this.#parentRect)
+    // Update the source data. The source lives and dies with the style it
+    // was added to — after a style swap it is gone until #addParentRect
+    // re-adds it on style.load, so guard instead of asserting.
+    const source = this.map.getSource<GeoJSONSource>('parentRect')
+    if (source !== undefined) source.setData(this.#parentRect)
   }
 
   /**

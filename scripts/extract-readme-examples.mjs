@@ -10,16 +10,17 @@
  *   expression  — config/option object documentation — validated as a JS expression
  *   skip        — not runnable here (install commands, CDN snippets, React JSX)
  *
- * Output: tests/e2e/app/readme-examples.js (generated, gitignored) — the e2e
+ * Output: tests/e2e/app/readme-examples.js (generated, tracked) — the e2e
  * host imports it and runs every `run`/`map-create`/`expression` case against
  * the BUILT dist with a real API key. README bytes stay untouched; transforms
  * apply only to the extracted copies (const→var for duplicate declarations,
  * placeholder key → real key, container id → fresh div).
  *
  * Usage: node scripts/extract-readme-examples.mjs [--check]
- *   --check: verify-only — exit 1 if the generated module is stale or missing;
- *   never writes (the file is gitignored, so `npm run e2e` / the Playwright
- *   webServer regenerate it; --check only guards a local stale copy)
+ *   --check: verify-only — exit 1 if the committed module is stale or missing
+ *   (guards CI fresh checkouts: a README edit must re-run the extractor and
+ *   commit the regenerated module; `npm run e2e` / the Playwright webServer
+ *   regenerate it regardless, keeping local runs fresh)
  */
 import fs from 'node:fs'
 import path from 'node:path'
