@@ -15,10 +15,10 @@ export interface BkoiDrawCreateEvent {
   features: Feature[]
 }
 
-/** Emitted when one or more features are updated (moved, scaled, rotated, coordinates/properties changed). */
+/** Emitted when one or more features are updated (moved, or coordinates changed). */
 export interface BkoiDrawUpdateEvent {
   features: Feature[]
-  action: 'change_coordinates' | 'change_properties' | 'move' | 'scale' | 'rotate'
+  action: 'change_coordinates' | 'move'
 }
 
 /** Emitted when one or more features are deleted via the draw tools. */
@@ -29,12 +29,13 @@ export interface BkoiDrawDeleteEvent {
 /** Emitted when the draw selection changes. */
 export interface BkoiDrawSelectionChangeEvent {
   features: Feature[]
+  /** Point features for each selected vertex (direct-select mode). */
+  points: Feature[]
 }
 
 /** Emitted when the draw mode changes (e.g. `simple_select` ⇄ `draw_polygon`). */
 export interface BkoiDrawModeChangeEvent {
   mode: string
-  opts?: Record<string, unknown>
 }
 
 /** Emitted when the state of the draw toolbar buttons changes. */

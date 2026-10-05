@@ -71,7 +71,7 @@ export interface BkoiGlMap {
     layerIds: string[],
     listener: (ev: MapLayerEventType[T] & object) => void
   ): Subscription
-  on(type: string, listener: Listener): Subscription
+  on(type: keyof BkoiMapEventType, listener: Listener): Subscription
   once<T extends keyof BkoiMapEventType>(
     type: T,
     listener: (ev: BkoiMapEventType[T] & object) => void
