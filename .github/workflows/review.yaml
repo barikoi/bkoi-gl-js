@@ -6,7 +6,7 @@ name: Code Review
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev", "main"]
 
 concurrency:
   group: code-review-${{ github.ref }}
