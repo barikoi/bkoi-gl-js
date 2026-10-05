@@ -10,3 +10,4 @@ tsconfig.json
 index.d.ts
 CHANGELOG.md
 src/worker-bundle.generated.ts
+tests/e2e/app/readme-examples.js
